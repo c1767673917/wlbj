@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiliconFlow API 前端测试</title>
+  <style>
+    body {
+      font-family: 'Microsoft YaHei', Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #1e88e5;
+      margin-top: 0;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    button {
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #1976d2;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .result-area {
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .status.info {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+    .status.success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    .status.error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .field {
+      margin-bottom: 8px;
+    }
+    .indent {
+      padding-left: 20px;
+    }
+    .field-label {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SiliconFlow API 前端测试</h1>
+    
+    <div class="form-group">
+      <label for="apiKey">API Key</label>
+      <input type="text" id="apiKey" value="sk-mkwzawhynjmauuhvflpfjhfdijcvmutwswdtunhaoqnsvdos" style="width: 100%; padding: 8px; box-sizing: border-box;">
+    </div>
+    
+    <div class="form-group">
+      <label for="input-text">物流信息输入</label>
+      <textarea id="input-text" placeholder="在此输入物流信息...">广州仓提货：河南省漯河市临颍县繁阳路南侧经一路西侧 临颍县恒烨实业有限公司 时会丽 15839591235 必须提前一天电话预约仓库送货，装车货品需按口味码放整齐，混码装卸仓库拒收，送清香牛肉579箱，香辣味1321箱，大骨牛肉500箱，番茄牛肉600箱，报价@谭宏洁</textarea>
+    </div>
+    
+    <button id="test-btn" onclick="testAPI()">开始测试API</button>
+    
+    <div class="result-area">
+      <h2>测试结果</h2>
+      <div id="status-container"></div>
+      <h3>原始API响应</h3>
+      <pre id="api-response">等待API响应...</pre>
+      <h3>提取结果</h3>
+      <pre id="extracted-data">等待数据提取...</pre>
+      <h3>格式化结果展示</h3>
+      <div id="formatted-result">等待数据提取...</div>
+    </div>
+  </div>
+
+  <script>
+    // 添加状态信息的函数
+    function addStatus(message, type = 'info') {
+      const statusContainer = document.getElementById('status-container');
+      const statusElement = document.createElement('div');
+      statusElement.className = `status ${type}`;
+      statusElement.innerText = message;
+      statusContainer.appendChild(statusElement);
+      // 滚动到最新状态
+      statusElement.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 清空状态容器
+    function clearStatus() {
+      document.getElementById('status-container').innerHTML = '';
+      document.getElementById('api-response').innerText = '等待API响应...';
+      document.getElementById('extracted-data').innerText = '等待数据提取...';
+      document.getElementById('formatted-result').innerHTML = '等待数据提取...';
+    }
+
+    // 格式化显示提取结果
+    function displayFormattedResult(data) {
+      const container = document.getElementById('formatted-result');
+      container.innerHTML = '';
+      
+      // 发货仓库信息
+      const warehouseField = document.createElement('div');
+      warehouseField.className = 'field';
+      warehouseField.innerHTML = `<span class="field-label">发货仓库:</span> ${data.warehouse || '未提取'}`;
+      container.appendChild(warehouseField);
+      
+      // 货物信息
+      const goodsField = document.createElement('div');
+      goodsField.className = 'field';
+      goodsField.innerHTML = `<span class="field-label">货物信息:</span>`;
+      container.appendChild(goodsField);
+      
+      if (data.goods) {
+        if (Array.isArray(data.goods)) {
+          // 处理货物数组
+          const goodsList = document.createElement('ul');
+          goodsList.style.margin = '5px 0';
+          goodsList.style.paddingLeft = '25px';
+          
+          data.goods.forEach(item => {
+            const goodsItem = document.createElement('li');
+            if (typeof item === 'object') {
+              goodsItem.textContent = `${item.name || ''} ${item.quantity || ''}`;
+            } else {
+              goodsItem.textContent = item;
+            }
+            goodsList.appendChild(goodsItem);
+          });
+          
+          goodsField.appendChild(goodsList);
+        } else if (typeof data.goods === 'object') {
+          // 处理单个货物对象
+          const goodsDetails = document.createElement('div');
+          goodsDetails.className = 'indent';
+          goodsDetails.textContent = JSON.stringify(data.goods, null, 2);
+          goodsField.appendChild(goodsDetails);
+        } else {
+          // 处理字符串
+          const goodsDetails = document.createElement('div');
+          goodsDetails.className = 'indent';
+          goodsDetails.textContent = data.goods;
+          goodsField.appendChild(goodsDetails);
+        }
+      } else {
+        const noGoods = document.createElement('div');
+        noGoods.className = 'indent';
+        noGoods.textContent = '未提取';
+        goodsField.appendChild(noGoods);
+      }
+      
+      // 收货信息
+      const deliveryField = document.createElement('div');
+      deliveryField.className = 'field';
+      deliveryField.innerHTML = `<span class="field-label">收货信息:</span>`;
+      container.appendChild(deliveryField);
+      
+      if (data.deliveryAddress) {
+        if (typeof data.deliveryAddress === 'object') {
+          // 处理收货地址对象 - 显示为原始JSON格式
+          const addressDetails = document.createElement('div');
+          addressDetails.className = 'indent';
+          addressDetails.style.whiteSpace = 'pre-wrap';
+          addressDetails.textContent = JSON.stringify(data.deliveryAddress, null, 2);
+          deliveryField.appendChild(addressDetails);
+        } else {
+          // 处理字符串
+          const addressDetails = document.createElement('div');
+          addressDetails.className = 'indent';
+          addressDetails.style.whiteSpace = 'pre-wrap';
+          addressDetails.textContent = data.deliveryAddress;
+          deliveryField.appendChild(addressDetails);
+        }
+      } else {
+        const noAddress = document.createElement('div');
+        noAddress.className = 'indent';
+        noAddress.textContent = '未提取';
+        deliveryField.appendChild(noAddress);
+      }
+    }
+
+    // 测试API的函数
+    async function testAPI() {
+      // 清空之前的结果
+      clearStatus();
+      
+      const inputText = document.getElementById('input-text').value.trim();
+      const apiKey = document.getElementById('apiKey').value.trim();
+      
+      if (!inputText) {
+        addStatus('请输入物流信息进行测试', 'error');
+        return;
+      }
+
+      if (!apiKey) {
+        addStatus('请输入API Key', 'error');
+        return;
+      }
+      
+      // 禁用按钮并显示加载状态
+      const button = document.getElementById('test-btn');
+      const originalButtonText = button.innerText;
+      button.disabled = true;
+      button.innerHTML = '<span class="spinner"></span> 处理中...';
+      
+      addStatus('开始调用SiliconFlow API...', 'info');
+      const startTime = new Date();
+      
+      try {
+        // 构造API请求数据
+        const requestData = {
+          model: 'Qwen/Qwen3-14B',
+          messages: [
+            {
+              role: 'system',
+              content: '你是一个物流信息提取专家。你需要从用户输入的文本中识别并提取以下信息：\n1. 发货仓库\n2. 货物信息(包括品名和数量)\n3. 收货信息(完整保留地址、联系人、电话、以及所有收货要求等)\n\n请以JSON格式返回结果，格式为{"warehouse": "提取的发货仓库", "goods": "提取的货物信息", "deliveryAddress": "提取的收货信息，包括完整地址、联系人、电话和所有收货要求，尽量保留原文"}'
+            },
+            {
+              role: 'user',
+              content: inputText
+            }
+          ],
+          temperature: 0.2,
+          enable_thinking: false  // Qwen3模型特有参数，关闭思考模式
+        };
+        
+        addStatus('发送请求中...', 'info');
+        addStatus(`请求URL: https://api.siliconflow.cn/v1/chat/completions`, 'info');
+        
+        // 发起API请求
+        const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify(requestData)
+        });
+        
+        const endTime = new Date();
+        const timeElapsed = (endTime - startTime) / 1000;
+        
+        addStatus(`收到响应，状态码: ${response.status}，用时: ${timeElapsed.toFixed(2)}秒`, response.ok ? 'success' : 'error');
+        
+        if (!response.ok) {
+          throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+        }
+        
+        // 解析JSON响应
+        const data = await response.json();
+        
+        // 显示原始响应
+        document.getElementById('api-response').innerText = JSON.stringify(data, null, 2);
+        
+        // 提取内容
+        if (data.choices && data.choices.length > 0) {
+          const content = data.choices[0].message.content;
+          addStatus('成功获取到模型回复', 'success');
+          
+          try {
+            // 尝试从内容中提取JSON
+            const jsonMatch = content.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              const extractedJson = JSON.parse(jsonMatch[0]);
+              document.getElementById('extracted-data').innerText = JSON.stringify(extractedJson, null, 2);
+              
+              // 添加提取结果分析
+              addStatus('成功提取JSON结构化数据', 'success');
+              
+              // 显示格式化结果
+              displayFormattedResult(extractedJson);
+              
+              // 货物信息可能是数组或对象，需要特殊处理
+              let goodsSummary = '';
+              if (extractedJson.goods) {
+                if (Array.isArray(extractedJson.goods)) {
+                  goodsSummary = extractedJson.goods.map(item => {
+                    if (typeof item === 'object') {
+                      return `${item.name || ''} ${item.quantity || ''}`;
+                    } else {
+                      return item;
+                    }
+                  }).join('\n- ');
+                  if (goodsSummary) {
+                    goodsSummary = '\n- ' + goodsSummary;
+                  }
+                } else {
+                  goodsSummary = JSON.stringify(extractedJson.goods);
+                }
+              }
+              
+              // 收货信息可能是对象，需要特殊处理
+              let addressSummary = '';
+              if (extractedJson.deliveryAddress) {
+                if (typeof extractedJson.deliveryAddress === 'object') {
+                  // 对象格式化为文本，保持原始格式
+                  addressSummary = JSON.stringify(extractedJson.deliveryAddress, null, 2);
+                } else {
+                  addressSummary = extractedJson.deliveryAddress;
+                }
+              } else {
+                addressSummary = '未提取';
+              }
+              
+              // 添加文本摘要
+              let summary = '提取结果分析:\n';
+              summary += `- 发货仓库: ${extractedJson.warehouse || '未提取'}`;
+              summary += `\n- 货物信息: ${goodsSummary || '未提取'}`;
+              summary += `\n- 收货信息: ${addressSummary}`;
+              
+              addStatus(summary, 'info');
+            } else {
+              document.getElementById('extracted-data').innerText = '无法从回复中提取JSON格式的数据';
+              document.getElementById('formatted-result').innerHTML = '无法从回复中提取JSON格式的数据';
+              addStatus('无法从回复中提取JSON格式的数据', 'error');
+            }
+          } catch (e) {
+            document.getElementById('extracted-data').innerText = `解析JSON失败: ${e.message}\n\n原始内容:\n${content}`;
+            document.getElementById('formatted-result').innerHTML = `解析JSON失败: ${e.message}`;
+            addStatus(`解析JSON失败: ${e.message}`, 'error');
+          }
+        } else {
+          document.getElementById('extracted-data').innerText = '模型回复中没有包含选择结果';
+          document.getElementById('formatted-result').innerHTML = '模型回复中没有包含选择结果';
+          addStatus('模型回复中没有包含选择结果', 'error');
+        }
+      } catch (error) {
+        addStatus(`请求出错: ${error.message}`, 'error');
+        document.getElementById('api-response').innerText = `发生错误: ${error.message}`;
+        document.getElementById('extracted-data').innerText = '由于API请求失败，无法提取数据';
+        document.getElementById('formatted-result').innerHTML = '由于API请求失败，无法提取数据';
+      } finally {
+        // 恢复按钮状态
+        button.disabled = false;
+        button.innerHTML = originalButtonText;
+      }
+    }
+  </script>
+</body>
+</html> 
