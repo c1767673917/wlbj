@@ -16,7 +16,7 @@
     .data-table th, .data-table td {
       padding: 12px 15px;
       text-align: left;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #ddd;
     }
     
     .data-table th {
@@ -90,6 +90,168 @@
       border-radius: 4px;
       border-left: 4px solid #ff9800;
     }
+    
+    /* 发货仓库表格列宽度 */
+    .warehouse-column,
+    table#orders-table th.warehouse-column,
+    table#orders-table td.warehouse-column {
+      width: 90px !important;
+      max-width: 90px !important;
+      min-width: 90px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+    
+    /* 分页样式 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    
+    .pagination button {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      color: #333;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .pagination button.active {
+      background-color: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+    
+    .pagination-info {
+      text-align: center;
+      margin-top: 10px;
+      color: #666;
+    }
+    
+    /* 订单工具栏 */
+    .order-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .search-box input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 250px;
+    }
+    
+    .search-box button {
+      padding: 8px 15px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #000;
+      font-weight: normal;
+    }
+    
+    .search-box button:hover {
+      background-color: #e9e9e9;
+    }
+    
+    .export-button {
+      padding: 8px 15px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .export-button:hover {
+      background-color: #45a049;
+    }
+    
+    /* 历史订单容器 */
+    .history-container {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    /* 按钮布局样式 */
+    .button-row {
+      margin-bottom: 5px;
+      display: flex;
+      gap: 5px;
+    }
+    
+    .button-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .action-cell {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+    
+    /* 关闭按钮 */
+    .close-order-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .close-order-btn:hover {
+      background-color: #d32f2f;
+    }
+    
+    /* 编辑按钮 */
+    .edit-btn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .edit-btn:hover {
+      background-color: #0b7dda;
+    }
+    
+    /* 查看报价按钮 */
+    .view-quotes-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .view-quotes-btn:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 <body>
@@ -117,7 +279,7 @@
       <form id="new-order-form">
         <div class="form-group">
           <label for="warehouse">发货仓库</label>
-          <input type="text" id="warehouse" name="warehouse" required>
+          <input type="text" id="warehouse" name="warehouse" required maxlength="6">
         </div>
         
         <div class="form-group">
@@ -136,14 +298,32 @@
     
     <div class="list-container">
       <h2>我的订单</h2>
+      <div class="order-tools">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="搜索订单..." />
+          <button id="search-button">搜索</button>
+          <button id="reset-search">重置</button>
+        </div>
+        <button id="export-xlsx" class="export-button">导出为Excel</button>
+      </div>
       <div id="orders-list">
         <table id="orders-table" class="data-table">
+          <colgroup>
+            <col style="width: 80px">
+            <col style="width: 90px">
+            <col>
+            <col>
+            <col style="width: 100px">
+            <col style="width: 100px">
+            <col style="width: 150px">
+          </colgroup>
           <thead>
             <tr>
               <th>订单编号</th>
-              <th>发货仓库</th>
+              <th class="warehouse-column">发货仓库</th>
               <th>货物信息</th>
               <th>收货信息</th>
+              <th>最低报价</th>
               <th>创建时间</th>
               <th>操作</th>
             </tr>
@@ -152,17 +332,45 @@
             <!-- 订单数据将通过JavaScript动态添加 -->
           </tbody>
         </table>
+        
+        <div id="pagination" class="pagination">
+          <!-- 分页按钮将通过JavaScript动态添加 -->
+        </div>
+        
+        <div id="pagination-info" class="pagination-info">
+          <!-- 分页信息将通过JavaScript动态添加 -->
+        </div>
       </div>
     </div>
     
-    <div class="history-container">
-      <h2>历史订单</h2>
-      <div id="history-list">
-        <table id="history-table" class="data-table">
+    <div class="list-container history-container">
+      <h2>订单历史</h2>
+      <div class="order-tools">
+        <div class="search-box">
+          <input type="text" id="history-search-input" placeholder="搜索历史订单..." />
+          <button id="history-search-button">搜索</button>
+          <button id="history-reset-search">重置</button>
+        </div>
+        <button id="history-export-xlsx" class="export-button">导出为Excel</button>
+      </div>
+      <div id="history-orders-list">
+        <table id="history-orders-table" class="data-table">
+          <colgroup>
+            <col style="width: 80px">
+            <col style="width: 90px">
+            <col>
+            <col>
+            <col style="width: 100px">
+            <col style="width: 100px">
+            <col style="width: 120px">
+          </colgroup>
           <thead>
             <tr>
               <th>订单编号</th>
-              <th>发货仓库</th>
+              <th class="warehouse-column">发货仓库</th>
+              <th>货物信息</th>
+              <th>收货信息</th>
+              <th>最低报价</th>
               <th>创建时间</th>
               <th>操作</th>
             </tr>
@@ -171,6 +379,14 @@
             <!-- 历史订单数据将通过JavaScript动态添加 -->
           </tbody>
         </table>
+        
+        <div id="history-pagination" class="pagination">
+          <!-- 历史分页按钮将通过JavaScript动态添加 -->
+        </div>
+        
+        <div id="history-pagination-info" class="pagination-info">
+          <!-- 历史分页信息将通过JavaScript动态添加 -->
+        </div>
       </div>
     </div>
   </div>
@@ -183,7 +399,7 @@
         <input type="hidden" name="orderId">
         <div class="form-group">
           <label for="edit-warehouse">发货仓库</label>
-          <input type="text" id="edit-warehouse" name="warehouse" required>
+          <input type="text" id="edit-warehouse" name="warehouse" required maxlength="6">
         </div>
         
         <div class="form-group">
@@ -205,8 +421,7 @@
   <!-- 报价显示模板 -->
   <template id="quotes-display-template">
     <div class="quote-container">
-      <h3>订单报价</h3>
-      <div class="order-details"></div>
+      <h3>物流商报价列表</h3>
       <div class="quotes-list">
         <table class="data-table quote-table">
           <thead>

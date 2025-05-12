@@ -32,6 +32,55 @@
     .data-table .action-cell {
       text-align: center;
     }
+    
+    /* 行内报价表单样式 */
+    .inline-quote-form {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .quote-form-row {
+      display: none;
+    }
+    
+    .inline-quote-form .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .inline-quote-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .inline-quote-form input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .inline-quote-form button {
+      padding: 8px 15px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .inline-quote-form button:hover {
+      background-color: #45a049;
+    }
+    
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
   </style>
 </head>
 <body>
@@ -76,26 +125,6 @@
       </div>
     </div>
     
-    <div id="quote-form-container" class="form-container" style="display: none;">
-      <h2>提交报价</h2>
-      <div id="quote-order-details"></div>
-      <form id="quote-form">
-        <input type="hidden" id="quoteOrderId" name="orderId">
-        
-        <div class="form-group">
-          <label for="price">报价 (元)</label>
-          <input type="number" id="price" name="price" step="0.01" min="0" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="estimatedDelivery">预计送达时间</label>
-          <input type="text" id="estimatedDelivery" name="estimatedDelivery" required>
-        </div>
-        
-        <button type="submit">提交报价</button>
-      </form>
-    </div>
-    
     <div class="history-container">
       <h2>我的报价历史</h2>
       <div id="provider-history-list">
@@ -117,6 +146,31 @@
       </div>
     </div>
   </div>
+  
+  <!-- 行内报价表单模板 -->
+  <template id="inline-quote-form-template">
+    <div class="inline-quote-form">
+      <h3>提交报价</h3>
+      <form class="quote-inline-form">
+        <input type="hidden" name="orderId">
+        
+        <div class="form-group">
+          <label for="quote-price">报价 (元)</label>
+          <input type="number" id="quote-price" name="price" step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="quote-delivery">预计送达时间</label>
+          <input type="text" id="quote-delivery" name="estimatedDelivery" required>
+        </div>
+        
+        <div class="form-buttons">
+          <button type="submit" class="submit-btn">提交报价</button>
+          <button type="button" class="cancel-btn">取消</button>
+        </div>
+      </form>
+    </div>
+  </template>
   
   <script src="/js/provider.js"></script>
 </body>

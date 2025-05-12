@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // 加载所有订单
-  loadOrders();
+  // 加载活跃订单和历史订单
+  loadActiveOrders();
+  loadHistoryOrders();
   
   // 绑定表单提交事件
   document.getElementById('new-order-form').addEventListener('submit', function(e) {
@@ -12,7 +13,73 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('ai-recognize-btn').addEventListener('click', function() {
     recognizeWithAI();
   });
+  
+  // 绑定搜索按钮事件
+  document.getElementById('search-button').addEventListener('click', function() {
+    searchOrders();
+  });
+  
+  // 绑定重置搜索按钮事件
+  document.getElementById('reset-search').addEventListener('click', function() {
+    resetSearch();
+  });
+  
+  // 绑定导出按钮事件
+  document.getElementById('export-xlsx').addEventListener('click', function() {
+    exportToExcel('active');
+  });
+  
+  // 绑定历史搜索按钮事件
+  document.getElementById('history-search-button').addEventListener('click', function() {
+    searchHistoryOrders();
+  });
+  
+  // 绑定历史重置按钮事件
+  document.getElementById('history-reset-search').addEventListener('click', function() {
+    resetHistorySearch();
+  });
+  
+  // 绑定历史导出按钮事件
+  document.getElementById('history-export-xlsx').addEventListener('click', function() {
+    exportToExcel('closed');
+  });
+  
+  // 监听搜索框按回车事件
+  document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      searchOrders();
+    }
+  });
+  
+  // 监听历史搜索框按回车事件
+  document.getElementById('history-search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      searchHistoryOrders();
+    }
+  });
 });
+
+// 活跃订单分页状态
+let paginationState = {
+  currentPage: 1,
+  pageSize: 10,
+  totalOrders: 0,
+  totalPages: 1,
+  allOrders: [],
+  filteredOrders: [],
+  searchQuery: ''
+};
+
+// 历史订单分页状态
+let historyPaginationState = {
+  currentPage: 1,
+  pageSize: 10,
+  totalOrders: 0,
+  totalPages: 1,
+  allOrders: [],
+  filteredOrders: [],
+  searchQuery: ''
+};
 
 // SiliconFlow API调用函数
 async function callSiliconFlowAPI(content) {
@@ -166,15 +233,50 @@ async function recognizeWithAI() {
   }
 }
 
-// 加载所有订单
-function loadOrders() {
-  fetch('/api/orders')
+// 加载活跃订单
+function loadActiveOrders() {
+  fetch('/api/orders?status=active')
     .then(response => response.json())
     .then(orders => {
-      displayOrders(orders);
-      displayHistoryOrders(orders);
+      // 确保orders是数组
+      const ordersArray = Array.isArray(orders) ? orders : [];
+      
+      // 存储所有订单
+      paginationState.allOrders = ordersArray;
+      paginationState.filteredOrders = ordersArray;
+      paginationState.totalOrders = ordersArray.length;
+      paginationState.totalPages = Math.ceil(ordersArray.length / paginationState.pageSize);
+      
+      // 显示当前页的订单
+      displayOrdersPage(1);
+      
+      // 更新分页控件
+      renderPagination();
     })
     .catch(error => console.error('加载订单失败:', error));
+}
+
+// 加载历史订单
+function loadHistoryOrders() {
+  fetch('/api/orders?status=closed')
+    .then(response => response.json())
+    .then(orders => {
+      // 确保orders是数组
+      const ordersArray = Array.isArray(orders) ? orders : [];
+      
+      // 存储所有历史订单
+      historyPaginationState.allOrders = ordersArray;
+      historyPaginationState.filteredOrders = ordersArray;
+      historyPaginationState.totalOrders = ordersArray.length;
+      historyPaginationState.totalPages = Math.ceil(ordersArray.length / historyPaginationState.pageSize);
+      
+      // 显示当前页的历史订单
+      displayHistoryOrdersPage(1);
+      
+      // 更新历史分页控件
+      renderHistoryPagination();
+    })
+    .catch(error => console.error('加载历史订单失败:', error));
 }
 
 // 提交新订单
@@ -196,44 +298,90 @@ function submitNewOrder() {
     .then(order => {
       document.getElementById('new-order-form').reset();
       document.getElementById('ai-input').value = ''; // 清空AI输入框
-      loadOrders(); // 重新加载订单列表
+      loadActiveOrders(); // 重新加载订单列表
       alert('订单创建成功！');
     })
     .catch(error => console.error('创建订单失败:', error));
 }
 
-// 显示订单列表
-function displayOrders(orders) {
+// 显示特定页的订单
+function displayOrdersPage(page) {
+  paginationState.currentPage = page;
   const ordersTableBody = document.querySelector('#orders-table tbody');
   ordersTableBody.innerHTML = '';
   
-  if (orders.length === 0) {
+  if (paginationState.filteredOrders.length === 0) {
     const emptyRow = document.createElement('tr');
-    emptyRow.innerHTML = '<td colspan="6" style="text-align: center;">暂无订单</td>';
+    if (paginationState.searchQuery) {
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">没有找到匹配的订单</td>';
+    } else {
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">暂无订单</td>';
+    }
     ordersTableBody.appendChild(emptyRow);
     return;
   }
   
-  // 按时间逆序排列，最新的在前面
-  orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // 计算当前页的订单
+  const startIndex = (page - 1) * paginationState.pageSize;
+  const endIndex = Math.min(startIndex + paginationState.pageSize, paginationState.totalOrders);
+  const currentPageOrders = paginationState.filteredOrders
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(startIndex, endIndex);
   
-  orders.forEach(order => {
+  // 显示当前页的订单
+  currentPageOrders.forEach(order => {
     // 创建主行
     const row = document.createElement('tr');
     row.setAttribute('data-order-id', order.id);
     const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
     
-    row.innerHTML = `
-      <td>${order.id.substring(0, 8)}</td>
-      <td>${order.warehouse}</td>
-      <td>${order.goods}</td>
-      <td>${order.deliveryAddress}</td>
-      <td>${createdDate}</td>
-      <td class="action-cell">
-        <button class="edit-btn" onclick="editOrder('${order.id}')">编辑</button>
-        <button onclick="viewQuotes('${order.id}', this)">查看报价</button>
-      </td>
-    `;
+    // 获取该订单的最低报价
+    fetchLowestQuote(order.id)
+      .then(lowestQuote => {
+        const lowestQuoteHtml = lowestQuote 
+          ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}` 
+          : '暂无报价';
+        
+        row.innerHTML = `
+          <td>${order.id.substring(0, 8)}</td>
+          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+          <td>${order.goods}</td>
+          <td>${order.deliveryAddress}</td>
+          <td>${lowestQuoteHtml}</td>
+          <td>${createdDate}</td>
+          <td class="action-cell">
+            <div class="button-row">
+              <button class="close-order-btn" onclick="closeOrder('${order.id}')">关闭</button>
+              <button class="edit-btn" onclick="editOrder('${order.id}')">编辑</button>
+            </div>
+            <div class="button-row">
+              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+            </div>
+          </td>
+        `;
+      })
+      .catch(error => {
+        console.error('获取最低报价失败:', error);
+        
+        // 如果获取报价失败，仍然显示订单，但没有报价信息
+        row.innerHTML = `
+          <td>${order.id.substring(0, 8)}</td>
+          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+          <td>${order.goods}</td>
+          <td>${order.deliveryAddress}</td>
+          <td>获取报价失败</td>
+          <td>${createdDate}</td>
+          <td class="action-cell">
+            <div class="button-row">
+              <button class="close-order-btn" onclick="closeOrder('${order.id}')">关闭</button>
+              <button class="edit-btn" onclick="editOrder('${order.id}')">编辑</button>
+            </div>
+            <div class="button-row">
+              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+            </div>
+          </td>
+        `;
+      });
     
     ordersTableBody.appendChild(row);
     
@@ -241,9 +389,98 @@ function displayOrders(orders) {
     const quoteRow = document.createElement('tr');
     quoteRow.className = 'quote-row';
     quoteRow.style.display = 'none';
-    quoteRow.innerHTML = '<td colspan="6" class="quote-row-content"></td>';
+    quoteRow.innerHTML = '<td colspan="7" class="quote-row-content"></td>';
     ordersTableBody.appendChild(quoteRow);
   });
+  
+  // 更新分页信息
+  updatePaginationInfo();
+}
+
+// 更新分页信息
+function updatePaginationInfo() {
+  const startIndex = (paginationState.currentPage - 1) * paginationState.pageSize + 1;
+  const endIndex = Math.min(startIndex + paginationState.pageSize - 1, paginationState.totalOrders);
+  
+  const paginationInfoElement = document.getElementById('pagination-info');
+  if (paginationState.totalOrders > 0) {
+    paginationInfoElement.textContent = `显示第 ${startIndex} 到 ${endIndex} 条，共 ${paginationState.totalOrders} 条记录`;
+  } else {
+    paginationInfoElement.textContent = '';
+  }
+}
+
+// 渲染分页控件
+function renderPagination() {
+  const paginationElement = document.getElementById('pagination');
+  paginationElement.innerHTML = '';
+  
+  if (paginationState.totalPages <= 1) {
+    return; // 只有一页或没有数据时不显示分页
+  }
+  
+  // 上一页按钮
+  const prevButton = document.createElement('button');
+  prevButton.innerHTML = '&laquo; 上一页';
+  prevButton.disabled = paginationState.currentPage === 1;
+  prevButton.addEventListener('click', () => {
+    if (paginationState.currentPage > 1) {
+      displayOrdersPage(paginationState.currentPage - 1);
+      renderPagination();
+    }
+  });
+  paginationElement.appendChild(prevButton);
+  
+  // 页码按钮
+  const maxPageButtons = 5; // 最多显示的页码按钮数
+  let startPage = Math.max(1, paginationState.currentPage - Math.floor(maxPageButtons / 2));
+  let endPage = Math.min(paginationState.totalPages, startPage + maxPageButtons - 1);
+  
+  // 调整startPage，确保显示maxPageButtons个按钮
+  if (endPage - startPage + 1 < maxPageButtons && startPage > 1) {
+    startPage = Math.max(1, endPage - maxPageButtons + 1);
+  }
+  
+  for (let i = startPage; i <= endPage; i++) {
+    const pageButton = document.createElement('button');
+    pageButton.textContent = i;
+    pageButton.classList.toggle('active', i === paginationState.currentPage);
+    pageButton.addEventListener('click', () => {
+      displayOrdersPage(i);
+      renderPagination();
+    });
+    paginationElement.appendChild(pageButton);
+  }
+  
+  // 下一页按钮
+  const nextButton = document.createElement('button');
+  nextButton.innerHTML = '下一页 &raquo;';
+  nextButton.disabled = paginationState.currentPage === paginationState.totalPages;
+  nextButton.addEventListener('click', () => {
+    if (paginationState.currentPage < paginationState.totalPages) {
+      displayOrdersPage(paginationState.currentPage + 1);
+      renderPagination();
+    }
+  });
+  paginationElement.appendChild(nextButton);
+}
+
+// 获取订单的最低报价
+async function fetchLowestQuote(orderId) {
+  try {
+    const response = await fetch(`/api/orders/${orderId}/quotes`);
+    const quotes = await response.json();
+    
+    if (quotes.length === 0) {
+      return null;
+    }
+    
+    // 报价已经按价格升序排列，取第一个就是最低报价
+    return quotes[0];
+  } catch (error) {
+    console.error('获取报价失败:', error);
+    return null;
+  }
 }
 
 // 查看某个订单的报价
@@ -255,32 +492,16 @@ function viewQuotes(orderId, buttonElement) {
   
   // 切换报价行显示状态
   if (quoteRow.style.display === 'none') {
-    // 获取订单详情
-    fetch(`/api/orders/${orderId}`)
-      .then(response => response.json())
-      .then(order => {
-        // 准备报价容器
-        const quoteTemplate = document.getElementById('quotes-display-template');
-        const quoteContainer = quoteTemplate.content.cloneNode(true);
-        
-        // 填充订单详情
-        const orderDetails = quoteContainer.querySelector('.order-details');
-        const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
-        
-        orderDetails.innerHTML = `
-          <p><strong>订单 #${order.id.substring(0, 8)}</strong> | ${createdDate}</p>
-          <p><strong>发货仓库:</strong> ${order.warehouse}</p>
-          <p><strong>货物信息:</strong> ${order.goods}</p>
-          <p><strong>收货信息:</strong> ${order.deliveryAddress}</p>
-        `;
-        
-        // 添加到DOM
-        quoteContent.innerHTML = '';
-        quoteContent.appendChild(quoteContainer);
-        
-        // 获取该订单的所有报价
-        return fetch(`/api/orders/${orderId}/quotes`);
-      })
+    // 准备报价容器
+    const quoteTemplate = document.getElementById('quotes-display-template');
+    const quoteContainer = quoteTemplate.content.cloneNode(true);
+    
+    // 添加到DOM
+    quoteContent.innerHTML = '';
+    quoteContent.appendChild(quoteContainer);
+    
+    // 获取该订单的所有报价
+    fetch(`/api/orders/${orderId}/quotes`)
       .then(response => response.json())
       .then(quotes => {
         // 显示报价
@@ -396,7 +617,7 @@ function editOrder(orderId) {
       
       // 添加到DOM
       const formCell = document.createElement('td');
-      formCell.colSpan = 6;
+      formCell.colSpan = 7;
       formCell.appendChild(formContent);
       formRow.appendChild(formCell);
       
@@ -437,10 +658,17 @@ function updateOrder(form) {
       return response.json();
     })
     .then(updatedOrder => {
+      // 更新本地数据
+      const orderIndex = paginationState.allOrders.findIndex(o => o.id === orderId);
+      if (orderIndex !== -1) {
+        paginationState.allOrders[orderIndex] = updatedOrder;
+      }
+      
       // 更新表格行数据
       const orderRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
       if (orderRow) {
         orderRow.cells[1].textContent = updatedOrder.warehouse;
+        orderRow.cells[1].title = updatedOrder.warehouse;
         orderRow.cells[2].textContent = updatedOrder.goods;
         orderRow.cells[3].textContent = updatedOrder.deliveryAddress;
       }
@@ -459,45 +687,362 @@ function updateOrder(form) {
     });
 }
 
-// 显示历史订单
-function displayHistoryOrders(orders) {
-  const historyTableBody = document.querySelector('#history-table tbody');
-  historyTableBody.innerHTML = '';
+// 搜索订单
+function searchOrders() {
+  const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+  paginationState.searchQuery = searchInput;
   
-  if (orders.length === 0) {
-    const emptyRow = document.createElement('tr');
-    emptyRow.innerHTML = '<td colspan="4" style="text-align: center;">暂无历史记录</td>';
-    historyTableBody.appendChild(emptyRow);
+  if (!searchInput) {
+    resetSearch();
     return;
   }
   
-  // 只显示最近5条
-  const recentOrders = orders
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 5);
+  // 在所有字段中搜索关键词
+  const filteredOrders = paginationState.allOrders.filter(order => {
+    return (
+      order.id.toLowerCase().includes(searchInput) ||
+      order.warehouse.toLowerCase().includes(searchInput) ||
+      order.goods.toLowerCase().includes(searchInput) ||
+      order.deliveryAddress.toLowerCase().includes(searchInput) ||
+      new Date(order.createdAt).toLocaleString('zh-CN').toLowerCase().includes(searchInput)
+    );
+  });
   
-  recentOrders.forEach(order => {
+  paginationState.filteredOrders = filteredOrders;
+  paginationState.totalOrders = filteredOrders.length;
+  paginationState.totalPages = Math.ceil(filteredOrders.length / paginationState.pageSize);
+  paginationState.currentPage = 1;
+  
+  displayOrdersPage(1);
+  renderPagination();
+}
+
+// 重置搜索
+function resetSearch() {
+  document.getElementById('search-input').value = '';
+  paginationState.searchQuery = '';
+  paginationState.filteredOrders = paginationState.allOrders;
+  paginationState.totalOrders = paginationState.allOrders.length;
+  paginationState.totalPages = Math.ceil(paginationState.allOrders.length / paginationState.pageSize);
+  
+  displayOrdersPage(1);
+  renderPagination();
+}
+
+// 导出为Excel
+function exportToExcel(type) {
+  // 检查是否已加载XLSX库
+  if (typeof XLSX === 'undefined') {
+    // 动态加载xlsx库
+    const script = document.createElement('script');
+    script.src = '/xlsx/xlsx.full.min.js';
+    script.onload = function() {
+      exportOrdersToExcel(type);
+    };
+    script.onerror = function() {
+      console.error('加载XLSX库失败');
+      alert('导出功能初始化失败，请刷新页面重试');
+    };
+    document.head.appendChild(script);
+  } else {
+    exportOrdersToExcel(type);
+  }
+}
+
+// 实际导出Excel的函数
+function exportOrdersToExcel(type) {
+  // 决定导出哪些数据：如果有搜索过滤，就导出过滤后的，否则导出全部
+  const state = type === 'active' ? paginationState : historyPaginationState;
+  const dataToExport = state.searchQuery ? 
+    state.filteredOrders : 
+    state.allOrders;
+    
+  // 为每个订单收集最低报价
+  const pricePromises = dataToExport.map(async order => {
+    try {
+      const lowestQuote = await fetchLowestQuote(order.id);
+      return {
+        '订单编号': order.id,
+        '发货仓库': order.warehouse,
+        '货物信息': order.goods,
+        '收货信息': order.deliveryAddress,
+        '最低报价物流商': lowestQuote ? lowestQuote.provider : '暂无',
+        '最低报价': lowestQuote ? `¥${lowestQuote.price.toFixed(2)}` : '暂无',
+        '预计送达时间': lowestQuote ? lowestQuote.estimatedDelivery : '暂无',
+        '创建时间': new Date(order.createdAt).toLocaleString('zh-CN')
+      };
+    } catch (error) {
+      return {
+        '订单编号': order.id,
+        '发货仓库': order.warehouse,
+        '货物信息': order.goods,
+        '收货信息': order.deliveryAddress,
+        '最低报价物流商': '获取失败',
+        '最低报价': '获取失败',
+        '预计送达时间': '获取失败',
+        '创建时间': new Date(order.createdAt).toLocaleString('zh-CN')
+      };
+    }
+  });
+  
+  Promise.all(pricePromises)
+    .then(rows => {
+      // 创建工作簿和工作表
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(rows);
+      
+      // 添加工作表到工作簿
+      XLSX.utils.book_append_sheet(wb, ws, type === 'active' ? '活跃订单报价列表' : '历史订单报价列表');
+      
+      // 生成文件名
+      const filename = `${type === 'active' ? '活跃' : '历史'}物流订单报价_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      
+      // 导出文件
+      XLSX.writeFile(wb, filename);
+    })
+    .catch(error => {
+      console.error('导出数据时出错:', error);
+      alert('导出失败，请重试');
+    });
+}
+
+// 搜索历史订单
+function searchHistoryOrders() {
+  const searchInput = document.getElementById('history-search-input').value.toLowerCase().trim();
+  historyPaginationState.searchQuery = searchInput;
+  
+  if (!searchInput) {
+    resetHistorySearch();
+    return;
+  }
+  
+  // 在所有字段中搜索关键词
+  const filteredOrders = historyPaginationState.allOrders.filter(order => {
+    return (
+      order.id.toLowerCase().includes(searchInput) ||
+      order.warehouse.toLowerCase().includes(searchInput) ||
+      order.goods.toLowerCase().includes(searchInput) ||
+      order.deliveryAddress.toLowerCase().includes(searchInput) ||
+      new Date(order.createdAt).toLocaleString('zh-CN').toLowerCase().includes(searchInput)
+    );
+  });
+  
+  historyPaginationState.filteredOrders = filteredOrders;
+  historyPaginationState.totalOrders = filteredOrders.length;
+  historyPaginationState.totalPages = Math.ceil(filteredOrders.length / historyPaginationState.pageSize);
+  historyPaginationState.currentPage = 1;
+  
+  displayHistoryOrdersPage(1);
+  renderHistoryPagination();
+}
+
+// 重置历史搜索
+function resetHistorySearch() {
+  document.getElementById('history-search-input').value = '';
+  historyPaginationState.searchQuery = '';
+  historyPaginationState.filteredOrders = historyPaginationState.allOrders;
+  historyPaginationState.totalOrders = historyPaginationState.allOrders.length;
+  historyPaginationState.totalPages = Math.ceil(historyPaginationState.allOrders.length / historyPaginationState.pageSize);
+  
+  displayHistoryOrdersPage(1);
+  renderHistoryPagination();
+}
+
+// 显示历史订单页
+function displayHistoryOrdersPage(page) {
+  historyPaginationState.currentPage = page;
+  const ordersTableBody = document.querySelector('#history-orders-table tbody');
+  ordersTableBody.innerHTML = '';
+  
+  if (historyPaginationState.filteredOrders.length === 0) {
+    const emptyRow = document.createElement('tr');
+    if (historyPaginationState.searchQuery) {
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">没有找到匹配的历史订单</td>';
+    } else {
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">暂无历史订单</td>';
+    }
+    ordersTableBody.appendChild(emptyRow);
+    return;
+  }
+  
+  // 计算当前页的订单
+  const startIndex = (page - 1) * historyPaginationState.pageSize;
+  const endIndex = Math.min(startIndex + historyPaginationState.pageSize, historyPaginationState.totalOrders);
+  const currentPageOrders = historyPaginationState.filteredOrders
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(startIndex, endIndex);
+  
+  // 显示当前页的订单
+  currentPageOrders.forEach(order => {
+    // 创建主行
     const row = document.createElement('tr');
     row.setAttribute('data-order-id', order.id);
     const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
     
-    row.innerHTML = `
-      <td>${order.id.substring(0, 8)}</td>
-      <td>${order.warehouse}</td>
-      <td>${createdDate}</td>
-      <td class="action-cell">
-        <button class="edit-btn" onclick="editOrder('${order.id}')">编辑</button>
-        <button onclick="viewQuotes('${order.id}', this)">查看报价</button>
-      </td>
-    `;
+    // 获取该订单的最低报价
+    fetchLowestQuote(order.id)
+      .then(lowestQuote => {
+        const lowestQuoteHtml = lowestQuote 
+          ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}` 
+          : '暂无报价';
+        
+        row.innerHTML = `
+          <td>${order.id.substring(0, 8)}</td>
+          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+          <td>${order.goods}</td>
+          <td>${order.deliveryAddress}</td>
+          <td>${lowestQuoteHtml}</td>
+          <td>${createdDate}</td>
+          <td class="action-cell">
+            <div class="button-row">
+              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+            </div>
+          </td>
+        `;
+      })
+      .catch(error => {
+        console.error('获取最低报价失败:', error);
+        
+        // 如果获取报价失败，仍然显示订单，但没有报价信息
+        row.innerHTML = `
+          <td>${order.id.substring(0, 8)}</td>
+          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+          <td>${order.goods}</td>
+          <td>${order.deliveryAddress}</td>
+          <td>获取报价失败</td>
+          <td>${createdDate}</td>
+          <td class="action-cell">
+            <div class="button-row">
+              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+            </div>
+          </td>
+        `;
+      });
     
-    historyTableBody.appendChild(row);
+    ordersTableBody.appendChild(row);
     
     // 创建用于显示报价的行（初始隐藏）
     const quoteRow = document.createElement('tr');
     quoteRow.className = 'quote-row';
     quoteRow.style.display = 'none';
-    quoteRow.innerHTML = '<td colspan="4" class="quote-row-content"></td>';
-    historyTableBody.appendChild(quoteRow);
+    quoteRow.innerHTML = '<td colspan="7" class="quote-row-content"></td>';
+    ordersTableBody.appendChild(quoteRow);
   });
-} 
+  
+  // 更新分页信息
+  updateHistoryPaginationInfo();
+}
+
+// 更新历史分页信息
+function updateHistoryPaginationInfo() {
+  const startIndex = (historyPaginationState.currentPage - 1) * historyPaginationState.pageSize + 1;
+  const endIndex = Math.min(startIndex + historyPaginationState.pageSize - 1, historyPaginationState.totalOrders);
+  
+  const paginationInfoElement = document.getElementById('history-pagination-info');
+  if (historyPaginationState.totalOrders > 0) {
+    paginationInfoElement.textContent = `显示第 ${startIndex} 到 ${endIndex} 条，共 ${historyPaginationState.totalOrders} 条记录`;
+  } else {
+    paginationInfoElement.textContent = '';
+  }
+}
+
+// 渲染历史分页控件
+function renderHistoryPagination() {
+  const paginationElement = document.getElementById('history-pagination');
+  paginationElement.innerHTML = '';
+  
+  if (historyPaginationState.totalPages <= 1) {
+    return; // 只有一页或没有数据时不显示分页
+  }
+  
+  // 上一页按钮
+  const prevButton = document.createElement('button');
+  prevButton.innerHTML = '&laquo; 上一页';
+  prevButton.disabled = historyPaginationState.currentPage === 1;
+  prevButton.addEventListener('click', () => {
+    if (historyPaginationState.currentPage > 1) {
+      displayHistoryOrdersPage(historyPaginationState.currentPage - 1);
+      renderHistoryPagination();
+    }
+  });
+  paginationElement.appendChild(prevButton);
+  
+  // 页码按钮
+  const maxPageButtons = 5; // 最多显示的页码按钮数
+  let startPage = Math.max(1, historyPaginationState.currentPage - Math.floor(maxPageButtons / 2));
+  let endPage = Math.min(historyPaginationState.totalPages, startPage + maxPageButtons - 1);
+  
+  // 调整startPage，确保显示maxPageButtons个按钮
+  if (endPage - startPage + 1 < maxPageButtons && startPage > 1) {
+    startPage = Math.max(1, endPage - maxPageButtons + 1);
+  }
+  
+  for (let i = startPage; i <= endPage; i++) {
+    const pageButton = document.createElement('button');
+    pageButton.textContent = i;
+    pageButton.classList.toggle('active', i === historyPaginationState.currentPage);
+    pageButton.addEventListener('click', () => {
+      displayHistoryOrdersPage(i);
+      renderHistoryPagination();
+    });
+    paginationElement.appendChild(pageButton);
+  }
+  
+  // 下一页按钮
+  const nextButton = document.createElement('button');
+  nextButton.innerHTML = '下一页 &raquo;';
+  nextButton.disabled = historyPaginationState.currentPage === historyPaginationState.totalPages;
+  nextButton.addEventListener('click', () => {
+    if (historyPaginationState.currentPage < historyPaginationState.totalPages) {
+      displayHistoryOrdersPage(historyPaginationState.currentPage + 1);
+      renderHistoryPagination();
+    }
+  });
+  paginationElement.appendChild(nextButton);
+}
+
+// 关闭订单
+function closeOrder(orderId) {
+  if (!confirm('确定要关闭这个订单吗？关闭后将移至历史订单。')) {
+    return;
+  }
+  
+  fetch(`/api/orders/${orderId}/close`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('服务器返回错误');
+      }
+      return response.json();
+    })
+    .then(closedOrder => {
+      // 从活跃订单中删除已关闭的订单
+      paginationState.allOrders = paginationState.allOrders.filter(order => order.id !== orderId);
+      paginationState.filteredOrders = paginationState.filteredOrders.filter(order => order.id !== orderId);
+      paginationState.totalOrders = paginationState.filteredOrders.length;
+      paginationState.totalPages = Math.ceil(paginationState.totalOrders / paginationState.pageSize);
+      
+      // 重新加载活跃订单和历史订单
+      displayOrdersPage(Math.min(paginationState.currentPage, paginationState.totalPages || 1));
+      renderPagination();
+      loadHistoryOrders();
+      
+      alert('订单已成功关闭');
+    })
+    .catch(error => {
+      console.error('关闭订单失败:', error);
+      alert('关闭订单失败，请重试');
+    });
+}
+
+// 将editOrder函数暴露到全局范围
+window.editOrder = editOrder;
+
+// 将viewQuotes函数暴露到全局范围
+window.viewQuotes = viewQuotes;
+
+// 将closeOrder函数暴露到全局范围 

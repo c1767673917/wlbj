@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -9,25 +9,53 @@ const PORT = process.env.PORT || 3000;
 
 // 确保数据文件夹存在
 const dataDir = path.join(__dirname, 'data');
+const fs = require('fs');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
-const ordersFile = path.join(dataDir, 'orders.json');
-const quotesFile = path.join(dataDir, 'quotes.json');
+// 设置SQLite数据库
+const dbPath = path.join(dataDir, 'logistics.db');
 
-// 如果数据文件不存在，创建它们
-if (!fs.existsSync(ordersFile)) {
-  fs.writeFileSync(ordersFile, JSON.stringify([]));
-}
-if (!fs.existsSync(quotesFile)) {
-  fs.writeFileSync(quotesFile, JSON.stringify([]));
-}
+// 如果需要重建数据库，请取消注释下面一行
+// // if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
+
+const db = new sqlite3.Database(dbPath);
+
+// 初始化数据库表
+db.serialize(() => {
+  // 创建订单表
+  db.run(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id TEXT PRIMARY KEY,
+      warehouse TEXT NOT NULL,
+      goods TEXT NOT NULL,
+      deliveryAddress TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT,
+      status TEXT DEFAULT 'active'
+    )
+  `);
+
+  // 创建报价表
+  db.run(`
+    CREATE TABLE IF NOT EXISTS quotes (
+      id TEXT PRIMARY KEY,
+      orderId TEXT NOT NULL,
+      provider TEXT NOT NULL,
+      price REAL NOT NULL,
+      estimatedDelivery TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      FOREIGN KEY (orderId) REFERENCES orders(id)
+    )
+  `);
+});
 
 // 中间件
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/xlsx', express.static(path.join(__dirname, 'node_modules/xlsx/dist')));
 
 // 添加CORS支持
 app.use((req, res, next) => {
@@ -39,13 +67,42 @@ app.use((req, res, next) => {
 
 // 路由 - 获取所有订单
 app.get('/api/orders', (req, res) => {
-  const orders = JSON.parse(fs.readFileSync(ordersFile));
-  res.json(orders);
+  const status = req.query.status;
+  
+  // 检查数据库中orders表是否有status列
+  db.get("PRAGMA table_info(orders)", (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: '数据库查询失败' });
+    }
+    
+    let query = 'SELECT * FROM orders';
+    let params = [];
+    
+    // 检查rows中是否有名为'status'的列
+    const hasStatusColumn = Array.isArray(rows) && rows.some(row => row.name === 'status');
+    
+    if (hasStatusColumn && status) {
+      // 如果有status列且提供了status参数，按status过滤
+      query += ' WHERE status = ? ORDER BY createdAt DESC';
+      params = [status];
+    } else {
+      // 否则返回所有订单
+      query += ' ORDER BY createdAt DESC';
+    }
+    
+    db.all(query, params, (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: '获取订单失败' });
+      }
+      res.json(rows || []);
+    });
+  });
 });
 
 // 提交新订单
 app.post('/api/orders', (req, res) => {
-  const orders = JSON.parse(fs.readFileSync(ordersFile));
   const newOrder = {
     id: Date.now().toString(),
     warehouse: req.body.warehouse,
@@ -54,37 +111,52 @@ app.post('/api/orders', (req, res) => {
     createdAt: new Date().toISOString()
   };
   
-  orders.push(newOrder);
-  fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
-  res.status(201).json(newOrder);
+  db.run(
+    'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt) VALUES (?, ?, ?, ?, ?)',
+    [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt],
+    function(err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: '创建订单失败' });
+      }
+      res.status(201).json(newOrder);
+    }
+  );
 });
 
 // 获取单个订单
 app.get('/api/orders/:id', (req, res) => {
-  const orders = JSON.parse(fs.readFileSync(ordersFile));
-  const order = orders.find(o => o.id === req.params.id);
-  
-  if (order) {
-    res.json(order);
-  } else {
-    res.status(404).json({ message: '订单未找到' });
-  }
+  db.get('SELECT * FROM orders WHERE id = ?', [req.params.id], (err, row) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: '获取订单失败' });
+    }
+    
+    if (row) {
+      res.json(row);
+    } else {
+      res.status(404).json({ message: '订单未找到' });
+    }
+  });
 });
 
 // 获取订单的报价
 app.get('/api/orders/:id/quotes', (req, res) => {
-  const quotes = JSON.parse(fs.readFileSync(quotesFile));
-  const orderQuotes = quotes.filter(q => q.orderId === req.params.id);
-  
-  // 按价格排序
-  orderQuotes.sort((a, b) => a.price - b.price);
-  
-  res.json(orderQuotes);
+  db.all(
+    'SELECT * FROM quotes WHERE orderId = ? ORDER BY price ASC',
+    [req.params.id],
+    (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: '获取报价失败' });
+      }
+      res.json(rows);
+    }
+  );
 });
 
 // 提交新报价
 app.post('/api/quotes', (req, res) => {
-  const quotes = JSON.parse(fs.readFileSync(quotesFile));
   const newQuote = {
     id: Date.now().toString(),
     orderId: req.body.orderId,
@@ -94,9 +166,17 @@ app.post('/api/quotes', (req, res) => {
     createdAt: new Date().toISOString()
   };
   
-  quotes.push(newQuote);
-  fs.writeFileSync(quotesFile, JSON.stringify(quotes, null, 2));
-  res.status(201).json(newQuote);
+  db.run(
+    'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+    [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
+    function(err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: '创建报价失败' });
+      }
+      res.status(201).json(newQuote);
+    }
+  );
 });
 
 // 前端路由
@@ -123,35 +203,69 @@ app.put('/api/orders/:id', (req, res) => {
       return res.status(400).json({ error: '所有字段都是必填的' });
     }
     
-    // 读取订单文件
-    const ordersFile = path.join(dataDir, 'orders.json');
-    if (!fs.existsSync(ordersFile)) {
-      return res.status(404).json({ error: '订单不存在' });
-    }
+    const updatedAt = new Date().toISOString();
     
-    let orders = JSON.parse(fs.readFileSync(ordersFile, 'utf8'));
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    
-    if (orderIndex === -1) {
-      return res.status(404).json({ error: '订单不存在' });
-    }
-    
-    // 更新订单信息，保留其他字段不变
-    orders[orderIndex] = {
-      ...orders[orderIndex],
-      warehouse,
-      goods,
-      deliveryAddress,
-      updatedAt: new Date().toISOString()
-    };
-    
-    // 保存回文件
-    fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
-    
-    res.json(orders[orderIndex]);
+    db.run(
+      'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, updatedAt = ? WHERE id = ?',
+      [warehouse, goods, deliveryAddress, updatedAt, orderId],
+      function(err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: '更新订单失败' });
+        }
+        
+        if (this.changes === 0) {
+          return res.status(404).json({ error: '订单不存在' });
+        }
+        
+        // 获取更新后的订单
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: '获取更新后的订单失败' });
+          }
+          res.json(row);
+        });
+      }
+    );
   } catch (error) {
     console.error('更新订单失败:', error);
     res.status(500).json({ error: '更新订单失败' });
+  }
+});
+
+// 关闭订单（移动到历史）
+app.put('/api/orders/:id/close', (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const updatedAt = new Date().toISOString();
+    
+    db.run(
+      'UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?',
+      ['closed', updatedAt, orderId],
+      function(err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: '关闭订单失败' });
+        }
+        
+        if (this.changes === 0) {
+          return res.status(404).json({ error: '订单不存在' });
+        }
+        
+        // 获取更新后的订单
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: '获取更新后的订单失败' });
+          }
+          res.json(row);
+        });
+      }
+    );
+  } catch (error) {
+    console.error('关闭订单失败:', error);
+    res.status(500).json({ error: '关闭订单失败' });
   }
 });
 
@@ -175,22 +289,71 @@ app.post('/api/orders/:id/quotes', (req, res) => {
       createdAt: new Date().toISOString()
     };
     
-    // 保存到文件
-    const quotesFile = path.join(dataDir, 'quotes.json');
-    let quotes = [];
-    
-    if (fs.existsSync(quotesFile)) {
-      quotes = JSON.parse(fs.readFileSync(quotesFile, 'utf8'));
-    }
-    
-    quotes.push(quote);
-    fs.writeFileSync(quotesFile, JSON.stringify(quotes, null, 2));
-    
-    res.status(201).json(quote);
+    db.run(
+      'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+      [quote.id, quote.orderId, quote.provider, quote.price, quote.estimatedDelivery, quote.createdAt],
+      function(err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: '创建报价失败' });
+        }
+        res.status(201).json(quote);
+      }
+    );
   } catch (error) {
     console.error('创建报价失败:', error);
     res.status(500).json({ error: '创建报价失败' });
   }
+});
+
+// 数据迁移：从JSON文件导入到SQLite
+const migrateData = () => {
+  const ordersFile = path.join(dataDir, 'orders.json');
+  const quotesFile = path.join(dataDir, 'quotes.json');
+  
+  // 导入订单数据
+  if (fs.existsSync(ordersFile)) {
+    try {
+      const orders = JSON.parse(fs.readFileSync(ordersFile, 'utf8'));
+      if (orders.length > 0) {
+        const stmt = db.prepare('INSERT OR IGNORE INTO orders (id, warehouse, goods, deliveryAddress, createdAt, status) VALUES (?, ?, ?, ?, ?, ?)');
+        orders.forEach(order => {
+          // 默认所有导入的订单为活跃状态
+          stmt.run(order.id, order.warehouse, order.goods, order.deliveryAddress, order.createdAt, 'active');
+        });
+        stmt.finalize();
+        console.log(`已成功导入 ${orders.length} 条订单数据`);
+      }
+    } catch (error) {
+      console.error('导入订单数据失败:', error);
+    }
+  }
+  
+  // 导入报价数据
+  if (fs.existsSync(quotesFile)) {
+    try {
+      const quotes = JSON.parse(fs.readFileSync(quotesFile, 'utf8'));
+      if (quotes.length > 0) {
+        const stmt = db.prepare('INSERT OR IGNORE INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)');
+        quotes.forEach(quote => {
+          stmt.run(quote.id, quote.orderId, quote.provider, quote.price, quote.estimatedDelivery, quote.createdAt);
+        });
+        stmt.finalize();
+        console.log(`已成功导入 ${quotes.length} 条报价数据`);
+      }
+    } catch (error) {
+      console.error('导入报价数据失败:', error);
+    }
+  }
+};
+
+// 执行数据迁移
+migrateData();
+
+// 关闭应用时关闭数据库连接
+process.on('SIGINT', () => {
+  db.close();
+  process.exit(0);
 });
 
 // 启动服务器
