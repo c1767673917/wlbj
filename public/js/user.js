@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // 加载活跃订单和历史订单
   loadActiveOrders();
   loadHistoryOrders();
+  // 新增: 页面加载时获取并显示物流公司列表
+  fetchAndDisplayProviders(); 
   
   // 绑定表单提交事件
   document.getElementById('new-order-form').addEventListener('submit', function(e) {
@@ -61,24 +63,53 @@ document.addEventListener('DOMContentLoaded', function() {
   const tabLinks = document.querySelectorAll('.tab-link');
   const tabContents = document.querySelectorAll('.tab-content');
 
+  // Function to activate a tab
+  function activateTab(tabId) {
+    tabLinks.forEach(innerLink => {
+      innerLink.classList.toggle('active', innerLink.getAttribute('data-tab') === tabId);
+    });
+    tabContents.forEach(content => {
+      content.classList.toggle('active', content.id === tabId);
+    });
+    localStorage.setItem('activeUserTab', tabId); // Save active tab to localStorage
+  }
+
   tabLinks.forEach(link => {
     link.addEventListener('click', function() {
       const tabId = this.getAttribute('data-tab');
-
-      // Update active state for links
-      tabLinks.forEach(innerLink => innerLink.classList.remove('active'));
-      this.classList.add('active');
-
-      // Update active state for content
-      tabContents.forEach(content => {
-        if (content.id === tabId) {
-          content.classList.add('active');
-        } else {
-          content.classList.remove('active');
-        }
-      });
+      activateTab(tabId);
     });
   });
+
+  // Restore active tab from localStorage on page load
+  const savedTabId = localStorage.getItem('activeUserTab');
+  if (savedTabId) {
+    // Check if the saved tab still exists in the DOM
+    const savedTabLink = document.querySelector(`.tab-link[data-tab="${savedTabId}"]`);
+    const savedTabContent = document.getElementById(savedTabId);
+    if (savedTabLink && savedTabContent) {
+        // Deactivate default active tab (which might be hardcoded in HTML or the first one)
+        const defaultActiveLink = document.querySelector('.tab-link.active');
+        const defaultActiveContent = document.querySelector('.tab-content.active');
+        if (defaultActiveLink) defaultActiveLink.classList.remove('active');
+        if (defaultActiveContent) defaultActiveContent.classList.remove('active');
+        
+        activateTab(savedTabId); // Activate the saved tab
+    } else {
+        // Saved tab ID is invalid or element doesn't exist, remove it from storage
+        localStorage.removeItem('activeUserTab');
+        // Optionally, activate the default first tab if no valid saved tab
+        // if (tabLinks.length > 0) activateTab(tabLinks[0].getAttribute('data-tab'));
+        // Or let the default HTML active class take precedence if that's how it's set up
+    }
+  } else {
+    // No saved tab, ensure the default one (usually first with .active class in HTML) is shown
+    // Or explicitly activate the first tab if none are marked active in HTML
+    const currentActiveLink = document.querySelector('.tab-link.active');
+    if (!currentActiveLink && tabLinks.length > 0) {
+        activateTab(tabLinks[0].getAttribute('data-tab'));
+    }
+  }
 });
 
 // 显示自定义Toast提示
@@ -276,48 +307,89 @@ async function recognizeWithAI() {
 
 // 加载活跃订单
 function loadActiveOrders() {
-  fetch('/api/orders?status=active')
+  const { currentPage, pageSize, searchQuery } = paginationState;
+  let apiUrl = `/api/orders?status=active&page=${currentPage}&pageSize=${pageSize}`;
+  // 如果有搜索查询，理想情况下后端API应支持搜索参数
+  // if (searchQuery) { apiUrl += `&q=${encodeURIComponent(searchQuery)}`; }
+
+  fetch(apiUrl)
     .then(response => response.json())
-    .then(orders => {
-      // 确保orders是数组
-      const ordersArray = Array.isArray(orders) ? orders : [];
+    .then(data => { // data is { items: [], totalItems, totalPages, currentPage, pageSize }
+      paginationState.allOrders = data.items; // allOrders now stores current page's items
       
-      // 存储所有订单
-      paginationState.allOrders = ordersArray;
-      paginationState.filteredOrders = ordersArray;
-      paginationState.totalOrders = ordersArray.length;
-      paginationState.totalPages = Math.ceil(ordersArray.length / paginationState.pageSize);
+      // 如果有搜索，需要在这里应用前端搜索，或者理想情况是后端支持搜索
+      // For now, if searchQuery exists, we filter current page items.
+      // This is not ideal for pagination accuracy if search reduces item count significantly.
+      if (searchQuery) {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        paginationState.filteredOrders = data.items.filter(order =>
+          order.id.toLowerCase().includes(lowerCaseQuery) ||
+          order.warehouse.toLowerCase().includes(lowerCaseQuery) ||
+          order.goods.toLowerCase().includes(lowerCaseQuery) ||
+          order.deliveryAddress.toLowerCase().includes(lowerCaseQuery)
+        );
+      } else {
+        paginationState.filteredOrders = data.items;
+      }
       
-      // 显示当前页的订单
-      displayOrdersPage(1);
+      paginationState.totalOrders = data.totalItems;
+      paginationState.totalPages = data.totalPages;
+      // paginationState.currentPage is already set or will be by displayOrdersPage call
+
+      // 显示当前页的订单 (displayOrdersPage should now just render, not fetch)
+      _renderActiveOrdersPage(); // Call a new render-only function
       
       // 更新分页控件
       renderPagination();
     })
-    .catch(error => console.error('加载订单失败:', error));
+    .catch(error => {
+      console.error('加载活跃订单失败:', error);
+      // Optionally clear table and show error message
+      const ordersTableBody = document.querySelector('#orders-table tbody');
+      if (ordersTableBody) ordersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">加载订单失败</td></tr>';
+      paginationState.totalOrders = 0;
+      paginationState.totalPages = 1;
+      renderPagination();
+    });
 }
 
 // 加载历史订单
 function loadHistoryOrders() {
-  fetch('/api/orders?status=closed')
+  const { currentPage, pageSize, searchQuery } = historyPaginationState;
+  let apiUrl = `/api/orders?status=closed&page=${currentPage}&pageSize=${pageSize}`;
+  // if (searchQuery) { apiUrl += `&q=${encodeURIComponent(searchQuery)}`; } // Backend search support needed for accuracy
+
+  fetch(apiUrl)
     .then(response => response.json())
-    .then(orders => {
-      // 确保orders是数组
-      const ordersArray = Array.isArray(orders) ? orders : [];
+    .then(data => { // data is { items: [], totalItems, totalPages, currentPage, pageSize }
+      historyPaginationState.allOrders = data.items; // allOrders now stores current page's items
+
+      if (searchQuery) {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        historyPaginationState.filteredOrders = data.items.filter(order =>
+          order.id.toLowerCase().includes(lowerCaseQuery) ||
+          order.warehouse.toLowerCase().includes(lowerCaseQuery) ||
+          order.goods.toLowerCase().includes(lowerCaseQuery) ||
+          order.deliveryAddress.toLowerCase().includes(lowerCaseQuery)
+        );
+      } else {
+        historyPaginationState.filteredOrders = data.items;
+      }
       
-      // 存储所有历史订单
-      historyPaginationState.allOrders = ordersArray;
-      historyPaginationState.filteredOrders = ordersArray;
-      historyPaginationState.totalOrders = ordersArray.length;
-      historyPaginationState.totalPages = Math.ceil(ordersArray.length / historyPaginationState.pageSize);
-      
-      // 显示当前页的历史订单
-      displayHistoryOrdersPage(1);
-      
-      // 更新历史分页控件
+      historyPaginationState.totalOrders = data.totalItems;
+      historyPaginationState.totalPages = data.totalPages;
+
+      _renderHistoryOrdersPage(); // Call new render-only function
       renderHistoryPagination();
     })
-    .catch(error => console.error('加载历史订单失败:', error));
+    .catch(error => {
+      console.error('加载历史订单失败:', error);
+      const historyTableBody = document.querySelector('#history-orders-table tbody');
+      if (historyTableBody) historyTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">加载历史订单失败</td></tr>';
+      historyPaginationState.totalOrders = 0;
+      historyPaginationState.totalPages = 1;
+      renderHistoryPagination();
+    });
 }
 
 // 提交新订单
@@ -345,33 +417,30 @@ function submitNewOrder() {
     .catch(error => console.error('创建订单失败:', error));
 }
 
-// 显示特定页的订单
-function displayOrdersPage(page) {
-  paginationState.currentPage = page;
+// Actual rendering function for active orders
+function _renderActiveOrdersPage() {
   const ordersTableBody = document.querySelector('#orders-table tbody');
-  ordersTableBody.innerHTML = '';
+  ordersTableBody.innerHTML = ''; // Clear previous items
   
-  if (paginationState.filteredOrders.length === 0) {
+  // filteredOrders now contains the items for the current page after potential client-side search filtering
+  const currentPageOrdersToDisplay = paginationState.filteredOrders;
+
+  if (currentPageOrdersToDisplay.length === 0) {
     const emptyRow = document.createElement('tr');
     if (paginationState.searchQuery) {
       emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">没有找到匹配的订单</td>';
-    } else {
-      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">暂无订单</td>';
+    } else if (paginationState.totalOrders === 0) { // Check if there are no orders at all
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">暂无活跃订单</td>';
+    } else { // Orders exist, but not on this page (or filtered out)
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">当前页没有订单</td>';
     }
     ordersTableBody.appendChild(emptyRow);
+    updatePaginationInfo(); // Update "Showing X to Y of Z"
     return;
   }
   
-  // 计算当前页的订单
-  const startIndex = (page - 1) * paginationState.pageSize;
-  const endIndex = Math.min(startIndex + paginationState.pageSize, paginationState.totalOrders);
-  const currentPageOrders = paginationState.filteredOrders
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(startIndex, endIndex);
-  
-  // 显示当前页的订单
-  currentPageOrders.forEach(order => {
-    // 创建主行
+  // currentPageOrdersToDisplay are already sorted if needed by server or previous step
+  currentPageOrdersToDisplay.forEach(order => {
     const row = document.createElement('tr');
     row.setAttribute('data-order-id', order.id);
     const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
@@ -436,6 +505,19 @@ function displayOrdersPage(page) {
   
   // 更新分页信息
   updatePaginationInfo();
+}
+
+// This function is called by pagination buttons. It sets the new page and triggers data loading.
+function displayOrdersPage(page) {
+  if (paginationState.currentPage !== page || paginationState.searchQuery) { // Reload if page changes or if there was a search (to reset to non-searched page)
+    paginationState.currentPage = page;
+    // paginationState.searchQuery = ''; // Optionally reset search when changing page via main pagination
+    // document.getElementById('search-input').value = ''; // Optionally clear search input
+    loadActiveOrders(); // Fetches and then renders the new page via _renderActiveOrdersPage
+  } else {
+    // If page is the same, and data is already loaded, re-render (e.g., after a sort or filter on current page if implemented)
+    _renderActiveOrdersPage();
+  }
 }
 
 // 更新分页信息
@@ -889,46 +971,45 @@ function resetHistorySearch() {
   renderHistoryPagination();
 }
 
-// 显示历史订单页
-function displayHistoryOrdersPage(page) {
-  historyPaginationState.currentPage = page;
-  const ordersTableBody = document.querySelector('#history-orders-table tbody');
-  ordersTableBody.innerHTML = '';
-  
-  if (historyPaginationState.filteredOrders.length === 0) {
+// Actual rendering function for history orders (was part of displayHistoryOrdersPage)
+// Note: The 'fetchLowestQuote' logic is removed from history orders as it's usually not relevant for closed/historical orders.
+// If it IS relevant, it needs to be added back, similar to _renderActiveOrdersPage.
+// For simplicity and common use case, I am assuming historical orders don't need to show current lowest quote.
+function _renderHistoryOrdersPage() {
+  const historyTableBody = document.querySelector('#history-orders-table tbody');
+  historyTableBody.innerHTML = ''; // Clear previous items
+
+  const currentPageHistoryOrdersToDisplay = historyPaginationState.filteredOrders;
+
+  if (currentPageHistoryOrdersToDisplay.length === 0) {
     const emptyRow = document.createElement('tr');
     if (historyPaginationState.searchQuery) {
       emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">没有找到匹配的历史订单</td>';
-    } else {
+    } else if (historyPaginationState.totalOrders === 0) {
       emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">暂无历史订单</td>';
+    } else {
+      emptyRow.innerHTML = '<td colspan="7" style="text-align: center;">当前页没有历史订单</td>';
     }
-    ordersTableBody.appendChild(emptyRow);
+    historyTableBody.appendChild(emptyRow);
+    updateHistoryPaginationInfo(); // Update "Showing X to Y of Z"
     return;
   }
   
-  // 计算当前页的订单
-  const startIndex = (page - 1) * historyPaginationState.pageSize;
-  const endIndex = Math.min(startIndex + historyPaginationState.pageSize, historyPaginationState.totalOrders);
-  const currentPageOrders = historyPaginationState.filteredOrders
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(startIndex, endIndex);
-  
-  // 显示当前页的订单
-  currentPageOrders.forEach(order => {
-    // 创建主行
+  currentPageHistoryOrdersToDisplay.forEach(order => {
     const row = document.createElement('tr');
-    row.setAttribute('data-order-id', order.id);
+    row.setAttribute('data-order-id', order.id); // Keep data-order-id for viewQuotes
     const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
-    
-    // 获取该订单的最低报价
+    // const updatedAt = order.updatedAt ? new Date(order.updatedAt).toLocaleString('zh-CN') : 'N/A'; // No longer displayed directly in the main row
+
+    // Fetch and display lowest quote, similar to active orders
     fetchLowestQuote(order.id)
       .then(lowestQuote => {
-        const lowestQuoteHtml = lowestQuote 
-          ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}` 
+        const lowestQuoteHtml = lowestQuote
+          ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}`
           : '暂无报价';
         
         row.innerHTML = `
-          <td>${order.id.substring(0, 8)}</td>
+          <td>${order.id.substring(0,8)}</td>
           <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
           <td>${order.goods}</td>
           <td>${order.deliveryAddress}</td>
@@ -942,36 +1023,47 @@ function displayHistoryOrdersPage(page) {
         `;
       })
       .catch(error => {
-        console.error('获取最低报价失败:', error);
-        
-        // 如果获取报价失败，仍然显示订单，但没有报价信息
-    row.innerHTML = `
-      <td>${order.id.substring(0, 8)}</td>
+        console.error(`获取订单 ${order.id} 的最低报价失败:`, error);
+        row.innerHTML = `
+          <td>${order.id.substring(0,8)}</td>
           <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
           <td>${order.goods}</td>
           <td>${order.deliveryAddress}</td>
           <td>获取报价失败</td>
-      <td>${createdDate}</td>
-      <td class="action-cell">
+          <td>${createdDate}</td>
+          <td class="action-cell">
             <div class="button-row">
               <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
             </div>
-      </td>
-    `;
+          </td>
+        `;
       });
-    
-    ordersTableBody.appendChild(row);
-    
-    // 创建用于显示报价的行（初始隐藏）
+      
+    historyTableBody.appendChild(row);
+
+    // Create the quote display row (initially hidden), similar to active orders
     const quoteRow = document.createElement('tr');
-    quoteRow.className = 'quote-row';
+    quoteRow.className = 'quote-row'; // Ensure this class is styled if not already
     quoteRow.style.display = 'none';
-    quoteRow.innerHTML = '<td colspan="7" class="quote-row-content"></td>';
-    ordersTableBody.appendChild(quoteRow);
+    quoteRow.innerHTML = `<td colspan="7" class="quote-row-content"></td>`; // Colspan should match number of columns
+    historyTableBody.appendChild(quoteRow);
   });
   
-  // 更新分页信息
   updateHistoryPaginationInfo();
+}
+
+
+// This function is called by pagination buttons for history orders.
+function displayHistoryOrdersPage(page) {
+  if (historyPaginationState.currentPage !== page || historyPaginationState.searchQuery) { // Reload if page changes or if there was a search
+    historyPaginationState.currentPage = page;
+    // historyPaginationState.searchQuery = ''; // Optionally reset search
+    // document.getElementById('history-search-input').value = ''; // Optionally clear search input
+    loadHistoryOrders(); // Fetches and then renders the new page via _renderHistoryOrdersPage
+  } else {
+    // If page is the same, and data is already loaded, re-render
+    _renderHistoryOrdersPage();
+  }
 }
 
 // 更新历史分页信息
@@ -1087,3 +1179,102 @@ window.editOrder = editOrder;
 window.viewQuotes = viewQuotes;
 
 // 将closeOrder函数暴露到全局范围 
+
+// --- 新增: 物流公司管理功能 ---
+async function addProvider() {
+    const nameInput = document.getElementById('providerNameInput');
+    const providerName = nameInput.value.trim();
+    const statusElement = document.getElementById('addProviderStatus');
+
+    if (!providerName) {
+        statusElement.textContent = '请输入物流公司名称。';
+        statusElement.style.color = 'red';
+        return;
+    }
+
+    statusElement.textContent = '正在添加...';
+    statusElement.style.color = 'blue';
+
+    try {
+        const response = await fetch('/api/providers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: providerName }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            statusElement.textContent = `物流公司 "${result.name}" 添加成功！专属链接已生成。`;
+            statusElement.style.color = 'green';
+            nameInput.value = ''; // 清空输入框
+            fetchAndDisplayProviders(); // 刷新列表
+        } else {
+            statusElement.textContent = `添加失败: ${result.error || response.statusText}`;
+            statusElement.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('添加物流公司时发生错误:', error);
+        statusElement.textContent = '添加过程中发生网络或服务器错误。';
+        statusElement.style.color = 'red';
+    }
+}
+
+async function fetchAndDisplayProviders() {
+    const providersListBody = document.getElementById('providersList');
+    // const statusElement = document.getElementById('addProviderStatus'); // 通常用于添加操作的状态，列表加载可以有自己的状态显示或静默失败
+
+    try {
+        const response = await fetch('/api/providers'); 
+        if (!response.ok) {
+            // 修改错误处理逻辑
+            let errorMsg = `加载物流公司列表失败，状态码: ${response.status}`;
+            try {
+                const errData = await response.json();
+                errorMsg = errData.error || errorMsg;
+            } catch (e) { /* 忽略解析错误，使用上面的状态码错误 */ }
+            console.error('Error fetching providers list:', errorMsg);
+            providersListBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">${errorMsg}</td></tr>`;
+            return; 
+        }
+
+        const data = await response.json();
+        const providers = Array.isArray(data) ? data : data.providers; 
+
+        providersListBody.innerHTML = ''; // 清空现有列表
+
+        if (providers && providers.length > 0) {
+            providers.forEach(provider => {
+                const row = providersListBody.insertRow();
+                row.insertCell().textContent = provider.name;
+                
+                const linkCell = row.insertCell();
+                const accessLink = `${window.location.origin}/provider/${provider.accessKey}`;
+                const linkElement = document.createElement('a');
+                linkElement.href = accessLink;
+                linkElement.textContent = accessLink;
+                linkElement.target = '_blank'; // 在新标签页打开
+                linkCell.appendChild(linkElement);
+                // 添加复制按钮
+                const copyButton = document.createElement('button');
+                copyButton.textContent = '复制';
+                copyButton.style.marginLeft = '10px';
+                copyButton.onclick = () => {
+                    navigator.clipboard.writeText(accessLink)
+                        .then(() => alert('链接已复制到剪贴板！'))
+                        .catch(err => console.error('复制失败: ', err));
+                };
+                linkCell.appendChild(copyButton);
+
+                row.insertCell().textContent = new Date(provider.createdAt).toLocaleString();
+            });
+        } else {
+            providersListBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">暂无物流公司。请在上方添加。</td></tr>';
+        }
+    } catch (error) {
+        console.error('获取物流公司列表时发生错误:', error);
+        providersListBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: red;">获取物流公司列表时发生网络或未知错误。</td></tr>';
+    }
+} 

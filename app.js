@@ -49,6 +49,16 @@ db.serialize(() => {
       FOREIGN KEY (orderId) REFERENCES orders(id)
     )
   `);
+
+  // 创建物流公司表 (新增)
+  db.run(`
+    CREATE TABLE IF NOT EXISTS providers (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL UNIQUE,
+      accessKey TEXT NOT NULL UNIQUE,
+      createdAt TEXT NOT NULL
+    )
+  `);
 });
 
 // 中间件
@@ -68,35 +78,62 @@ app.use((req, res, next) => {
 // 路由 - 获取所有订单
 app.get('/api/orders', (req, res) => {
   const status = req.query.status;
-  
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10; // 默认每页10条
+  const offset = (page - 1) * pageSize;
+
+  let params = [];
+  let countParams = []; // Params for count query might be different if no status column
+  let whereClauses = [];
+
   // 检查数据库中orders表是否有status列
-  db.get("PRAGMA table_info(orders)", (err, rows) => {
+  db.get("PRAGMA table_info(orders)", (err, tableInfo) => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: '数据库查询失败' });
+      console.error("PRAGMA table_info error:", err);
+      return res.status(500).json({ error: '查询数据库表结构失败' });
     }
-    
-    let query = 'SELECT * FROM orders';
-    let params = [];
-    
-    // 检查rows中是否有名为'status'的列
-    const hasStatusColumn = Array.isArray(rows) && rows.some(row => row.name === 'status');
-    
+
+    const hasStatusColumn = Array.isArray(tableInfo) && tableInfo.some(col => col.name === 'status');
+
     if (hasStatusColumn && status) {
-      // 如果有status列且提供了status参数，按status过滤
-      query += ' WHERE status = ? ORDER BY createdAt DESC';
-      params = [status];
-    } else {
-      // 否则返回所有订单
-      query += ' ORDER BY createdAt DESC';
+      whereClauses.push('status = ?');
+      params.push(status);
+      countParams.push(status);
     }
     
-    db.all(query, params, (err, rows) => {
+    let countQuery = 'SELECT COUNT(*) as total FROM orders';
+    let dataQuery = 'SELECT * FROM orders';
+
+    if (whereClauses.length > 0) {
+      const whereString = ' WHERE ' + whereClauses.join(' AND ');
+      countQuery += whereString;
+      dataQuery += whereString;
+    }
+
+    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+    params.push(pageSize, offset);
+
+    db.get(countQuery, countParams, (err, countRow) => {
       if (err) {
-        console.error(err);
-        return res.status(500).json({ error: '获取订单失败' });
+        console.error("Count query error:", err);
+        return res.status(500).json({ error: '获取订单总数失败' });
       }
-      res.json(rows || []);
+      const totalItems = countRow.total;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      db.all(dataQuery, params, (err, items) => {
+        if (err) {
+          console.error("Data query error:", err);
+          return res.status(500).json({ error: '获取订单失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize
+        });
+      });
     });
   });
 });
@@ -104,7 +141,7 @@ app.get('/api/orders', (req, res) => {
 // 提交新订单
 app.post('/api/orders', (req, res) => {
   const newOrder = {
-    id: Date.now().toString(),
+    id: uuidv4(),
     warehouse: req.body.warehouse,
     goods: req.body.goods,
     deliveryAddress: req.body.deliveryAddress,
@@ -122,6 +159,77 @@ app.post('/api/orders', (req, res) => {
       res.status(201).json(newOrder);
     }
   );
+});
+
+// 获取可报价订单 (特定供应商未报价的订单，分页)
+app.get('/api/orders/available', (req, res) => {
+  const accessKey = req.query.accessKey;
+  // const status = req.query.status; // 'status' query parameter no longer primarily drives this, fixed to 'active'
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
+
+  if (!accessKey) {
+    return res.status(400).json({ error: '必须提供 accessKey 进行查询' });
+  }
+
+  db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
+    if (err) {
+      console.error("Error fetching provider by accessKey:", err);
+      return res.status(500).json({ error: '查询物流商信息失败' });
+    }
+    if (!providerRow) {
+      return res.status(404).json({ error: '无效的 accessKey 或物流商不存在' });
+    }
+    const providerName = providerRow.name;
+
+    // --- Modified Section for Params and Where Clauses ---
+    // Parameters for the main query, always filtering for 'active' status
+    let queryParams = [providerName, 'active'];
+    // Parameters for the count query
+    let countQueryParams = [providerName, 'active'];
+
+    let commonWhereClauses = [
+      `id NOT IN (SELECT orderId FROM quotes WHERE provider = ?)`,
+      `status = ?` // Hardcoded to filter by active status
+    ];
+    // --- End of Modified Section ---
+
+    // The PRAGMA table_info check and conditional push based on req.query.status are removed
+    // as this endpoint now consistently filters for 'active' orders for quoting.
+
+    const whereString = ' WHERE ' + commonWhereClauses.join(' AND ');
+    let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+    let dataQuery = 'SELECT * FROM orders' + whereString;
+
+    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+    // Add pageSize and offset to the parameters for the data retrieval query
+    let finalDataParams = [...queryParams, pageSize, offset];
+
+    db.get(countQuery, countQueryParams, (err, countRow) => {
+      if (err) {
+        console.error("Count query error (available orders):", err);
+        return res.status(500).json({ error: '获取可报价订单总数失败' });
+      }
+      const totalItems = countRow ? countRow.total : 0; // Ensure countRow is not null
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      db.all(dataQuery, finalDataParams, (err, items) => {
+        if (err) {
+          console.error("Data query error (available orders):", err);
+          return res.status(500).json({ error: '获取可报价订单失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize,
+          providerName // Optionally return providerName if useful for client
+        });
+      });
+    });
+  });
 });
 
 // 获取单个订单
@@ -155,28 +263,208 @@ app.get('/api/orders/:id/quotes', (req, res) => {
   );
 });
 
-// 提交新报价
+// 获取报价 (可按provider过滤, 修改为按 accessKey 过滤)
+app.get('/api/quotes', (req, res) => {
+  const accessKey = req.query.accessKey;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
+
+  let params = [];
+  let countParams = [];
+  let whereClauses = [];
+
+  if (accessKey) {
+    db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
+      if (err) {
+        console.error("Error fetching provider by accessKey for quotes:", err);
+        return res.status(500).json({ error: '查询物流商信息失败' });
+      }
+      if (!providerRow) {
+        return res.json({ items: [], totalItems: 0, totalPages: 0, currentPage: page, pageSize });
+      }
+      const providerName = providerRow.name;
+      
+      whereClauses.push('provider = ?');
+      params.push(providerName);
+      countParams.push(providerName);
+      
+      executeQuery();
+    });
+  } else {
+    executeQuery();
+  }
+  
+  function executeQuery() {
+    let countQuery = 'SELECT COUNT(*) as total FROM quotes';
+    let dataQuery = 'SELECT * FROM quotes';
+
+    if (whereClauses.length > 0) {
+      const whereString = ' WHERE ' + whereClauses.join(' AND ');
+      countQuery += whereString;
+      dataQuery += whereString;
+    }
+
+    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+    params.push(pageSize, offset);
+
+    db.get(countQuery, countParams, (err, countRow) => {
+      if (err) {
+        console.error("Count query error (quotes):", err);
+        return res.status(500).json({ error: '获取报价总数失败' });
+      }
+      const totalItems = countRow ? countRow.total : 0;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      db.all(dataQuery, params, (err, items) => {
+        if (err) {
+          console.error("Data query error (quotes):", err);
+          return res.status(500).json({ error: '获取报价失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize
+        });
+      });
+    });
+  }
+});
+
+// 提交新报价 (修改: 使用 accessKey 确认物流商)
 app.post('/api/quotes', (req, res) => {
-  const newQuote = {
-    id: Date.now().toString(),
-    orderId: req.body.orderId,
-    provider: req.body.provider,
-    price: parseFloat(req.body.price),
-    estimatedDelivery: req.body.estimatedDelivery,
+  const { orderId, price, estimatedDelivery, accessKey } = req.body;
+
+  if (!orderId || !price || !estimatedDelivery || !accessKey) {
+    return res.status(400).json({ error: 'orderId, price, estimatedDelivery 和 accessKey 都是必填的' });
+  }
+
+  db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
+    if (err) {
+      console.error("Error fetching provider by accessKey for submitting quote:", err);
+      return res.status(500).json({ error: '查询物流商信息失败' });
+    }
+    if (!providerRow) {
+      return res.status(403).json({ error: '无效的 accessKey 或物流商不允许操作' });
+    }
+    const providerName = providerRow.name;
+
+    db.get('SELECT status FROM orders WHERE id = ?', [orderId], (err, orderRow) => {
+        if (err) {
+            console.error("Error fetching order details:", err);
+            return res.status(500).json({ error: '查询订单信息失败' });
+        }
+        if (!orderRow) {
+            return res.status(404).json({ error: '订单不存在' });
+        }
+        if (orderRow.status !== 'active') {
+            return res.status(400).json({ error: `订单状态为 "${orderRow.status}"，不可报价` });
+        }
+
+        db.get('SELECT id FROM quotes WHERE orderId = ? AND provider = ?', [orderId, providerName], (err, existingQuote) => {
+            if (err) {
+                console.error("Error checking existing quote:", err);
+                return res.status(500).json({ error: '检查现有报价失败' });
+            }
+            if (existingQuote) {
+                return res.status(409).json({ error: '您已对该订单报过价' });
+            }
+
+            const newQuote = {
+              id: uuidv4(),
+              orderId: orderId,
+              provider: providerName,
+              price: parseFloat(price),
+              estimatedDelivery: estimatedDelivery,
+              createdAt: new Date().toISOString()
+            };
+            
+            db.run(
+              'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+              [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
+              function(err) {
+                if (err) {
+                  console.error(err);
+                  return res.status(500).json({ error: '创建报价失败' });
+                }
+                res.status(201).json(newQuote);
+              }
+            );
+        });
+    });
+  });
+});
+
+// API - 添加新的物流公司 (新增)
+app.post('/api/providers', (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: '物流公司名称是必填的' });
+  }
+
+  const newProvider = {
+    id: uuidv4(),
+    name: name,
+    accessKey: uuidv4(), // 使用 uuid 作为 accessKey 保证唯一性
     createdAt: new Date().toISOString()
   };
-  
+
   db.run(
-    'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
-    [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
+    'INSERT INTO providers (id, name, accessKey, createdAt) VALUES (?, ?, ?, ?)',
+    [newProvider.id, newProvider.name, newProvider.accessKey, newProvider.createdAt],
     function(err) {
       if (err) {
+        // SQLite UNIQUE constraint failure error code is SQLITE_CONSTRAINT
+        if (err.message && err.message.includes('UNIQUE constraint failed: providers.name')) {
+          return res.status(409).json({ error: '该物流公司名称已存在' });
+        }
+        if (err.message && err.message.includes('UNIQUE constraint failed: providers.accessKey')) {
+          // 理论上 accessKey (uuid) 碰撞概率极低，但以防万一
+          return res.status(500).json({ error: '生成专属链接失败，请重试' });
+        }
         console.error(err);
-        return res.status(500).json({ error: '创建报价失败' });
+        return res.status(500).json({ error: '添加物流公司失败' });
       }
-      res.status(201).json(newQuote);
+      // 返回新创建的物流公司信息，包含 accessKey
+      res.status(201).json({
+        id: newProvider.id,
+        name: newProvider.name,
+        accessKey: newProvider.accessKey,
+        createdAt: newProvider.createdAt
+      });
     }
   );
+});
+
+// API - 获取所有物流公司 (新增)
+app.get('/api/providers', (req, res) => {
+  db.all('SELECT id, name, accessKey, createdAt FROM providers ORDER BY createdAt DESC', [], (err, providers) => {
+    if (err) {
+      console.error("Error fetching providers:", err);
+      return res.status(500).json({ error: '获取物流公司列表失败' });
+    }
+    res.json(providers); //直接返回数组
+  });
+});
+
+// API - 根据 accessKey 获取单个物流公司详细信息 (新增)
+app.get('/api/provider-details', (req, res) => {
+  const accessKey = req.query.accessKey;
+  if (!accessKey) {
+    return res.status(400).json({ error: '必须提供 accessKey' });
+  }
+  db.get('SELECT id, name, accessKey, createdAt FROM providers WHERE accessKey = ?', [accessKey], (err, provider) => {
+    if (err) {
+      console.error("Error fetching provider details by accessKey:", err);
+      return res.status(500).json({ error: '查询物流公司信息失败' });
+    }
+    if (!provider) {
+      return res.status(404).json({ error: '找不到具有指定 accessKey 的物流公司' });
+    }
+    res.json(provider);
+  });
 });
 
 // 前端路由
@@ -188,8 +476,18 @@ app.get('/user', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-app.get('/provider', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'provider.html'));
+app.get('/provider/:accessKey', (req, res) => {
+  const accessKey = req.params.accessKey;
+  db.get('SELECT id, name FROM providers WHERE accessKey = ?', [accessKey], (err, provider) => {
+    if (err) {
+      console.error('Error validating accessKey:', err);
+      return res.status(500).send('服务器错误');
+    }
+    if (!provider) {
+      return res.status(404).send('页面未找到或无效的访问链接。请确保链接正确，或联系管理员。');
+    }
+    res.sendFile(path.join(__dirname, 'views', 'provider.html'));
+  });
 });
 
 // 更新订单
@@ -305,50 +603,6 @@ app.post('/api/orders/:id/quotes', (req, res) => {
     res.status(500).json({ error: '创建报价失败' });
   }
 });
-
-// 数据迁移：从JSON文件导入到SQLite
-const migrateData = () => {
-  const ordersFile = path.join(dataDir, 'orders.json');
-  const quotesFile = path.join(dataDir, 'quotes.json');
-  
-  // 导入订单数据
-  if (fs.existsSync(ordersFile)) {
-    try {
-      const orders = JSON.parse(fs.readFileSync(ordersFile, 'utf8'));
-      if (orders.length > 0) {
-        const stmt = db.prepare('INSERT OR IGNORE INTO orders (id, warehouse, goods, deliveryAddress, createdAt, status) VALUES (?, ?, ?, ?, ?, ?)');
-        orders.forEach(order => {
-          // 默认所有导入的订单为活跃状态
-          stmt.run(order.id, order.warehouse, order.goods, order.deliveryAddress, order.createdAt, 'active');
-        });
-        stmt.finalize();
-        console.log(`已成功导入 ${orders.length} 条订单数据`);
-      }
-    } catch (error) {
-      console.error('导入订单数据失败:', error);
-    }
-  }
-  
-  // 导入报价数据
-  if (fs.existsSync(quotesFile)) {
-    try {
-      const quotes = JSON.parse(fs.readFileSync(quotesFile, 'utf8'));
-      if (quotes.length > 0) {
-        const stmt = db.prepare('INSERT OR IGNORE INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)');
-        quotes.forEach(quote => {
-          stmt.run(quote.id, quote.orderId, quote.provider, quote.price, quote.estimatedDelivery, quote.createdAt);
-        });
-        stmt.finalize();
-        console.log(`已成功导入 ${quotes.length} 条报价数据`);
-      }
-    } catch (error) {
-      console.error('导入报价数据失败:', error);
-    }
-  }
-};
-
-// 执行数据迁移
-migrateData();
 
 // 关闭应用时关闭数据库连接
 process.on('SIGINT', () => {

@@ -117,91 +117,89 @@
   </style>
 </head>
 <body>
-  
-  <div class="container">
-    
-    <div class="form-container">
-      <h2>物流商信息</h2>
-      <form id="provider-info-form">
-        <div class="form-group">
-          <label for="providerName">物流公司名称</label>
-          <input type="text" id="providerName" name="providerName" required>
+  <header>
+    <h1>物流供应商操作平台</h1>
+    <p id="providerNameDisplay" style="font-size: 1.2em; color: #e0e0e0;">物流公司: <span style="font-weight: bold;">加载中...</span></p>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="list-container">
+        <h2>可报价订单</h2>
+        <div id="available-orders-list">
+          <table id="available-orders-table" class="data-table">
+            <thead>
+              <tr>
+                <th>订单编号</th>
+                <th>发货仓库</th>
+                <th>货物信息</th>
+                <th>收货信息</th>
+                <th>发布时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 订单数据将通过JavaScript动态添加 -->
+            </tbody>
+          </table>
+          <div id="available-orders-pagination-info" class="pagination-info"></div>
+          <div id="available-orders-pagination" class="pagination-controls"></div>
         </div>
-        <button type="submit">保存信息</button>
-      </form>
-    </div>
-    
-    <div class="list-container">
-      <h2>可报价订单</h2>
-      <div id="available-orders-list">
-        <table id="available-orders-table" class="data-table">
-          <thead>
-            <tr>
-              <th>订单编号</th>
-              <th>发货仓库</th>
-              <th>货物信息</th>
-              <th>收货信息</th>
-              <th>发布时间</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- 订单数据将通过JavaScript动态添加 -->
-          </tbody>
-        </table>
-        <div id="available-orders-pagination-info" class="pagination-info"></div>
-        <div id="available-orders-pagination" class="pagination-controls"></div>
+      </div>
+      
+      <div class="history-container">
+        <h2>我的报价历史</h2>
+        <div id="provider-history-list">
+          <table id="provider-history-table" class="data-table">
+            <thead>
+              <tr>
+                <th>订单编号</th>
+                <th>发货仓库</th>
+                <th>收货信息</th>
+                <th>报价(元)</th>
+                <th>预计送达时间</th>
+                <th>报价时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 历史报价数据将通过JavaScript动态添加 -->
+            </tbody>
+          </table>
+          <div id="provider-history-pagination-info" class="pagination-info"></div>
+          <div id="provider-history-pagination" class="pagination-controls"></div>
+        </div>
       </div>
     </div>
     
-    <div class="history-container">
-      <h2>我的报价历史</h2>
-      <div id="provider-history-list">
-        <table id="provider-history-table" class="data-table">
-          <thead>
-            <tr>
-              <th>订单编号</th>
-              <th>发货仓库</th>
-              <th>收货信息</th>
-              <th>报价(元)</th>
-              <th>预计送达时间</th>
-              <th>报价时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- 历史报价数据将通过JavaScript动态添加 -->
-          </tbody>
-        </table>
-        <div id="provider-history-pagination-info" class="pagination-info"></div>
-        <div id="provider-history-pagination" class="pagination-controls"></div>
+    <!-- 行内报价表单模板 -->
+    <template id="inline-quote-form-template">
+      <div class="inline-quote-form">
+        <h3>提交报价</h3>
+        <form class="quote-inline-form">
+          <input type="hidden" name="orderId">
+          
+          <div class="form-group">
+            <label for="quote-price">报价 (元)</label>
+            <input type="number" id="quote-price" name="price" step="0.01" min="0" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="quote-delivery">预计送达时间</label>
+            <input type="text" id="quote-delivery" name="estimatedDelivery" required>
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="submit-btn">提交报价</button>
+            <button type="button" class="cancel-btn">取消</button>
+          </div>
+        </form>
       </div>
-    </div>
-  </div>
+    </template>
+  </main>
   
-  <!-- 行内报价表单模板 -->
-  <template id="inline-quote-form-template">
-    <div class="inline-quote-form">
-      <h3>提交报价</h3>
-      <form class="quote-inline-form">
-        <input type="hidden" name="orderId">
-        
-        <div class="form-group">
-          <label for="quote-price">报价 (元)</label>
-          <input type="number" id="quote-price" name="price" step="0.01" min="0" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="quote-delivery">预计送达时间</label>
-          <input type="text" id="quote-delivery" name="estimatedDelivery" required>
-        </div>
-        
-        <div class="form-buttons">
-          <button type="submit" class="submit-btn">提交报价</button>
-          <button type="button" class="cancel-btn">取消</button>
-        </div>
-      </form>
-    </div>
-  </template>
+  <footer>
+    <p>&copy; 2024 物流报价平台</p>
+  </footer>
   
   <script src="/js/provider.js"></script>
 </body>

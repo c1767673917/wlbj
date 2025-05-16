@@ -284,6 +284,13 @@
       border-color: #1e88e5;
     }
 
+    /* 新增CSS规则，用于将物流公司管理标签按钮推到最右侧 */
+    #logistics-tab-button {
+        margin-left: auto; /* 将此按钮推向右侧 */
+        /* 如果需要与右边缘有间距，可以在其父容器 .tab-navigation 上设置 padding-right */
+        /* 或者给这个按钮自身加 margin-right, e.g., margin-right: 10px; */
+    }
+
     .tab-content {
       display: none; /* Hidden by default */
       padding: 20px;
@@ -331,6 +338,7 @@
       <button class="tab-link active" data-tab="publish-order-content">发布订单</button>
       <button class="tab-link" data-tab="my-orders-content">我的订单</button>
       <button class="tab-link" data-tab="history-orders-content">订单历史</button>
+      <button class="tab-link" data-tab="logistics-providers-content" id="logistics-tab-button">物流公司管理</button>
     </div>
 
     <!-- 发布订单板块 -->
@@ -463,6 +471,38 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- 新增: 物流公司管理区域 (现在是标签页内容) -->
+    <div id="logistics-providers-content" class="tab-content">
+        <section id="logisticsProvidersSection" style="padding: 0; border: none; box-shadow: none;">
+            <h2>物流公司管理</h2>
+            
+            <div id="addProviderFormContainer" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                <h3>添加新物流公司</h3>
+                <label for="providerNameInput">公司名称:</label>
+                <input type="text" id="providerNameInput" placeholder="例如：顺丰速运" required style="margin-right: 10px;">
+                <button onclick="addProvider()" style="padding: 8px 15px;">确认添加</button>
+                <p id="addProviderStatus" style="margin-top: 10px; color: green;"></p>
+            </div>
+
+            <h3>已添加的物流公司</h3>
+            <div id="providersListContainer" style="padding: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                <table id="providersTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">物流公司名称</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">专属操作链接</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">创建时间</th>
+                        </tr>
+                    </thead>
+                    <tbody id="providersList">
+                        <!-- 物流公司及其专属链接将在这里填充 -->
+                        <tr><td colspan="3" style="text-align: center; padding: 10px;">暂无物流公司。请在上方添加。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
   </div>
   
