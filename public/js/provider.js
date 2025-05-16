@@ -200,12 +200,13 @@ function renderTable(items, tableId, showActionButton) {
                 button.onclick = () => showQuoteFormForRow(item.id, button.closest('tr'));
                 cell.appendChild(button);
             }
-        } else {
-            row.insertCell().textContent = item.id ? item.id.substring(0,8) : 'N/A';
-            row.insertCell().textContent = item.orderId ? item.orderId.substring(0,8) : 'N/A';
-            row.insertCell().textContent = item.price != null ? item.price.toFixed(2) : 'N/A';
-            row.insertCell().textContent = item.estimatedDelivery;
-            row.insertCell().textContent = new Date(item.createdAt).toLocaleString();
+        } else { // Logic for 'provider-history-table'
+            row.insertCell().textContent = item.orderId ? item.orderId.substring(0,8) : 'N/A'; // 订单编号
+            row.insertCell().textContent = item.orderWarehouse || 'N/A'; // 发货仓库 (占位符, 假设后端会提供)
+            row.insertCell().textContent = item.orderDeliveryAddress || 'N/A'; // 收货信息 (占位符, 假设后端会提供)
+            row.insertCell().textContent = item.price != null ? item.price.toFixed(2) : 'N/A'; // 报价(元)
+            row.insertCell().textContent = item.estimatedDelivery; // 预计送达时间
+            row.insertCell().textContent = new Date(item.createdAt).toLocaleString(); // 报价时间
         }
     });
 }
@@ -246,7 +247,7 @@ function showQuoteFormForRow(orderId, orderRow) {
   const formContent = formTemplate.content.cloneNode(true);
     const formElement = formContent.querySelector('.quote-inline-form');
     formElement.querySelector('[name="orderId"]').value = orderId;
-
+  
     formElement.addEventListener('submit', async function(event) {
         event.preventDefault();
         const price = this.querySelector('[name="price"]').value;
@@ -256,8 +257,8 @@ function showQuoteFormForRow(orderId, orderRow) {
   
   formContent.querySelector('.cancel-btn').addEventListener('click', function() {
         newFormRow.remove();
-    });
-
+  });
+  
     cell.appendChild(formContent);
     orderRow.after(newFormRow);
     newFormRow.style.display = 'table-row'; // Explicitly set display style

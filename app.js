@@ -83,56 +83,47 @@ app.get('/api/orders', (req, res) => {
   const offset = (page - 1) * pageSize;
 
   let params = [];
-  let countParams = []; // Params for count query might be different if no status column
+  let countParams = [];
   let whereClauses = [];
 
-  // 检查数据库中orders表是否有status列
-  db.get("PRAGMA table_info(orders)", (err, tableInfo) => {
-    if (err) {
-      console.error("PRAGMA table_info error:", err);
-      return res.status(500).json({ error: '查询数据库表结构失败' });
-    }
-
-    const hasStatusColumn = Array.isArray(tableInfo) && tableInfo.some(col => col.name === 'status');
-
-    if (hasStatusColumn && status) {
-      whereClauses.push('status = ?');
-      params.push(status);
-      countParams.push(status);
-    }
+  // 添加状态过滤（强制要求status字段）
+  if (status) {
+    whereClauses.push('status = ?');
+    params.push(status);
+    countParams.push(status);
+  }
     
-    let countQuery = 'SELECT COUNT(*) as total FROM orders';
-    let dataQuery = 'SELECT * FROM orders';
+  let countQuery = 'SELECT COUNT(*) as total FROM orders';
+  let dataQuery = 'SELECT * FROM orders';
 
-    if (whereClauses.length > 0) {
-      const whereString = ' WHERE ' + whereClauses.join(' AND ');
-      countQuery += whereString;
-      dataQuery += whereString;
+  if (whereClauses.length > 0) {
+    const whereString = ' WHERE ' + whereClauses.join(' AND ');
+    countQuery += whereString;
+    dataQuery += whereString;
+  }
+
+  dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+  params.push(pageSize, offset);
+
+  db.get(countQuery, countParams, (err, countRow) => {
+    if (err) {
+      console.error("Count query error:", err);
+      return res.status(500).json({ error: '获取订单总数失败' });
     }
+    const totalItems = countRow.total;
+    const totalPages = Math.ceil(totalItems / pageSize);
 
-    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
-    params.push(pageSize, offset);
-
-    db.get(countQuery, countParams, (err, countRow) => {
+    db.all(dataQuery, params, (err, items) => {
       if (err) {
-        console.error("Count query error:", err);
-        return res.status(500).json({ error: '获取订单总数失败' });
+        console.error("Data query error:", err);
+        return res.status(500).json({ error: '获取订单失败' });
       }
-      const totalItems = countRow.total;
-      const totalPages = Math.ceil(totalItems / pageSize);
-
-      db.all(dataQuery, params, (err, items) => {
-        if (err) {
-          console.error("Data query error:", err);
-          return res.status(500).json({ error: '获取订单失败' });
-        }
-        res.json({
-          items: items || [],
-          totalItems,
-          totalPages,
-          currentPage: page,
-          pageSize
-        });
+      res.json({
+        items: items || [],
+        totalItems,
+        totalPages,
+        currentPage: page,
+        pageSize
       });
     });
   });
@@ -285,9 +276,9 @@ app.get('/api/quotes', (req, res) => {
       }
       const providerName = providerRow.name;
       
-      whereClauses.push('provider = ?');
-      params.push(providerName);
-      countParams.push(providerName);
+    whereClauses.push('q.provider = ?'); // Alias quotes table as 'q'
+    params.push(providerName);
+    countParams.push(providerName);
       
       executeQuery();
     });
@@ -296,39 +287,54 @@ app.get('/api/quotes', (req, res) => {
   }
   
   function executeQuery() {
-    let countQuery = 'SELECT COUNT(*) as total FROM quotes';
-    let dataQuery = 'SELECT * FROM quotes';
+    // Modify countQuery to only count quotes for the specific provider if accessKey is present
+    let countQuery = 'SELECT COUNT(*) as total FROM quotes q'; // Alias quotes table as 'q'
+    // Select from quotes and join with orders to get order details
+    let dataQuery = `
+        SELECT 
+            q.id, 
+            q.orderId, 
+            q.provider, 
+            q.price, 
+            q.estimatedDelivery, 
+            q.createdAt,
+            o.warehouse AS orderWarehouse, 
+            o.deliveryAddress AS orderDeliveryAddress,
+            o.goods AS orderGoods -- Also fetching goods for completeness, though not in current HTML table for history
+        FROM quotes q
+        JOIN orders o ON q.orderId = o.id
+    `;
 
     if (whereClauses.length > 0) {
-      const whereString = ' WHERE ' + whereClauses.join(' AND ');
-      countQuery += whereString;
-      dataQuery += whereString;
+        const whereString = ' WHERE ' + whereClauses.join(' AND ');
+        countQuery += whereString; // Apply WHERE to count query
+        dataQuery += whereString; // Apply WHERE to data query
     }
 
-    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+    dataQuery += ' ORDER BY q.createdAt DESC LIMIT ? OFFSET ?'; // Order by quote creation time
     params.push(pageSize, offset);
 
     db.get(countQuery, countParams, (err, countRow) => {
-      if (err) {
-        console.error("Count query error (quotes):", err);
-        return res.status(500).json({ error: '获取报价总数失败' });
-      }
-      const totalItems = countRow ? countRow.total : 0;
-      const totalPages = Math.ceil(totalItems / pageSize);
-
-      db.all(dataQuery, params, (err, items) => {
         if (err) {
-          console.error("Data query error (quotes):", err);
-          return res.status(500).json({ error: '获取报价失败' });
+            console.error("Count query error (quotes):", err);
+            return res.status(500).json({ error: '获取报价总数失败' });
         }
-        res.json({
-          items: items || [],
-          totalItems,
-          totalPages,
-          currentPage: page,
-          pageSize
+        const totalItems = countRow ? countRow.total : 0;
+        const totalPages = Math.ceil(totalItems / pageSize);
+
+        db.all(dataQuery, params, (err, items) => {
+            if (err) {
+                console.error("Data query error (quotes):", err);
+                return res.status(500).json({ error: '获取报价失败' });
+            }
+            res.json({
+                items: items || [],
+                totalItems,
+                totalPages,
+                currentPage: page,
+                pageSize
+            });
         });
-      });
     });
   }
 });
@@ -372,26 +378,26 @@ app.post('/api/quotes', (req, res) => {
                 return res.status(409).json({ error: '您已对该订单报过价' });
             }
 
-            const newQuote = {
-              id: uuidv4(),
+  const newQuote = {
+    id: uuidv4(),
               orderId: orderId,
               provider: providerName,
               price: parseFloat(price),
               estimatedDelivery: estimatedDelivery,
-              createdAt: new Date().toISOString()
-            };
-            
-            db.run(
-              'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
-              [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
-              function(err) {
-                if (err) {
-                  console.error(err);
-                  return res.status(500).json({ error: '创建报价失败' });
-                }
-                res.status(201).json(newQuote);
-              }
-            );
+    createdAt: new Date().toISOString()
+  };
+  
+  db.run(
+    'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+    [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
+    function(err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: '创建报价失败' });
+      }
+      res.status(201).json(newQuote);
+    }
+  );
         });
     });
   });
@@ -486,7 +492,7 @@ app.get('/provider/:accessKey', (req, res) => {
     if (!provider) {
       return res.status(404).send('页面未找到或无效的访问链接。请确保链接正确，或联系管理员。');
     }
-    res.sendFile(path.join(__dirname, 'views', 'provider.html'));
+  res.sendFile(path.join(__dirname, 'views', 'provider.html'));
   });
 });
 

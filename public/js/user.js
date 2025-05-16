@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (defaultActiveContent) defaultActiveContent.classList.remove('active');
         
         activateTab(savedTabId); // Activate the saved tab
-    } else {
+        } else {
         // Saved tab ID is invalid or element doesn't exist, remove it from storage
         localStorage.removeItem('activeUserTab');
         // Optionally, activate the default first tab if no valid saved tab
@@ -1153,16 +1153,10 @@ function closeOrder(orderId) {
       return response.json();
     })
     .then(closedOrder => {
-      // 从活跃订单中删除已关闭的订单
-      paginationState.allOrders = paginationState.allOrders.filter(order => order.id !== orderId);
-      paginationState.filteredOrders = paginationState.filteredOrders.filter(order => order.id !== orderId);
-      paginationState.totalOrders = paginationState.filteredOrders.length;
-      paginationState.totalPages = Math.ceil(paginationState.totalOrders / paginationState.pageSize);
-      
+      // 不再手动过滤本地列表，而是直接重新加载订单
       // 重新加载活跃订单和历史订单
-      displayOrdersPage(Math.min(paginationState.currentPage, paginationState.totalPages || 1));
-      renderPagination();
-      loadHistoryOrders();
+      loadActiveOrders(); // 从服务器重新获取活跃订单
+      loadHistoryOrders(); // 从服务器重新获取历史订单
       
       alert('订单已成功关闭');
     })
