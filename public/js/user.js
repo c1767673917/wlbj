@@ -119,7 +119,7 @@ function showToast(message) {
     toastElement.textContent = message;
     toastElement.classList.add('show');
     
-    // 1秒后开始淡出
+    // 1.5秒后开始淡出
     setTimeout(() => {
       toastElement.classList.remove('show');
       toastElement.classList.add('fadeout');
@@ -127,7 +127,7 @@ function showToast(message) {
       setTimeout(() => {
         toastElement.classList.remove('fadeout');
       }, 500); // 这里的500ms对应CSS中的transition时间
-    }, 1000);
+    }, 1500); // 修改此处为1.5秒
   }
 }
 
@@ -412,7 +412,7 @@ function submitNewOrder() {
       document.getElementById('new-order-form').reset();
       document.getElementById('ai-input').value = ''; // 清空AI输入框
       loadActiveOrders(); // 重新加载订单列表
-      alert('订单创建成功！');
+      showToast('订单创建成功！');
     })
     .catch(error => console.error('创建订单失败:', error));
 }
@@ -1177,7 +1177,9 @@ window.viewQuotes = viewQuotes;
 // --- 新增: 物流公司管理功能 ---
 async function addProvider() {
     const nameInput = document.getElementById('providerNameInput');
+    const accessKeyInput = document.getElementById('providerAccessKeyInput'); // 获取新输入框
     const providerName = nameInput.value.trim();
+    const providerAccessKey = accessKeyInput.value.trim(); // 获取自定义链接名
     const statusElement = document.getElementById('addProviderStatus');
 
     if (!providerName) {
@@ -1185,9 +1187,26 @@ async function addProvider() {
         statusElement.style.color = 'red';
         return;
     }
+    
+    // 对自定义链接名进行前端校验 (与后端校验规则一致或更宽松，后端会做最终校验)
+    if (providerAccessKey && !/^[a-zA-Z0-9_-]+$/.test(providerAccessKey)) {
+        statusElement.textContent = '自定义链接名只能包含字母、数字、下划线和中划线。';
+        statusElement.style.color = 'red';
+        return;
+    }
+    if (providerAccessKey && providerAccessKey.includes(' ')) {
+        statusElement.textContent = '自定义链接名不能包含空格。';
+        statusElement.style.color = 'red';
+        return;
+    }
 
     statusElement.textContent = '正在添加...';
     statusElement.style.color = 'blue';
+
+    const requestBody = { name: providerName };
+    if (providerAccessKey) {
+        requestBody.customAccessKey = providerAccessKey;
+    }
 
     try {
         const response = await fetch('/api/providers', {
@@ -1195,7 +1214,7 @@ async function addProvider() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name: providerName }),
+            body: JSON.stringify(requestBody), // 使用包含自定义链接名的请求体
         });
 
         const result = await response.json();
@@ -1204,6 +1223,7 @@ async function addProvider() {
             statusElement.textContent = `物流公司 "${result.name}" 添加成功！专属链接已生成。`;
             statusElement.style.color = 'green';
             nameInput.value = ''; // 清空输入框
+            accessKeyInput.value = ''; // 清空自定义链接名输入框
             fetchAndDisplayProviders(); // 刷新列表
         } else {
             statusElement.textContent = `添加失败: ${result.error || response.statusText}`;
@@ -1230,7 +1250,7 @@ async function fetchAndDisplayProviders() {
                 errorMsg = errData.error || errorMsg;
             } catch (e) { /* 忽略解析错误，使用上面的状态码错误 */ }
             console.error('Error fetching providers list:', errorMsg);
-            providersListBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">${errorMsg}</td></tr>`;
+            providersListBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: red;">${errorMsg}</td></tr>`; // 更新 colspan
             return; 
         }
 
@@ -1242,6 +1262,7 @@ async function fetchAndDisplayProviders() {
         if (providers && providers.length > 0) {
             providers.forEach(provider => {
                 const row = providersListBody.insertRow();
+                row.setAttribute('data-provider-id', provider.id); // 为行添加 provider id，方便操作
                 row.insertCell().textContent = provider.name;
                 
                 const linkCell = row.insertCell();
@@ -1251,24 +1272,137 @@ async function fetchAndDisplayProviders() {
                 linkElement.textContent = accessLink;
                 linkElement.target = '_blank'; // 在新标签页打开
                 linkCell.appendChild(linkElement);
-                // 添加复制按钮
+                
                 const copyButton = document.createElement('button');
                 copyButton.textContent = '复制';
                 copyButton.style.marginLeft = '10px';
                 copyButton.onclick = () => {
                     navigator.clipboard.writeText(accessLink)
-                        .then(() => alert('链接已复制到剪贴板！'))
-                        .catch(err => console.error('复制失败: ', err));
+                        .then(() => showToast('链接已复制到剪贴板！')) // 使用 showToast 替换 alert
+                        .catch(err => {
+                            console.error('复制失败: ', err);
+                            showToast('复制失败，请手动复制。');
+                        });
                 };
                 linkCell.appendChild(copyButton);
 
-                row.insertCell().textContent = new Date(provider.createdAt).toLocaleString();
+                row.insertCell().textContent = new Date(provider.createdAt).toLocaleString('zh-CN');
+
+                // 新增操作单元格
+                const actionCell = row.insertCell();
+                const editLinkButton = document.createElement('button');
+                editLinkButton.textContent = '修改链接';
+                editLinkButton.style.padding = '5px 10px';
+                editLinkButton.style.backgroundColor = '#2196F3'; // 蓝色背景
+                editLinkButton.style.color = 'white';
+                editLinkButton.style.border = 'none';
+                editLinkButton.style.borderRadius = '4px';
+                editLinkButton.style.cursor = 'pointer';
+                editLinkButton.onclick = () => showEditAccessKeyModal(provider.id, provider.accessKey);
+                actionCell.appendChild(editLinkButton);
+
+                // 新增删除按钮
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '删除';
+                deleteButton.style.padding = '5px 10px';
+                deleteButton.style.backgroundColor = '#f44336'; // 红色背景
+                deleteButton.style.color = 'white';
+                deleteButton.style.border = 'none';
+                deleteButton.style.borderRadius = '4px';
+                deleteButton.style.cursor = 'pointer';
+                deleteButton.style.marginLeft = '5px'; // 与修改按钮的间距
+                deleteButton.onclick = () => confirmDeleteProvider(provider.id, provider.name);
+                actionCell.appendChild(deleteButton);
             });
         } else {
-            providersListBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">暂无物流公司。请在上方添加。</td></tr>';
+            providersListBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">暂无物流公司。请在上方添加。</td></tr>'; // 更新 colspan
         }
     } catch (error) {
         console.error('获取物流公司列表时发生错误:', error);
-        providersListBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: red;">获取物流公司列表时发生网络或未知错误。</td></tr>';
+        providersListBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">获取物流公司列表时发生网络或未知错误。</td></tr>';// 更新 colspan
+    }
+}
+
+// --- 以下是新增的函数 ---
+function showEditAccessKeyModal(providerId, currentAccessKey) {
+    const newAccessKey = prompt('请输入新的自定义链接名 (accessKey):\n(仅支持字母、数字、下划线和中划线，不能为空)', currentAccessKey);
+
+    if (newAccessKey === null) { // 用户点击了取消
+        return;
+    }
+
+    const trimmedNewAccessKey = newAccessKey.trim();
+
+    if (trimmedNewAccessKey === '') {
+        showToast('新的链接名不能为空。');
+        return;
+    }
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(trimmedNewAccessKey)) {
+        showToast('新的链接名只能包含字母、数字、下划线和中划线。');
+        return;
+    }
+    
+    if (trimmedNewAccessKey.includes(' ')) {
+        showToast('新的链接名不能包含空格。');
+        return;
+    }
+
+    if (trimmedNewAccessKey === currentAccessKey) {
+        showToast('新的链接名与当前链接名相同，未做修改。');
+        return;
+    }
+
+    updateProviderAccessKey(providerId, trimmedNewAccessKey);
+}
+
+async function updateProviderAccessKey(providerId, newAccessKey) {
+    try {
+        const response = await fetch(`/api/providers/${providerId}/access-key`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newAccessKey: newAccessKey }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast(result.message || '链接名更新成功！');
+            fetchAndDisplayProviders(); // 刷新列表
+        } else {
+            showToast(`更新失败: ${result.error || response.statusText}`);
+        }
+    } catch (error) {
+        console.error('更新链接名时发生错误:', error);
+        showToast('更新链接名过程中发生网络或服务器错误。');
+    }
+}
+
+// --- 新增删除相关函数 ---
+function confirmDeleteProvider(providerId, providerName) {
+    if (confirm(`确定要删除物流公司 "${providerName}" 吗？此操作不可撤销。`)) {
+        deleteProvider(providerId);
+    }
+}
+
+async function deleteProvider(providerId) {
+    try {
+        const response = await fetch(`/api/providers/${providerId}`, {
+            method: 'DELETE',
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast(result.message || '物流公司删除成功！');
+            fetchAndDisplayProviders(); // 刷新列表
+        } else {
+            showToast(`删除失败: ${result.error || response.statusText}`);
+        }
+    } catch (error) {
+        console.error('删除物流公司时发生错误:', error);
+        showToast('删除过程中发生网络或服务器错误。');
     }
 } 

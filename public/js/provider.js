@@ -161,7 +161,7 @@ async function fetchMyQuotes(page) {
     updatePaginationControls('myquotes', data.totalPages, data.currentPage);
 }
 
-// Adapt renderTable (simplified placeholder)
+// Corrected renderTable function
 function renderTable(items, tableId, showActionButton) {
     const tableElement = document.getElementById(tableId);
     if (!tableElement) {
@@ -176,43 +176,101 @@ function renderTable(items, tableId, showActionButton) {
 
     tableBody.innerHTML = ''; // Clear existing rows
     if (!items || items.length === 0) {
-        let colspan = 5;
-        if (tableId === 'available-orders-table') {
-            colspan = tableElement.getElementsByTagName('thead')[0]?.rows[0]?.cells.length || 6;
-        } else if (tableId === 'provider-history-table') {
-            colspan = tableElement.getElementsByTagName('thead')[0]?.rows[0]?.cells.length || 6;
+        let colspan = 6; // Default colspan
+        const thead = tableElement.getElementsByTagName('thead')[0];
+        if (thead && thead.rows.length > 0 && thead.rows[0].cells.length > 0) {
+            colspan = thead.rows[0].cells.length;
         }
         tableBody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;">无数据</td></tr>`;
-    return; 
-  }
+        return; 
+    }
+
     items.forEach(item => {
         const row = tableBody.insertRow();
+        let cell;
+
         if (tableId === 'available-orders-table') {
-            row.insertCell().textContent = item.id ? item.id.substring(0, 8) : 'N/A';
-            row.insertCell().textContent = item.warehouse;
-            row.insertCell().textContent = item.goods;
-            row.insertCell().textContent = item.deliveryAddress;
-            row.insertCell().textContent = new Date(item.createdAt).toLocaleString();
+            // 订单编号
+            cell = row.insertCell();
+            cell.textContent = item.id ? item.id.substring(0, 8) : 'N/A';
+            cell.setAttribute('data-label', '订单编号:');
+
+            // 发货仓库
+            cell = row.insertCell();
+            cell.textContent = item.warehouse;
+            cell.setAttribute('data-label', '发货仓库:');
+
+            // 货物信息 - Needs span for full-width layout
+            cell = row.insertCell();
+            cell.setAttribute('data-label', '货物信息:');
+            cell.style.whiteSpace = 'pre-wrap'; 
+            const goodsSpan = document.createElement('span');
+            goodsSpan.className = 'content-value';
+            goodsSpan.textContent = item.goods;
+            cell.appendChild(goodsSpan);
+
+            // 收货信息 - Needs span for full-width layout
+            cell = row.insertCell();
+            cell.setAttribute('data-label', '收货信息:');
+            cell.style.whiteSpace = 'pre-wrap'; 
+            const deliveryAddressSpan = document.createElement('span');
+            deliveryAddressSpan.className = 'content-value';
+            deliveryAddressSpan.textContent = item.deliveryAddress;
+            cell.appendChild(deliveryAddressSpan);
+
+            // 发布时间
+            cell = row.insertCell();
+            cell.textContent = new Date(item.createdAt).toLocaleString();
+            cell.setAttribute('data-label', '发布时间:');
+
             if (showActionButton) {
-                const cell = row.insertCell();
+                cell = row.insertCell();
+                cell.setAttribute('data-label', '操作:'); 
+                cell.classList.add('action-cell'); 
                 const button = document.createElement('button');
                 button.textContent = '报价';
                 button.onclick = () => showQuoteFormForRow(item.id, button.closest('tr'));
                 cell.appendChild(button);
             }
         } else { // Logic for 'provider-history-table'
-            row.insertCell().textContent = item.orderId ? item.orderId.substring(0,8) : 'N/A'; // 订单编号
-            row.insertCell().textContent = item.orderWarehouse || 'N/A'; // 发货仓库 (占位符, 假设后端会提供)
-            row.insertCell().textContent = item.orderDeliveryAddress || 'N/A'; // 收货信息 (占位符, 假设后端会提供)
-            row.insertCell().textContent = item.price != null ? item.price.toFixed(2) : 'N/A'; // 报价(元)
-            row.insertCell().textContent = item.estimatedDelivery; // 预计送达时间
-            row.insertCell().textContent = new Date(item.createdAt).toLocaleString(); // 报价时间
+            // 订单编号
+            cell = row.insertCell();
+            cell.textContent = item.orderId ? item.orderId.substring(0,8) : 'N/A';
+            cell.setAttribute('data-label', '订单编号:');
+
+            // 发货仓库 
+            cell = row.insertCell();
+            cell.textContent = item.orderWarehouse || 'N/A'; 
+            cell.setAttribute('data-label', '发货仓库:');
+
+            // 收货信息 - Needs span for full-width layout
+            cell = row.insertCell();
+            cell.setAttribute('data-label', '收货信息:');
+            cell.style.whiteSpace = 'pre-wrap'; 
+            const historyDeliveryAddressSpan = document.createElement('span');
+            historyDeliveryAddressSpan.className = 'content-value';
+            historyDeliveryAddressSpan.textContent = item.orderDeliveryAddress || 'N/A';
+            cell.appendChild(historyDeliveryAddressSpan);
+
+            // 报价(元)
+            cell = row.insertCell();
+            cell.textContent = item.price != null ? item.price.toFixed(2) : 'N/A';
+            cell.setAttribute('data-label', '我的报价 (元):');
+
+            // 预计送达时间
+            cell = row.insertCell();
+            cell.textContent = item.estimatedDelivery;
+            cell.setAttribute('data-label', '预计送达:');
+
+            // 报价时间
+            cell = row.insertCell();
+            cell.textContent = new Date(item.createdAt).toLocaleString();
+            cell.setAttribute('data-label', '报价时间:');
         }
     });
 }
 
-// Placeholder for showQuoteFormForRow - this needs to be implemented 
-// to use the <template id="inline-quote-form-template">
+// Placeholder for showQuoteFormForRow - this needs to be implemented
 function showQuoteFormForRow(orderId, orderRow) {
     console.log(`Attempting to show quote form for order ${orderId}. Clicked order row content:`, orderRow.textContent);
   const existingFormRows = document.querySelectorAll('.quote-form-row');

@@ -405,15 +405,29 @@ app.post('/api/quotes', (req, res) => {
 
 // API - 添加新的物流公司 (新增)
 app.post('/api/providers', (req, res) => {
-  const { name } = req.body;
+  const { name, customAccessKey } = req.body; // 接收 customAccessKey
   if (!name) {
     return res.status(400).json({ error: '物流公司名称是必填的' });
+  }
+
+  let accessKeyToUse = customAccessKey;
+  if (customAccessKey) {
+    // 基本校验：不允许空格，可以根据需要添加更多校验规则
+    if (/\s/.test(customAccessKey) || customAccessKey.length === 0) {
+      return res.status(400).json({ error: '自定义链接名不能包含空格且不能为空' });
+    }
+    // 可选：校验字符集，例如只允许字母、数字、下划线、中划线
+    if (!/^[a-zA-Z0-9_-]+$/.test(customAccessKey)) {
+        return res.status(400).json({ error: '自定义链接名只能包含字母、数字、下划线和中划线' });
+    }
+  } else {
+    accessKeyToUse = uuidv4(); // 如果未提供，则生成UUID
   }
 
   const newProvider = {
     id: uuidv4(),
     name: name,
-    accessKey: uuidv4(), // 使用 uuid 作为 accessKey 保证唯一性
+    accessKey: accessKeyToUse, 
     createdAt: new Date().toISOString()
   };
 
@@ -422,18 +436,17 @@ app.post('/api/providers', (req, res) => {
     [newProvider.id, newProvider.name, newProvider.accessKey, newProvider.createdAt],
     function(err) {
       if (err) {
-        // SQLite UNIQUE constraint failure error code is SQLITE_CONSTRAINT
         if (err.message && err.message.includes('UNIQUE constraint failed: providers.name')) {
           return res.status(409).json({ error: '该物流公司名称已存在' });
         }
+        // 修改错误提示，更明确针对 accessKey
         if (err.message && err.message.includes('UNIQUE constraint failed: providers.accessKey')) {
-          // 理论上 accessKey (uuid) 碰撞概率极低，但以防万一
-          return res.status(500).json({ error: '生成专属链接失败，请重试' });
+          const message = customAccessKey ? '自定义链接名已被使用，请更换一个。' : '生成专属链接失败，请重试。';
+          return res.status(409).json({ error: message });
         }
         console.error(err);
         return res.status(500).json({ error: '添加物流公司失败' });
       }
-      // 返回新创建的物流公司信息，包含 accessKey
       res.status(201).json({
         id: newProvider.id,
         name: newProvider.name,
@@ -452,6 +465,70 @@ app.get('/api/providers', (req, res) => {
       return res.status(500).json({ error: '获取物流公司列表失败' });
     }
     res.json(providers); //直接返回数组
+  });
+});
+
+// API - 修改供应商的 accessKey (新增)
+app.put('/api/providers/:id/access-key', (req, res) => {
+  const providerId = req.params.id;
+  const { newAccessKey } = req.body;
+
+  if (!newAccessKey || typeof newAccessKey !== 'string' || newAccessKey.trim() === '') {
+    return res.status(400).json({ error: '新的链接名不能为空' });
+  }
+
+  const trimmedNewAccessKey = newAccessKey.trim();
+
+  // 基本校验：不允许空格
+  if (/\s/.test(trimmedNewAccessKey)) {
+    return res.status(400).json({ error: '新的链接名不能包含空格' });
+  }
+  // 可选：校验字符集，例如只允许字母、数字、下划线、中划线
+  if (!/^[a-zA-Z0-9_-]+$/.test(trimmedNewAccessKey)) {
+    return res.status(400).json({ error: '新的链接名只能包含字母、数字、下划线和中划线' });
+  }
+
+  // 1. 检查新的 accessKey 是否已被其他供应商使用
+  db.get('SELECT id FROM providers WHERE accessKey = ? AND id != ?', [trimmedNewAccessKey, providerId], (err, existingProvider) => {
+    if (err) {
+      console.error("Error checking accessKey uniqueness:", err);
+      return res.status(500).json({ error: '检查链接名唯一性失败' });
+    }
+    if (existingProvider) {
+      return res.status(409).json({ error: '该链接名已被其他供应商使用，请选择其他名称' });
+    }
+
+    // 2. 更新 accessKey
+    db.run('UPDATE providers SET accessKey = ? WHERE id = ?', [trimmedNewAccessKey, providerId], function(err) {
+      if (err) {
+        console.error("Error updating accessKey:", err);
+        return res.status(500).json({ error: '更新链接名失败' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: '未找到指定ID的物流公司' });
+      }
+      res.json({ message: '链接名更新成功', newAccessKey: trimmedNewAccessKey });
+    });
+  });
+});
+
+// API - 删除指定ID的物流公司 (新增)
+app.delete('/api/providers/:id', (req, res) => {
+  const providerId = req.params.id;
+
+  // 可选：在删除供应商前，处理其关联的报价。例如，删除或将其标记为无效。
+  // 为了简单起见，这里我们直接删除供应商。
+  // db.run('DELETE FROM quotes WHERE provider = (SELECT name FROM providers WHERE id = ?)', [providerId], function(err) { ... });
+
+  db.run('DELETE FROM providers WHERE id = ?', [providerId], function(err) {
+    if (err) {
+      console.error("Error deleting provider:", err);
+      return res.status(500).json({ error: '删除物流公司失败' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: '未找到指定ID的物流公司' });
+    }
+    res.json({ message: '物流公司删除成功' });
   });
 });
 

@@ -307,7 +307,7 @@
     /* 自定义 Toast 提示样式 */
     .custom-toast {
       position: fixed;
-      bottom: 30px;
+      top: 30px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #333;
@@ -329,6 +329,49 @@
       opacity: 0;
       visibility: hidden;
     }
+
+    /* 响应式调整 - 针对小屏幕 (此部分将被移除，因为用户端仅PC使用) */
+    /*
+    @media (max-width: 768px) {
+      .tab-navigation {
+        flex-direction: column; 
+        align-items: stretch; 
+      }
+      .tab-link {
+        margin-bottom: 5px; 
+        text-align: center; 
+      }
+      #logistics-tab-button {
+        margin-left: 0; 
+      }
+
+      #addProviderFormContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; 
+      }
+      #addProviderFormContainer label,
+      #addProviderFormContainer input,
+      #addProviderFormContainer button {
+        width: 100%;
+        margin-left: 0 !important; 
+        margin-right: 0 !important;
+      }
+      #providerAccessKeyInput {
+        width: 100% !important; 
+      }
+
+      .list-container,
+      #providersListContainer {
+        overflow-x: auto;
+      }
+
+      .data-table th, .data-table td,
+      #providersTable th, #providersTable td {
+        padding: 8px 10px;
+      }
+    }
+    */
   </style>
 </head>
 <body>
@@ -482,6 +525,8 @@
                 <h3>添加新物流公司</h3>
                 <label for="providerNameInput">公司名称:</label>
                 <input type="text" id="providerNameInput" placeholder="例如：顺丰速运" required style="margin-right: 10px;">
+                <label for="providerAccessKeyInput" style="margin-left: 10px;">自定义链接名 (可选):</label>
+                <input type="text" id="providerAccessKeyInput" placeholder="留空则自动生成 (字母/数字/_-)" style="margin-right: 10px; width: 220px;">
                 <button onclick="addProvider()" style="padding: 8px 15px;">确认添加</button>
                 <p id="addProviderStatus" style="margin-top: 10px; color: green;"></p>
             </div>
@@ -494,11 +539,12 @@
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">物流公司名称</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">专属操作链接</th>
                             <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">创建时间</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left; width: 150px;">操作</th>
                         </tr>
                     </thead>
                     <tbody id="providersList">
                         <!-- 物流公司及其专属链接将在这里填充 -->
-                        <tr><td colspan="3" style="text-align: center; padding: 10px;">暂无物流公司。请在上方添加。</td></tr>
+                        <tr><td colspan="4" style="text-align: center; padding: 10px;">暂无物流公司。请在上方添加。</td></tr>
                     </tbody>
                 </table>
             </div>

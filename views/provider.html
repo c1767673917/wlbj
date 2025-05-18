@@ -114,6 +114,153 @@
       color: white;
       border-color: #007bff;
     }
+
+    /* Provider Page Responsive Adjustments */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.5em; /* 缩小标题字体 */
+      }
+      #providerNameDisplay {
+        font-size: 1em; /* 缩小物流公司名称字体 */
+      }
+
+      .container {
+        padding: 10px; /* 减小容器内边距 */
+      }
+
+      /* --- Card-like layout for tables on small screens --- */
+      /* Target both available orders and history tables */
+      #available-orders-table, #provider-history-table {
+        display: block;
+        width: 100%;
+      }
+
+      #available-orders-table thead, #provider-history-table thead {
+        display: none; /* Hide table headers */
+      }
+
+      #available-orders-table tbody, #provider-history-table tbody,
+      #available-orders-table tr, #provider-history-table tr {
+        display: block;
+        width: 100%;
+      }
+
+      #available-orders-table tr, #provider-history-table tr {
+        margin-bottom: 20px; /* Increased margin for better separation between cards */
+        border: 1px solid #bbb; /* Darker border for cards */
+        border-radius: 4px;
+        padding: 10px;
+        background-color: #fff; 
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      }
+
+      #available-orders-table td, #provider-history-table td {
+        display: block;
+        text-align: left; 
+        padding-left: 10px; 
+        position: relative;
+        border-bottom: 1px dotted #e0e0e0; /* Slightly more visible dotted line */
+        padding-top: 10px; /* Increased padding */
+        padding-bottom: 10px; /* Increased padding */
+        min-height: 22px; 
+      }
+      
+      #available-orders-table td:last-child, #provider-history-table td:last-child {
+        border-bottom: none; 
+      }
+
+      #available-orders-table td::before, #provider-history-table td::before {
+        content: attr(data-label);
+        font-weight: bold; /* Ensure boldness */
+        color: #111; /* Darker label color for more contrast */
+        display: inline-block; 
+        margin-right: 10px; /* Slightly increased margin */
+        width: auto; 
+      }
+
+      /* --- Special handling for full-width fields like '收货信息' & '货物信息' --- */
+      #available-orders-table td[data-label*="收货信息"],
+      #available-orders-table td[data-label*="货物信息"],
+      #provider-history-table td[data-label*="收货信息"] {
+        padding-left: 10px; 
+      }
+
+      #available-orders-table td[data-label*="收货信息"]::before,
+      #available-orders-table td[data-label*="货物信息"]::before,
+      #provider-history-table td[data-label*="收货信息"]::before {
+        display: block; 
+        margin-bottom: 6px; /* Increased margin */
+        width: 100%;
+        padding-bottom: 4px; /* Added padding */
+        border-bottom: 1px solid #ddd; /* Solid line under full-width labels */
+      }
+      #available-orders-table td[data-label*="收货信息"] span.content-value,
+      #available-orders-table td[data-label*="货物信息"] span.content-value,
+      #provider-history-table td[data-label*="收货信息"] span.content-value {
+          display: block; 
+          color: #444; /* Slightly lighter color for content text */
+          padding-top: 4px; /* Add some space above content if label has border-bottom */
+      }
+
+      /* Adjust action cell for card layout */
+      #available-orders-table td.action-cell,
+      #provider-history-table td.action-cell {
+        padding-left: 10px; /* Reset padding for action cell */
+        text-align: center; /* Center buttons */
+      }
+      #available-orders-table td.action-cell button {
+        width: auto; /* Allow button to size based on content */
+        padding: 8px 12px;
+        margin: 5px;
+      }
+      #available-orders-table td.action-cell::before {
+        display:none; /* No label for action cell container */
+      }
+
+      /* --- Styling for Inline Quote Form on Mobile --- */
+      .inline-quote-form {
+        padding: 15px; /* Keep existing padding or adjust as needed */
+      }
+
+      .inline-quote-form h3 {
+        text-align: center; /* Center the form title */
+        margin-bottom: 20px; /* Add some space below the title */
+      }
+
+       /* Ensure form elements in quote form are full width */
+      .inline-quote-form input,
+      .inline-quote-form button { /* This already targets all buttons in the form */
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .inline-quote-form .form-buttons button {
+        margin-top: 8px; /* Consistent margin for stacked buttons */
+        padding-top: 8px; /* Reduced top padding for shorter buttons */
+        padding-bottom: 8px; /* Reduced bottom padding */
+        font-size: 15px; /* Slightly smaller font for a more compact button */
+      }
+
+      /* Override default green for submit, and style cancel button */
+      .inline-quote-form .submit-btn {
+        background-color: #1e88e5; /* Blue, matching other action buttons */
+      }
+      .inline-quote-form .submit-btn:hover {
+        background-color: #1976d2; /* Darker blue on hover */
+      }
+
+      .inline-quote-form .cancel-btn {
+        background-color: #757575; /* Grey for cancel, or use #1e88e5 if strictly same color desired */
+        color: white;
+      }
+      .inline-quote-form .cancel-btn:hover {
+        background-color: #616161;
+      }
+
+      .form-buttons {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
