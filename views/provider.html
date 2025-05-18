@@ -260,6 +260,28 @@
       .form-buttons {
         flex-direction: column;
       }
+
+      /* Ensure the quote form row and its cell behave as blocks on mobile */
+      #available-orders-table tr.quote-form-row,
+      #provider-history-table tr.quote-form-row { /* If history also has this feature */
+        display: block !important; /* Override JS inline style for TR */
+        padding: 0; /* Remove card padding for the form row itself */
+        border: none; /* Remove card border for the form row */
+        box-shadow: none; /* Remove card shadow for the form row */
+        margin-bottom: 10px; /* Keep some margin */
+        background-color: transparent; /* Ensure no card background interferes */
+      }
+
+      #available-orders-table tr.quote-form-row > td,
+      #provider-history-table tr.quote-form-row > td {
+        display: block;
+        width: 100%;
+        padding: 0; /* Remove specific TD padding, let the form inside handle it */
+        border-bottom: none; /* No border for this TD */
+        box-sizing: border-box;
+        min-height: auto; /* Reset min-height if not needed */
+      }
+      /* The .inline-quote-form already has its own padding and styling */
     }
   </style>
 </head>

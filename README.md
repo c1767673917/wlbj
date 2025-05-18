@@ -41,7 +41,13 @@
 
 ```
 wlbj/
-├── app.js             # Express 应用主文件 (服务器逻辑, API路由, 数据库交互)
+├── app.js             # Express 应用主文件 (应用初始化, 中间件加载, 路由挂载)
+├── db/                # 数据库相关模块
+│   └── database.js    # 数据库连接初始化和表结构定义
+├── routes/            # API 路由定义模块
+│   ├── ordersRoutes.js    # 订单相关API路由
+│   ├── quotesRoutes.js    # 报价相关API路由
+│   └── providersRoutes.js # 物流公司相关API路由
 ├── data/              # 存放 SQLite 数据库文件
 │   └── logistics.db
 ├── node_modules/      # Node.js 依赖包
@@ -52,7 +58,7 @@ wlbj/
 │       ├── user.js    # 用户端前端逻辑
 │       └── provider.js# 物流供应商端前端逻辑
 ├── views/             # 存放 HTML 视图文件
-│   ├── home.html      # 应用首页 (当前可能直接跳转或未使用)
+│   ├── home.html      # 应用首页
 │   ├── index.html     # 用户端主操作界面
 │   └── provider.html  # 物流供应商端操作界面
 ├── package.json       # 项目依赖和脚本配置

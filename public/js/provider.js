@@ -40,7 +40,7 @@ async function fetchProviderDetails(accessKey) {
     const displayElement = document.getElementById('providerNameDisplay');
     try {
         // This API endpoint /api/provider-details?accessKey=KEY needs to be created in app.js
-        const response = await fetch(`/api/provider-details?accessKey=${accessKey}`);
+        const response = await fetch(`/api/providers/details?accessKey=${accessKey}`);
         if (!response.ok) {
             if (response.status === 404) {
                 currentProviderName = '未知物流商 (无效Key)';
