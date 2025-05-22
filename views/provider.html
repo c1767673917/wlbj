@@ -114,6 +114,54 @@
       color: white;
       border-color: #007bff;
     }
+    
+    /* 新增：订单工具栏样式 */
+    .order-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .search-box input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 250px;
+    }
+    
+    .search-box button {
+      padding: 8px 15px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #000;
+      font-weight: normal;
+    }
+    
+    .search-box button:hover {
+      background-color: #e9e9e9;
+    }
+    
+    .export-button {
+      padding: 8px 15px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .export-button:hover {
+      background-color: #45a049;
+    }
 
     /* Provider Page Responsive Adjustments */
     @media (max-width: 768px) {
@@ -296,6 +344,15 @@
     <div class="list-container">
       <h2>可报价订单</h2>
       <div id="available-orders-list">
+        <!-- 新增：搜索和导出工具栏 -->
+        <div class="order-tools">
+          <div class="search-box">
+            <input type="text" id="search-orders-input" placeholder="搜索可报价订单..." />
+            <button id="search-orders-button">搜索</button>
+            <button id="reset-orders-search">重置</button>
+          </div>
+          <button id="export-orders-xlsx" class="export-button">导出为Excel</button>
+        </div>
         <table id="available-orders-table" class="data-table">
           <thead>
             <tr>
@@ -319,6 +376,15 @@
     <div class="history-container">
       <h2>我的报价历史</h2>
       <div id="provider-history-list">
+        <!-- 新增：搜索和导出工具栏 -->
+        <div class="order-tools">
+          <div class="search-box">
+            <input type="text" id="search-history-input" placeholder="搜索报价历史..." />
+            <button id="search-history-button">搜索</button>
+            <button id="reset-history-search">重置</button>
+          </div>
+          <button id="export-history-xlsx" class="export-button">导出为Excel</button>
+        </div>
         <table id="provider-history-table" class="data-table">
           <thead>
             <tr>
@@ -371,5 +437,7 @@
   </footer>
   
   <script src="/js/provider.js"></script>
+  <!-- 添加XLSX库引用 -->
+  <script src="/xlsx/xlsx.full.min.js"></script>
 </body>
 </html> 

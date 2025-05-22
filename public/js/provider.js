@@ -399,6 +399,5 @@ function nextPage(type) {
         // Check if currentPageMyQuotes < totalPagesMyQuotes
         fetchMyQuotes(currentPageMyQuotes + 1);
     }
-}
+}// Make sure to include any other necessary utility functions or event listeners from the original provider.js
 
-// Make sure to include any other necessary utility functions or event listeners from the original provider.js

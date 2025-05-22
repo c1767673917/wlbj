@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户登录 - 物流报价系统</title>
+  <link rel="stylesheet" href="/css/styles.css"> 
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f4f6f8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .login-container {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-container h1 {
+      color: #333;
+      margin-bottom: 25px;
+      font-size: 1.8em;
+    }
+    .login-container input[type="password"] {
+      width: calc(100% - 22px); /* Adjust width to account for padding and border */
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .login-container button:hover {
+      background-color: #0056b3;
+    }
+    .error-message {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>用户访问认证</h1>
+    <p id="errorMessage" class="error-message"></p>
+    <form action="/authenticate-user" method="POST">
+      <div>
+        <input type="password" id="password" name="password" placeholder="请输入访问密码" required>
+      </div>
+      <button type="submit">登录</button>
+    </form>
+  </div>
+
+  <script>
+    // 检查URL中是否有错误参数并显示错误消息
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error === '1') {
+      document.getElementById('errorMessage').textContent = '密码错误，请重试。';
+    }
+  </script>
+</body>
+</html> 
