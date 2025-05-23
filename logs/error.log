@@ -1,0 +1,11 @@
+[2025-05-23 10:56:31.467 AM] error: 	导出活跃订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 10:56:33.951 AM] error: 	导出活跃订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 10:56:45.865 AM] error: 	导出活跃订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 10:56:49.232 AM] error: 	导出历史订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 10:57:52.344 AM] error: 	SiliconFlow API密钥未配置
+[2025-05-23 10:57:55.258 AM] error: 	SiliconFlow API密钥未配置
+[2025-05-23 10:57:58.574 AM] error: 	SiliconFlow API密钥未配置
+[2025-05-23 11:04:22.524 AM] error: 	导出活跃订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 11:04:26.872 AM] error: 	导出历史订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
+[2025-05-23 11:11:44.973 AM] error: 	生成Excel文件失败: Invalid character in header content ["Content-Disposition"]
+[2025-05-23 11:11:46.001 AM] error: 	生成Excel文件失败: Invalid character in header content ["Content-Disposition"]

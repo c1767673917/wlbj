@@ -153,34 +153,18 @@ let historyPaginationState = {
   searchQuery: ''
 };
 
-// SiliconFlow API调用函数
+// SiliconFlow API调用函数 - 已移除，改为调用后端API
 async function callSiliconFlowAPI(content) {
-  const apiKey = 'sk-mkwzawhynjmauuhvflpfjhfdijcvmutwswdtunhaoqnsvdos';
-  const apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
-  
   try {
     const startTime = Date.now();
     
-    const response = await fetch(apiUrl, {
+    const response = await fetch('/api/ai/recognize', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'Qwen/Qwen3-14B',
-        messages: [
-          {
-            role: 'system',
-            content: '你是一个物流信息提取专家。你需要从用户输入的文本中识别并提取以下信息：\n1. 发货仓库\n2. 货物信息(包括品名和数量)\n3. 收货信息(完整保留地址、联系人、电话、以及所有收货要求等)\n\n请以JSON格式返回结果，格式为{"warehouse": "提取的发货仓库", "goods": "提取的货物信息", "deliveryAddress": "提取的收货信息，包括完整地址、联系人、电话和所有收货要求，尽量保留原文"}'
-          },
-          {
-            role: 'user',
-            content: content
-          }
-        ],
-        temperature: 0.2,
-        enable_thinking: false  // Qwen3模型特有参数，关闭思考模式
+        content: content
       })
     });
 
@@ -189,11 +173,17 @@ async function callSiliconFlowAPI(content) {
     console.log(`API响应时间: ${timeElapsed.toFixed(2)}秒`);
 
     if (!response.ok) {
-      throw new Error(`API请求失败: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `API请求失败: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error || '服务器返回错误');
+    }
+    
+    return result.data;
   } catch (error) {
     console.error('调用AI接口出错:', error);
     throw error;
@@ -852,81 +842,32 @@ function resetSearch() {
   renderPagination();
 }
 
-// 导出为Excel
+// 导出Excel文件
 function exportToExcel(type) {
-  // 检查是否已加载XLSX库
-  if (typeof XLSX === 'undefined') {
-    // 动态加载xlsx库
-    const script = document.createElement('script');
-    script.src = '/xlsx/xlsx.full.min.js';
-    script.onload = function() {
-      exportOrdersToExcel(type);
-    };
-    script.onerror = function() {
-      console.error('加载XLSX库失败');
-      alert('导出功能初始化失败，请刷新页面重试');
-    };
-    document.head.appendChild(script);
-  } else {
-    exportOrdersToExcel(type);
-  }
-}
-
-// 实际导出Excel的函数
-function exportOrdersToExcel(type) {
-  // 决定导出哪些数据：如果有搜索过滤，就导出过滤后的，否则导出全部
-  const state = type === 'active' ? paginationState : historyPaginationState;
-  const dataToExport = state.searchQuery ? 
-    state.filteredOrders : 
-    state.allOrders;
-    
-  // 为每个订单收集最低报价
-  const pricePromises = dataToExport.map(async order => {
-    try {
-      const lowestQuote = await fetchLowestQuote(order.id);
-      return {
-        '订单编号': order.id,
-        '发货仓库': order.warehouse,
-        '货物信息': order.goods,
-        '收货信息': order.deliveryAddress,
-        '最低报价物流商': lowestQuote ? lowestQuote.provider : '暂无',
-        '最低报价': lowestQuote ? `¥${lowestQuote.price.toFixed(2)}` : '暂无',
-        '预计送达时间': lowestQuote ? lowestQuote.estimatedDelivery : '暂无',
-        '创建时间': new Date(order.createdAt).toLocaleString('zh-CN')
-      };
-    } catch (error) {
-      return {
-        '订单编号': order.id,
-        '发货仓库': order.warehouse,
-        '货物信息': order.goods,
-        '收货信息': order.deliveryAddress,
-        '最低报价物流商': '获取失败',
-        '最低报价': '获取失败',
-        '预计送达时间': '获取失败',
-        '创建时间': new Date(order.createdAt).toLocaleString('zh-CN')
-      };
-    }
-  });
+  const searchQuery = type === 'active' 
+    ? paginationState.searchQuery 
+    : historyPaginationState.searchQuery;
   
-  Promise.all(pricePromises)
-    .then(rows => {
-      // 创建工作簿和工作表
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(rows);
-      
-      // 添加工作表到工作簿
-      XLSX.utils.book_append_sheet(wb, ws, type === 'active' ? '活跃订单报价列表' : '历史订单报价列表');
-      
-      // 生成文件名
-      const filename = `${type === 'active' ? '活跃' : '历史'}物流订单报价_${new Date().toISOString().slice(0, 10)}.xlsx`;
-      
-      // 导出文件
-      XLSX.writeFile(wb, filename);
-    })
-    .catch(error => {
-      console.error('导出数据时出错:', error);
-      alert('导出失败，请重试');
-    });
+  const params = new URLSearchParams();
+  if (searchQuery) {
+    params.append('search', searchQuery);
+  }
+  
+  const endpoint = type === 'active' 
+    ? '/api/export/orders/active'
+    : '/api/export/orders/closed';
+    
+  const url = `${endpoint}?${params.toString()}`;
+  
+  // 创建一个临时的链接来下载文件
+  const link = document.createElement('a');
+  link.href = url;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  showToast(`${type === 'active' ? '活跃' : '历史'}订单导出已开始下载`);
 }
 
 // 搜索历史订单

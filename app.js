@@ -6,9 +6,20 @@ const db = require('./db/database'); // Import the database instance
 const fs = require('fs'); // 文件系统模块
 const morgan = require('morgan'); // HTTP request logger
 const logger = require('./config/logger'); // Winston logger
+const config = require('./config/env'); // 环境变量配置
+
+// 验证环境变量
+try {
+  config.validate();
+} catch (error) {
+  logger.error('环境变量验证失败:', error.message);
+  if (config.isProduction()) {
+    process.exit(1);
+  }
+}
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 // --- HTTP Request Logging with Morgan and Winston ---
 // Morgan stream to Winston
@@ -128,7 +139,7 @@ function userAuthMiddleware(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/xlsx', express.static(path.join(__dirname, 'node_modules/xlsx/dist')));
+// app.use('/xlsx', express.static(path.join(__dirname, 'node_modules/xlsx/dist'))); // 已移除xlsx库
 
 // 添加CORS支持
 app.use((req, res, next) => {
@@ -142,10 +153,14 @@ app.use((req, res, next) => {
 const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
+const aiRoutes = require('./routes/aiRoutes'); // AI路由
+const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
 app.use('/api/orders', ordersRoutes);
 app.use('/api/quotes', quotesRoutes);
 app.use('/api/providers', providersRoutes);
+app.use('/api/ai', aiRoutes); // 添加AI路由
+app.use('/api/export', exportRoutes); // 添加导出路由
 
 // 前端路由
 app.get('/', (req, res) => {

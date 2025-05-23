@@ -34,6 +34,76 @@ document.addEventListener('DOMContentLoaded', () => {
     //         // This form is no longer used for initial auth, might be repurposed or removed
     //     });
     // }
+
+    // 添加导出功能事件监听器
+    const exportOrdersButton = document.getElementById('export-orders-xlsx');
+    const exportHistoryButton = document.getElementById('export-history-xlsx');
+    
+    if (exportOrdersButton) {
+        exportOrdersButton.addEventListener('click', () => {
+            exportProviderData('available-orders');
+        });
+    }
+    
+    if (exportHistoryButton) {
+        exportHistoryButton.addEventListener('click', () => {
+            exportProviderData('quote-history');
+        });
+    }
+    
+    // 搜索功能事件监听器
+    const searchOrdersButton = document.getElementById('search-orders-button');
+    const resetOrdersButton = document.getElementById('reset-orders-search');
+    const searchHistoryButton = document.getElementById('search-history-button');
+    const resetHistoryButton = document.getElementById('reset-history-search');
+    
+    if (searchOrdersButton) {
+        searchOrdersButton.addEventListener('click', () => {
+            const searchValue = document.getElementById('search-orders-input').value;
+            searchAvailableOrders(searchValue);
+        });
+    }
+    
+    if (resetOrdersButton) {
+        resetOrdersButton.addEventListener('click', () => {
+            document.getElementById('search-orders-input').value = '';
+            fetchAvailableOrders(1);
+        });
+    }
+    
+    if (searchHistoryButton) {
+        searchHistoryButton.addEventListener('click', () => {
+            const searchValue = document.getElementById('search-history-input').value;
+            searchQuoteHistory(searchValue);
+        });
+    }
+    
+    if (resetHistoryButton) {
+        resetHistoryButton.addEventListener('click', () => {
+            document.getElementById('search-history-input').value = '';
+            fetchMyQuotes(1);
+        });
+    }
+    
+    // 回车键搜索支持
+    const searchOrdersInput = document.getElementById('search-orders-input');
+    const searchHistoryInput = document.getElementById('search-history-input');
+    
+    if (searchOrdersInput) {
+        searchOrdersInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchAvailableOrders(e.target.value);
+            }
+        });
+    }
+    
+    if (searchHistoryInput) {
+        searchHistoryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchQuoteHistory(e.target.value);
+            }
+        });
+    }
 });
 
 async function fetchProviderDetails(accessKey) {
@@ -399,5 +469,126 @@ function nextPage(type) {
         // Check if currentPageMyQuotes < totalPagesMyQuotes
         fetchMyQuotes(currentPageMyQuotes + 1);
     }
-}// Make sure to include any other necessary utility functions or event listeners from the original provider.js
+}
+
+// Make sure to include any other necessary utility functions or event listeners from the original provider.js
+
+// 导出供应商数据功能
+function exportProviderData(type) {
+    if (!currentProviderAccessKey) {
+        alert('导出失败：无法获取供应商访问密钥');
+        return;
+    }
+    
+    const searchValue = type === 'available-orders' 
+        ? document.getElementById('search-orders-input').value
+        : document.getElementById('search-history-input').value;
+    
+    const params = new URLSearchParams();
+    params.append('accessKey', currentProviderAccessKey);
+    if (searchValue) {
+        params.append('search', searchValue);
+    }
+    
+    const endpoint = `/api/export/provider/${type}`;
+    const url = `${endpoint}?${params.toString()}`;
+    
+    // 创建一个临时的链接来下载文件
+    const link = document.createElement('a');
+    link.href = url;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    const typeName = type === 'available-orders' ? '可报价订单' : '报价历史';
+    showToast(`${typeName}导出已开始下载`);
+}
+
+// 搜索可报价订单
+function searchAvailableOrders(searchValue) {
+    currentPageAvailable = 1;
+    fetchAvailableOrdersWithSearch(searchValue);
+}
+
+// 搜索报价历史
+function searchQuoteHistory(searchValue) {
+    currentPageMyQuotes = 1;
+    fetchMyQuotesWithSearch(searchValue);
+}
+
+// 带搜索功能的获取可报价订单
+async function fetchAvailableOrdersWithSearch(searchValue) {
+    if (!currentProviderAccessKey) return;
+    
+    const params = new URLSearchParams();
+    params.append('accessKey', currentProviderAccessKey);
+    params.append('page', currentPageAvailable);
+    params.append('pageSize', pageSize);
+    if (searchValue) {
+        params.append('search', searchValue);
+    }
+    
+    try {
+        const response = await fetch(`/api/orders/available?${params.toString()}`);
+        const data = await response.json();
+        renderTable(data.items, 'available-orders-table', true);
+        updatePaginationControls('available', data.totalPages, data.currentPage);
+    } catch (error) {
+        console.error('搜索可报价订单失败:', error);
+        showToast('搜索失败，请重试');
+    }
+}
+
+// 带搜索功能的获取报价历史
+async function fetchMyQuotesWithSearch(searchValue) {
+    if (!currentProviderAccessKey) return;
+    
+    const params = new URLSearchParams();
+    params.append('accessKey', currentProviderAccessKey);
+    params.append('page', currentPageMyQuotes);
+    params.append('pageSize', pageSize);
+    if (searchValue) {
+        params.append('search', searchValue);
+    }
+    
+    try {
+        const response = await fetch(`/api/quotes?${params.toString()}`);
+        const data = await response.json();
+        renderTable(data.items, 'provider-history-table', false);
+        updatePaginationControls('myquotes', data.totalPages, data.currentPage);
+    } catch (error) {
+        console.error('搜索报价历史失败:', error);
+        showToast('搜索失败，请重试');
+    }
+}
+
+// 显示提示消息
+function showToast(message, type = 'info') {
+    // 创建toast元素
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#f44336' : '#4caf50'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        font-size: 14px;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // 3秒后自动移除
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
 
