@@ -9,3 +9,18 @@
 [2025-05-23 11:04:26.872 AM] error: 	导出历史订单失败: SQLITE_ERROR: misuse of aggregate function MIN()
 [2025-05-23 11:11:44.973 AM] error: 	生成Excel文件失败: Invalid character in header content ["Content-Disposition"]
 [2025-05-23 11:11:46.001 AM] error: 	生成Excel文件失败: Invalid character in header content ["Content-Disposition"]
+[2025-05-23 16:55:13.483 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/v1/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/v1/wlbj/app.js:262:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47

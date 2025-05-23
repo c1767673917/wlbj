@@ -153,18 +153,34 @@ let historyPaginationState = {
   searchQuery: ''
 };
 
-// SiliconFlow API调用函数 - 已移除，改为调用后端API
+// SiliconFlow API调用函数 - 直接调用AI API
 async function callSiliconFlowAPI(content) {
   try {
     const startTime = Date.now();
     
-    const response = await fetch('/api/ai/recognize', {
+    // 固定的API密钥
+    const apiKey = 'sk-mkwzawhynjmauuhvflpfjhfdijcvmutwswdtunhaoqnsvdos';
+    
+    const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        content: content
+        model: 'Qwen/Qwen3-14B',
+        messages: [
+          {
+            role: 'system',
+            content: '你是一个物流信息提取专家。你需要从用户输入的文本中识别并提取以下信息：\n1. 发货仓库\n2. 货物信息(包括品名和数量)\n3. 收货信息(完整保留地址、联系人、电话、以及所有收货要求等)\n\n请以JSON格式返回结果，格式为{"warehouse": "提取的发货仓库", "goods": "提取的货物信息", "deliveryAddress": "提取的收货信息，包括完整地址、联系人、电话和所有收货要求，尽量保留原文"}'
+          },
+          {
+            role: 'user',
+            content: content
+          }
+        ],
+        temperature: 0.2,
+        enable_thinking: false
       })
     });
 
@@ -173,17 +189,18 @@ async function callSiliconFlowAPI(content) {
     console.log(`API响应时间: ${timeElapsed.toFixed(2)}秒`);
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `API请求失败: ${response.status}`);
+      const errorText = await response.text();
+      console.error('API错误响应:', errorText);
+      throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
     }
 
     const result = await response.json();
     
-    if (!result.success) {
-      throw new Error(result.error || '服务器返回错误');
+    if (!result.choices || result.choices.length === 0) {
+      throw new Error('AI服务返回了无效的响应');
     }
     
-    return result.data;
+    return result;
   } catch (error) {
     console.error('调用AI接口出错:', error);
     throw error;

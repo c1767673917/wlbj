@@ -153,13 +153,12 @@ app.use((req, res, next) => {
 const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
-const aiRoutes = require('./routes/aiRoutes'); // AI路由
+// app.use('/api/ai', aiRoutes); // AI路由已迁移到前端直接调用
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
 app.use('/api/orders', ordersRoutes);
 app.use('/api/quotes', quotesRoutes);
 app.use('/api/providers', providersRoutes);
-app.use('/api/ai', aiRoutes); // 添加AI路由
 app.use('/api/export', exportRoutes); // 添加导出路由
 
 // 前端路由
