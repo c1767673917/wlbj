@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
+const CacheManager = require('../utils/cache');
 
 // GET /api/quotes - 获取报价 (可按provider过滤, 修改为按 accessKey 过滤)
 router.get('/', (req, res) => {
@@ -24,28 +25,28 @@ router.get('/', (req, res) => {
         return res.json({ items: [], totalItems: 0, totalPages: 0, currentPage: page, pageSize });
       }
       const providerName = providerRow.name;
-      
+
       whereClauses.push('q.provider = ?'); // Alias quotes table as 'q'
       params.push(providerName);
       countParams.push(providerName);
-      
+
       executeQuery();
     });
   } else {
     executeQuery();
   }
-  
+
   function executeQuery() {
     let countQuery = 'SELECT COUNT(*) as total FROM quotes q';
     let dataQuery = `
-        SELECT 
-            q.id, 
-            q.orderId, 
-            q.provider, 
-            q.price, 
-            q.estimatedDelivery, 
+        SELECT
+            q.id,
+            q.orderId,
+            q.provider,
+            q.price,
+            q.estimatedDelivery,
             q.createdAt,
-            o.warehouse AS orderWarehouse, 
+            o.warehouse AS orderWarehouse,
             o.deliveryAddress AS orderDeliveryAddress,
             o.goods AS orderGoods
         FROM quotes q
@@ -133,7 +134,7 @@ router.post('/', (req, res) => {
               estimatedDelivery: estimatedDelivery,
               createdAt: new Date().toISOString()
             };
-            
+
             db.run(
               'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
               [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
@@ -142,6 +143,10 @@ router.post('/', (req, res) => {
                   console.error(err);
                   return res.status(500).json({ error: '创建报价失败' });
                 }
+
+                // 清除相关缓存
+                CacheManager.invalidateQuoteRelatedCache(newQuote.orderId);
+
                 res.status(201).json(newQuote);
               }
             );

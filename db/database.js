@@ -59,7 +59,43 @@ function initializeDB() {
         createdAt TEXT NOT NULL
       )
     `);
+
+    // 创建性能优化索引
+    createPerformanceIndexes();
+
     console.log('Database tables checked/created.');
+  });
+}
+
+// 创建性能优化索引
+function createPerformanceIndexes() {
+  const indexes = [
+    // 订单表索引
+    'CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)',
+    'CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(createdAt DESC)',
+    'CREATE INDEX IF NOT EXISTS idx_orders_status_created ON orders(status, createdAt DESC)',
+    'CREATE INDEX IF NOT EXISTS idx_orders_warehouse ON orders(warehouse)',
+
+    // 报价表索引
+    'CREATE INDEX IF NOT EXISTS idx_quotes_order_id ON quotes(orderId)',
+    'CREATE INDEX IF NOT EXISTS idx_quotes_provider ON quotes(provider)',
+    'CREATE INDEX IF NOT EXISTS idx_quotes_order_provider ON quotes(orderId, provider)',
+    'CREATE INDEX IF NOT EXISTS idx_quotes_price ON quotes(price)',
+    'CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON quotes(createdAt DESC)',
+
+    // 物流公司表索引
+    'CREATE INDEX IF NOT EXISTS idx_providers_access_key ON providers(accessKey)',
+    'CREATE INDEX IF NOT EXISTS idx_providers_name ON providers(name)'
+  ];
+
+  indexes.forEach((indexSQL, i) => {
+    db.run(indexSQL, (err) => {
+      if (err) {
+        console.error(`创建索引失败 (${i + 1}):`, err.message);
+      } else {
+        console.log(`索引创建成功 (${i + 1}/${indexes.length})`);
+      }
+    });
   });
 }
 

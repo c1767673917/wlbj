@@ -117,7 +117,7 @@ function userAuthMiddleware(req, res, next) {
       return res.status(503).send('系统认证服务暂不可用，请联系管理员。');
   }
   const clientIp = req.ip; // Express 会处理 X-Forwarded-For (如果 trust proxy 设置了)
-  
+
   if (ipWhitelist.ips.includes(clientIp)) {
     logger.debug(`IP白名单用户访问: ${clientIp} -> ${req.path}`);
     return next(); // IP在白名单中，允许访问
@@ -158,6 +158,7 @@ const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
 app.use('/api/orders', ordersRoutes);
 app.use('/api/quotes', quotesRoutes);
+app.use('/api/quotes', require('./routes/quotesOptimized')); // 优化的报价路由
 app.use('/api/providers', providersRoutes);
 app.use('/api/export', exportRoutes); // 添加导出路由
 
@@ -204,7 +205,7 @@ app.post('/authenticate-user', (req, res) => {
     // 更健壮的方法是使用会话和 flash 消息。
     // 为了避免密码直接出现在URL中，我们这里使用一个通用的错误标识
     logger.warn(`用户 ${clientIp} 密码错误尝试登录。`);
-    res.redirect('/login-user-page?error=1'); 
+    res.redirect('/login-user-page?error=1');
   }
 });
 
@@ -264,4 +265,4 @@ app.listen(PORT, () => {
   if (currentPassword === "changeme_please_ASAP_!") {
     logger.warn(`安全警告：请立即修改 ${AUTH_CONFIG_PATH} 中的默认密码！`);
   }
-}); 
+});

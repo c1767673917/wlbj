@@ -3,26 +3,36 @@ const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
 
-// GET /api/orders - 获取所有订单
+// GET /api/orders - 获取所有订单（优化版本）
 router.get('/', (req, res) => {
   const status = req.query.status;
+  const search = req.query.search; // 新增搜索参数
   const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || 10; // 默认每页10条
+  const pageSize = Math.min(parseInt(req.query.pageSize) || 10, 50); // 限制最大页面大小
   const offset = (page - 1) * pageSize;
 
   let params = [];
   let countParams = [];
   let whereClauses = [];
 
-  // 添加状态过滤（强制要求status字段）
+  // 添加状态过滤
   if (status) {
     whereClauses.push('status = ?');
     params.push(status);
     countParams.push(status);
   }
-    
+
+  // 添加搜索过滤
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`;
+    whereClauses.push('(id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)');
+    params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    countParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+  }
+
   let countQuery = 'SELECT COUNT(*) as total FROM orders';
-  let dataQuery = 'SELECT * FROM orders';
+  // 优化：只选择必要的字段，减少数据传输
+  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders';
 
   if (whereClauses.length > 0) {
     const whereString = ' WHERE ' + whereClauses.join(' AND ');
@@ -30,6 +40,7 @@ router.get('/', (req, res) => {
     dataQuery += whereString;
   }
 
+  // 使用索引优化的排序
   dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
   params.push(pageSize, offset);
 
@@ -51,7 +62,8 @@ router.get('/', (req, res) => {
         totalItems,
         totalPages,
         currentPage: page,
-        pageSize
+        pageSize,
+        hasSearch: !!search
       });
     });
   });
@@ -66,7 +78,7 @@ router.post('/', (req, res) => {
     deliveryAddress: req.body.deliveryAddress,
     createdAt: new Date().toISOString()
   };
-  
+
   db.run(
     'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt) VALUES (?, ?, ?, ?, ?)',
     [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt],
@@ -149,7 +161,7 @@ router.get('/:id', (req, res) => {
       console.error(err);
       return res.status(500).json({ error: '获取订单失败' });
     }
-    
+
     if (row) {
       res.json(row);
     } else {
@@ -178,13 +190,13 @@ router.put('/:id', (req, res) => {
   try {
     const orderId = req.params.id;
     const { warehouse, goods, deliveryAddress } = req.body;
-    
+
     if (!warehouse || !goods || !deliveryAddress) {
       return res.status(400).json({ error: '所有字段都是必填的' });
     }
-    
+
     const updatedAt = new Date().toISOString();
-    
+
     db.run(
       'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, updatedAt = ? WHERE id = ?',
       [warehouse, goods, deliveryAddress, updatedAt, orderId],
@@ -193,11 +205,11 @@ router.put('/:id', (req, res) => {
           console.error(err);
           return res.status(500).json({ error: '更新订单失败' });
         }
-        
+
         if (this.changes === 0) {
           return res.status(404).json({ error: '订单不存在' });
         }
-        
+
         db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
           if (err) {
             console.error(err);
@@ -218,7 +230,7 @@ router.put('/:id/close', (req, res) => {
   try {
     const orderId = req.params.id;
     const updatedAt = new Date().toISOString();
-    
+
     db.run(
       'UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?',
       ['closed', updatedAt, orderId],
@@ -227,11 +239,11 @@ router.put('/:id/close', (req, res) => {
           console.error(err);
           return res.status(500).json({ error: '关闭订单失败' });
         }
-        
+
         if (this.changes === 0) {
           return res.status(404).json({ error: '订单不存在' });
         }
-        
+
         db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
           if (err) {
             console.error(err);
@@ -254,11 +266,11 @@ router.post('/:id/quotes', (req, res) => {
   try {
     const orderId = req.params.id;
     const { provider, price, estimatedDelivery } = req.body;
-    
+
     if (!provider || !price || !estimatedDelivery) {
       return res.status(400).json({ error: '所有字段都是必填的' });
     }
-    
+
     const quote = {
       id: uuidv4(),
       orderId,
@@ -267,7 +279,7 @@ router.post('/:id/quotes', (req, res) => {
       estimatedDelivery,
       createdAt: new Date().toISOString()
     };
-    
+
     db.run(
       'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
       [quote.id, quote.orderId, quote.provider, quote.price, quote.estimatedDelivery, quote.createdAt],
