@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  wlbj-app:
+    build: .
+    container_name: wlbj-logistics
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_PATH=/app/data/logistics.db
+      - LOG_LEVEL=info
+      - LOG_DIR=/app/logs
+      # SiliconFlow API配置 - 请在.env文件中设置
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY}
+      - SILICONFLOW_API_URL=${SILICONFLOW_API_URL:-https://api.siliconflow.cn/v1/chat/completions}
+    volumes:
+      # 持久化数据库文件
+      - wlbj-data:/app/data
+      # 持久化日志文件
+      - wlbj-logs:/app/logs
+      # 持久化配置文件
+      - wlbj-config:/app/config-persistent
+    networks:
+      - wlbj-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 可选：添加Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: wlbj-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - wlbj-nginx-logs:/var/log/nginx
+      # SSL证书目录（如果需要HTTPS）
+      # - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - wlbj-app
+    networks:
+      - wlbj-network
+    profiles:
+      - with-nginx
+
+volumes:
+  wlbj-data:
+    driver: local
+  wlbj-logs:
+    driver: local
+  wlbj-config:
+    driver: local
+  wlbj-nginx-logs:
+    driver: local
+
+networks:
+  wlbj-network:
+    driver: bridge

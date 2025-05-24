@@ -123,12 +123,28 @@ wlbj/
 
 ## 安装与运行
 
-### 前提条件
+### 🐳 Docker 部署（推荐）
+
+**快速开始**：
+```bash
+git clone https://github.com/c1767673917/wlbj.git
+cd wlbj
+git checkout docker-version
+cp .env.docker.example .env
+# 编辑 .env 文件设置 SILICONFLOW_API_KEY
+./docker-deploy.sh
+```
+
+详细说明请参考：[Docker 部署指南](README-Docker.md) | [快速开始](DOCKER-QUICKSTART.md)
+
+### 📦 传统部署
+
+#### 前提条件
 
 - [Node.js](https://nodejs.org/) (建议使用 LTS 版本)
 - npm (通常随 Node.js 一起安装)
 
-### 安装步骤
+#### 安装步骤
 
 1. 克隆或下载本项目代码。
 2. 打开终端，进入项目根目录下的 `wlbj` 文件夹：
@@ -174,8 +190,8 @@ LOG_DIR=./logs
 在 `wlbj/` 目录下手动创建 `auth_config.json` 文件：
 
 ```json
-{ 
-  "password": "your_secure_password_here" 
+{
+  "password": "your_secure_password_here"
 }
 ```
 
