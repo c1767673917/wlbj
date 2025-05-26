@@ -33,7 +33,10 @@ function initializeDB() {
         deliveryAddress TEXT NOT NULL,
         createdAt TEXT NOT NULL,
         updatedAt TEXT,
-        status TEXT DEFAULT 'active'
+        status TEXT DEFAULT 'active',
+        selectedProvider TEXT,
+        selectedPrice REAL,
+        selectedAt TEXT
       )
     `);
 
@@ -56,12 +59,19 @@ function initializeDB() {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL UNIQUE,
         accessKey TEXT NOT NULL UNIQUE,
-        createdAt TEXT NOT NULL
+        createdAt TEXT NOT NULL,
+        wechat_webhook_url TEXT
       )
     `);
 
     // 创建性能优化索引
     createPerformanceIndexes();
+
+    // 数据库迁移：为现有providers表添加wechat_webhook_url字段
+    migrateProvidersTable();
+
+    // 数据库迁移：为现有orders表添加选择物流商相关字段
+    migrateOrdersTable();
 
     console.log('Database tables checked/created.');
   });
@@ -96,6 +106,82 @@ function createPerformanceIndexes() {
         console.log(`索引创建成功 (${i + 1}/${indexes.length})`);
       }
     });
+  });
+}
+
+// 数据库迁移：为现有providers表添加wechat_webhook_url字段
+function migrateProvidersTable() {
+  // 检查wechat_webhook_url字段是否已存在
+  db.all("PRAGMA table_info(providers)", (err, columns) => {
+    if (err) {
+      console.error('检查providers表结构失败:', err.message);
+      return;
+    }
+
+    const hasWebhookColumn = columns.some(col => col.name === 'wechat_webhook_url');
+
+    if (!hasWebhookColumn) {
+      db.run('ALTER TABLE providers ADD COLUMN wechat_webhook_url TEXT', (err) => {
+        if (err) {
+          console.error('添加wechat_webhook_url字段失败:', err.message);
+        } else {
+          console.log('成功为providers表添加wechat_webhook_url字段');
+        }
+      });
+    } else {
+      console.log('providers表已包含wechat_webhook_url字段');
+    }
+  });
+}
+
+// 数据库迁移：为现有orders表添加选择物流商相关字段
+function migrateOrdersTable() {
+  // 检查orders表结构
+  db.all("PRAGMA table_info(orders)", (err, columns) => {
+    if (err) {
+      console.error('检查orders表结构失败:', err.message);
+      return;
+    }
+
+    const columnNames = columns.map(col => col.name);
+    const hasSelectedProvider = columnNames.includes('selectedProvider');
+    const hasSelectedPrice = columnNames.includes('selectedPrice');
+    const hasSelectedAt = columnNames.includes('selectedAt');
+
+    // 添加缺失的字段
+    if (!hasSelectedProvider) {
+      db.run('ALTER TABLE orders ADD COLUMN selectedProvider TEXT', (err) => {
+        if (err) {
+          console.error('添加selectedProvider字段失败:', err.message);
+        } else {
+          console.log('成功为orders表添加selectedProvider字段');
+        }
+      });
+    }
+
+    if (!hasSelectedPrice) {
+      db.run('ALTER TABLE orders ADD COLUMN selectedPrice REAL', (err) => {
+        if (err) {
+          console.error('添加selectedPrice字段失败:', err.message);
+        } else {
+          console.log('成功为orders表添加selectedPrice字段');
+        }
+      });
+    }
+
+    if (!hasSelectedAt) {
+      db.run('ALTER TABLE orders ADD COLUMN selectedAt TEXT', (err) => {
+        if (err) {
+          console.error('添加selectedAt字段失败:', err.message);
+        } else {
+          console.log('成功为orders表添加selectedAt字段');
+        }
+      });
+    }
+
+    if (hasSelectedProvider && hasSelectedPrice && hasSelectedAt) {
+      console.log('orders表已包含所有选择物流商相关字段');
+    }
   });
 }
 

@@ -648,9 +648,15 @@ function displayQuotesInRow(quotes, quoteRow) {
   const quotesTableBody = quoteContainer.querySelector('tbody');
   quotesTableBody.innerHTML = '';
 
+  // 获取订单ID和判断是否为历史订单
+  const orderRow = quoteRow.previousElementSibling;
+  const orderId = orderRow.getAttribute('data-order-id');
+  const isHistoryOrder = orderRow.closest('#history-orders-table') !== null;
+
   if (quotes.length === 0) {
     const emptyRow = document.createElement('tr');
-    emptyRow.innerHTML = '<td colspan="4" style="text-align: center;">暂无报价</td>';
+    const colspan = isHistoryOrder ? '4' : '5'; // 历史订单不显示操作列
+    emptyRow.innerHTML = `<td colspan="${colspan}" style="text-align: center;">暂无报价</td>`;
     quotesTableBody.appendChild(emptyRow);
     return;
   }
@@ -666,12 +672,30 @@ function displayQuotesInRow(quotes, quoteRow) {
 
     const quoteDate = new Date(quote.createdAt).toLocaleString('zh-CN');
 
-    row.innerHTML = `
-      <td>${quote.provider}</td>
-      <td>¥${quote.price.toFixed(2)}</td>
-      <td>${quote.estimatedDelivery}</td>
-      <td>${quoteDate}</td>
-    `;
+    if (isHistoryOrder) {
+      // 历史订单：不显示选择按钮
+      row.innerHTML = `
+        <td>${quote.provider}</td>
+        <td>¥${quote.price.toFixed(2)}</td>
+        <td>${quote.estimatedDelivery}</td>
+        <td>${quoteDate}</td>
+      `;
+    } else {
+      // 活跃订单：显示选择按钮
+      row.innerHTML = `
+        <td>${quote.provider}</td>
+        <td>¥${quote.price.toFixed(2)}</td>
+        <td>${quote.estimatedDelivery}</td>
+        <td>${quoteDate}</td>
+        <td>
+          <button class="select-provider-btn"
+                  onclick="selectProvider('${orderId}', '${quote.provider}', ${quote.price})"
+                  style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+            选择
+          </button>
+        </td>
+      `;
+    }
 
     quotesTableBody.appendChild(row);
   });
@@ -951,43 +975,65 @@ function _renderHistoryOrdersPage() {
     const createdDate = new Date(order.createdAt).toLocaleString('zh-CN');
     // const updatedAt = order.updatedAt ? new Date(order.updatedAt).toLocaleString('zh-CN') : 'N/A'; // No longer displayed directly in the main row
 
-    // Fetch and display lowest quote, similar to active orders
-    fetchLowestQuote(order.id)
-      .then(lowestQuote => {
-        const lowestQuoteHtml = lowestQuote
-          ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}`
-          : '暂无报价';
+    // 显示选择的报价信息，如果没有选择则显示最低报价
+    const selectedQuoteHtml = order.selectedProvider && order.selectedPrice
+      ? `${order.selectedProvider}: ¥${order.selectedPrice.toFixed(2)}`
+      : null;
 
-        row.innerHTML = `
-          <td>${order.id.substring(0,8)}</td>
-          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
-          <td>${order.goods}</td>
-          <td>${order.deliveryAddress}</td>
-          <td>${lowestQuoteHtml}</td>
-          <td>${createdDate}</td>
-          <td class="action-cell">
-            <div class="button-row">
-              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
-            </div>
-          </td>
-        `;
-      })
-      .catch(error => {
-        console.error(`获取订单 ${order.id} 的最低报价失败:`, error);
-        row.innerHTML = `
-          <td>${order.id.substring(0,8)}</td>
-          <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
-          <td>${order.goods}</td>
-          <td>${order.deliveryAddress}</td>
-          <td>获取报价失败</td>
-          <td>${createdDate}</td>
-          <td class="action-cell">
-            <div class="button-row">
-              <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
-            </div>
-          </td>
-        `;
-      });
+    if (selectedQuoteHtml) {
+      // 如果有选择的报价，直接显示
+      row.innerHTML = `
+        <td>${order.id.substring(0,8)}</td>
+        <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+        <td>${order.goods}</td>
+        <td>${order.deliveryAddress}</td>
+        <td>${selectedQuoteHtml}</td>
+        <td>${createdDate}</td>
+        <td class="action-cell">
+          <div class="button-row">
+            <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+          </div>
+        </td>
+      `;
+    } else {
+      // 如果没有选择的报价，显示最低报价
+      fetchLowestQuote(order.id)
+        .then(lowestQuote => {
+          const lowestQuoteHtml = lowestQuote
+            ? `${lowestQuote.provider}: ¥${lowestQuote.price.toFixed(2)}`
+            : '暂无报价';
+
+          row.innerHTML = `
+            <td>${order.id.substring(0,8)}</td>
+            <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+            <td>${order.goods}</td>
+            <td>${order.deliveryAddress}</td>
+            <td>${lowestQuoteHtml}</td>
+            <td>${createdDate}</td>
+            <td class="action-cell">
+              <div class="button-row">
+                <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+              </div>
+            </td>
+          `;
+        })
+        .catch(error => {
+          console.error(`获取订单 ${order.id} 的最低报价失败:`, error);
+          row.innerHTML = `
+            <td>${order.id.substring(0,8)}</td>
+            <td class="warehouse-column" title="${order.warehouse}" style="width:90px; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-left:4px; padding-right:4px;">${order.warehouse}</td>
+            <td>${order.goods}</td>
+            <td>${order.deliveryAddress}</td>
+            <td>获取报价失败</td>
+            <td>${createdDate}</td>
+            <td class="action-cell">
+              <div class="button-row">
+                <button class="view-quotes-btn" onclick="viewQuotes('${order.id}', this)">查看报价</button>
+              </div>
+            </td>
+          `;
+        });
+    }
 
     historyTableBody.appendChild(row);
 
@@ -1123,13 +1169,63 @@ window.editOrder = editOrder;
 window.viewQuotes = viewQuotes;
 
 // 将closeOrder函数暴露到全局范围
+window.closeOrder = closeOrder;
+
+// 选择物流商
+function selectProvider(orderId, provider, price) {
+  // 显示确认对话框
+  const confirmMessage = `确定选择 ${provider} 的报价 ¥${price.toFixed(2)} 吗？\n\n选择后订单将自动关闭并移至历史订单。`;
+
+  if (!confirm(confirmMessage)) {
+    return;
+  }
+
+  // 发送选择请求
+  fetch(`/api/orders/${orderId}/select-provider`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      provider: provider,
+      price: price
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('服务器返回错误');
+      }
+      return response.json();
+    })
+    .then(result => {
+      // 重新加载活跃订单和历史订单
+      loadActiveOrders();
+      loadHistoryOrders();
+    })
+    .catch(error => {
+      console.error('选择物流商失败:', error);
+      alert('选择物流商失败，请重试');
+    });
+}
+
+// 将selectProvider函数暴露到全局范围
+window.selectProvider = selectProvider;
 
 // --- 新增: 物流公司管理功能 ---
+// 验证企业微信webhook URL格式
+function validateWechatWebhookUrl(url) {
+    if (!url) return true; // 空值是允许的
+    const pattern = /^https:\/\/qyapi\.weixin\.qq\.com\/cgi-bin\/webhook\/send\?key=[a-zA-Z0-9-_]+$/;
+    return pattern.test(url);
+}
+
 async function addProvider() {
     const nameInput = document.getElementById('providerNameInput');
     const accessKeyInput = document.getElementById('providerAccessKeyInput'); // 获取新输入框
+    const webhookInput = document.getElementById('providerWebhookInput'); // 获取webhook输入框
     const providerName = nameInput.value.trim();
     const providerAccessKey = accessKeyInput.value.trim(); // 获取自定义链接名
+    const wechatWebhookUrl = webhookInput.value.trim(); // 获取企业微信webhook URL
     const statusElement = document.getElementById('addProviderStatus');
 
     if (!providerName) {
@@ -1150,12 +1246,22 @@ async function addProvider() {
         return;
     }
 
+    // 验证企业微信webhook URL格式
+    if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
+        statusElement.textContent = '企业微信webhook URL格式不正确，应为：https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY';
+        statusElement.style.color = 'red';
+        return;
+    }
+
     statusElement.textContent = '正在添加...';
     statusElement.style.color = 'blue';
 
     const requestBody = { name: providerName };
     if (providerAccessKey) {
         requestBody.customAccessKey = providerAccessKey;
+    }
+    if (wechatWebhookUrl) {
+        requestBody.wechatWebhookUrl = wechatWebhookUrl;
     }
 
     try {
@@ -1174,6 +1280,7 @@ async function addProvider() {
             statusElement.style.color = 'green';
             nameInput.value = ''; // 清空输入框
             accessKeyInput.value = ''; // 清空自定义链接名输入框
+            webhookInput.value = ''; // 清空webhook输入框
             fetchAndDisplayProviders(); // 刷新列表
         } else {
             statusElement.textContent = `添加失败: ${result.error || response.statusText}`;
@@ -1200,7 +1307,7 @@ async function fetchAndDisplayProviders() {
                 errorMsg = errData.error || errorMsg;
             } catch (e) { /* 忽略解析错误，使用上面的状态码错误 */ }
             console.error('Error fetching providers list:', errorMsg);
-            providersListBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: red;">${errorMsg}</td></tr>`; // 更新 colspan
+            providersListBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">${errorMsg}</td></tr>`; // 更新 colspan
             return;
         }
 
@@ -1236,6 +1343,28 @@ async function fetchAndDisplayProviders() {
                 };
                 linkCell.appendChild(copyButton);
 
+                // 企业微信通知状态列
+                const wechatCell = row.insertCell();
+                if (provider.wechat_webhook_url) {
+                    wechatCell.innerHTML = '<span style="color: green;">✓ 已配置</span>';
+                    const editWebhookBtn = document.createElement('button');
+                    editWebhookBtn.textContent = '编辑';
+                    editWebhookBtn.style.marginLeft = '5px';
+                    editWebhookBtn.style.padding = '2px 6px';
+                    editWebhookBtn.style.fontSize = '12px';
+                    editWebhookBtn.onclick = () => editWebhookUrl(provider.id, provider.wechat_webhook_url);
+                    wechatCell.appendChild(editWebhookBtn);
+                } else {
+                    wechatCell.innerHTML = '<span style="color: #999;">未配置</span>';
+                    const addWebhookBtn = document.createElement('button');
+                    addWebhookBtn.textContent = '配置';
+                    addWebhookBtn.style.marginLeft = '5px';
+                    addWebhookBtn.style.padding = '2px 6px';
+                    addWebhookBtn.style.fontSize = '12px';
+                    addWebhookBtn.onclick = () => editWebhookUrl(provider.id, '');
+                    wechatCell.appendChild(addWebhookBtn);
+                }
+
                 row.insertCell().textContent = new Date(provider.createdAt).toLocaleString('zh-CN');
 
                 // 新增操作单元格
@@ -1265,15 +1394,67 @@ async function fetchAndDisplayProviders() {
                 actionCell.appendChild(deleteButton);
             });
         } else {
-            providersListBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">暂无物流公司。请在上方添加。</td></tr>'; // 更新 colspan
+            providersListBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">暂无物流公司。请在上方添加。</td></tr>'; // 更新 colspan
         }
     } catch (error) {
         console.error('获取物流公司列表时发生错误:', error);
-        providersListBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">获取物流公司列表时发生网络或未知错误。</td></tr>';// 更新 colspan
+        providersListBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">获取物流公司列表时发生网络或未知错误。</td></tr>';// 更新 colspan
     }
 }
 
 // --- 以下是新增的函数 ---
+// 编辑企业微信webhook URL
+function editWebhookUrl(providerId, currentWebhookUrl) {
+    const newWebhookUrl = prompt(
+        '请输入企业微信群机器人webhook URL:\n(格式: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY)\n留空则删除配置',
+        currentWebhookUrl || ''
+    );
+
+    if (newWebhookUrl === null) { // 用户点击了取消
+        return;
+    }
+
+    const trimmedWebhookUrl = newWebhookUrl.trim();
+
+    // 验证URL格式（如果不为空）
+    if (trimmedWebhookUrl && !validateWechatWebhookUrl(trimmedWebhookUrl)) {
+        showToast('企业微信webhook URL格式不正确，应为：https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY');
+        return;
+    }
+
+    if (trimmedWebhookUrl === currentWebhookUrl) {
+        showToast('webhook URL未发生变化。');
+        return;
+    }
+
+    updateProviderWebhookUrl(providerId, trimmedWebhookUrl);
+}
+
+// 更新物流公司的企业微信webhook URL
+async function updateProviderWebhookUrl(providerId, webhookUrl) {
+    try {
+        const response = await fetch(`/api/providers/${providerId}/webhook`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ wechatWebhookUrl: webhookUrl }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast(result.message || '企业微信webhook URL更新成功！');
+            fetchAndDisplayProviders(); // 刷新列表
+        } else {
+            showToast(`更新失败: ${result.error || response.statusText}`);
+        }
+    } catch (error) {
+        console.error('更新webhook URL时发生错误:', error);
+        showToast('更新webhook URL过程中发生网络或服务器错误。');
+    }
+}
+
 function showEditAccessKeyModal(providerId, currentAccessKey) {
     const newAccessKey = prompt('请输入新的自定义链接名 (accessKey):\n(仅支持字母、数字、下划线和中划线，不能为空)', currentAccessKey);
 

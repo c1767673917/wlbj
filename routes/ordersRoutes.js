@@ -2,6 +2,74 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
+const { notifyAllProvidersNewOrder } = require('../utils/wechatNotification');
+
+// 生成订单号：RX + yymmdd + "-" + 3位流水号
+function generateOrderId() {
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2); // 取年份后两位
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 月份补零
+  const day = now.getDate().toString().padStart(2, '0'); // 日期补零
+  const dateStr = year + month + day;
+
+  return new Promise((resolve, reject) => {
+    // 查询今天已有的订单数量来生成流水号
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+
+    db.get(
+      'SELECT COUNT(*) as count FROM orders WHERE createdAt >= ? AND createdAt < ?',
+      [todayStart, todayEnd],
+      (err, row) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const sequenceNumber = (row.count + 1).toString().padStart(3, '0'); // 3位流水号，从001开始
+        const orderId = `RX${dateStr}-${sequenceNumber}`;
+        resolve(orderId);
+      }
+    );
+  });
+}
+
+// 发送企业微信通知的异步函数
+async function sendWechatNotifications(order) {
+  try {
+    // 获取所有配置了企业微信webhook的物流公司
+    db.all('SELECT name, wechat_webhook_url FROM providers WHERE wechat_webhook_url IS NOT NULL AND wechat_webhook_url != ""', [], async (err, providers) => {
+      if (err) {
+        console.error('获取物流公司列表失败:', err);
+        return;
+      }
+
+      if (providers.length === 0) {
+        console.log('没有配置企业微信webhook的物流公司，跳过通知发送');
+        return;
+      }
+
+      console.log(`开始向 ${providers.length} 个物流公司发送订单通知...`);
+
+      // 发送通知
+      const results = await notifyAllProvidersNewOrder(order, providers);
+
+      // 记录发送结果
+      results.forEach(result => {
+        if (result.success) {
+          console.log(`✓ 成功向 ${result.providerName} 发送订单通知`);
+        } else {
+          console.error(`✗ 向 ${result.providerName} 发送订单通知失败: ${result.message}`);
+        }
+      });
+
+      const successCount = results.filter(r => r.success).length;
+      console.log(`订单通知发送完成: ${successCount}/${results.length} 成功`);
+    });
+  } catch (error) {
+    console.error('发送企业微信通知时出错:', error);
+  }
+}
 
 // GET /api/orders - 获取所有订单（优化版本）
 router.get('/', (req, res) => {
@@ -70,26 +138,38 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/orders - 提交新订单
-router.post('/', (req, res) => {
-  const newOrder = {
-    id: uuidv4(),
-    warehouse: req.body.warehouse,
-    goods: req.body.goods,
-    deliveryAddress: req.body.deliveryAddress,
-    createdAt: new Date().toISOString()
-  };
+router.post('/', async (req, res) => {
+  try {
+    // 生成新的订单号格式
+    const orderId = await generateOrderId();
 
-  db.run(
-    'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt) VALUES (?, ?, ?, ?, ?)',
-    [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt],
-    function(err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: '创建订单失败' });
+    const newOrder = {
+      id: orderId,
+      warehouse: req.body.warehouse,
+      goods: req.body.goods,
+      deliveryAddress: req.body.deliveryAddress,
+      createdAt: new Date().toISOString()
+    };
+
+    db.run(
+      'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt) VALUES (?, ?, ?, ?, ?)',
+      [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt],
+      function(err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: '创建订单失败' });
+        }
+
+        // 订单创建成功后，发送企业微信通知
+        sendWechatNotifications(newOrder);
+
+        res.status(201).json(newOrder);
       }
-      res.status(201).json(newOrder);
-    }
-  );
+    );
+  } catch (error) {
+    console.error('生成订单号失败:', error);
+    res.status(500).json({ error: '创建订单失败' });
+  }
 });
 
 // GET /api/orders/available - 获取可报价订单
@@ -256,6 +336,68 @@ router.put('/:id/close', (req, res) => {
   } catch (error) {
     console.error('关闭订单失败:', error);
     res.status(500).json({ error: '关闭订单失败' });
+  }
+});
+
+// PUT /api/orders/:id/select-provider - 选择物流商
+router.put('/:id/select-provider', (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const { provider, price } = req.body;
+
+    if (!provider || !price) {
+      return res.status(400).json({ error: '物流商名称和报价金额都是必填的' });
+    }
+
+    const updatedAt = new Date().toISOString();
+    const selectedAt = new Date().toISOString();
+
+    // 首先验证该报价是否存在
+    db.get(
+      'SELECT * FROM quotes WHERE orderId = ? AND provider = ? AND price = ?',
+      [orderId, provider, parseFloat(price)],
+      (err, quote) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: '验证报价失败' });
+        }
+
+        if (!quote) {
+          return res.status(400).json({ error: '选择的报价不存在或已失效' });
+        }
+
+        // 更新订单状态为已关闭，并记录选择的物流商信息
+        db.run(
+          'UPDATE orders SET status = ?, selectedProvider = ?, selectedPrice = ?, selectedAt = ?, updatedAt = ? WHERE id = ? AND status = ?',
+          ['closed', provider, parseFloat(price), selectedAt, updatedAt, orderId, 'active'],
+          function(err) {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ error: '选择物流商失败' });
+            }
+
+            if (this.changes === 0) {
+              return res.status(404).json({ error: '订单不存在或已关闭' });
+            }
+
+            // 返回更新后的订单信息
+            db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+              if (err) {
+                console.error(err);
+                return res.status(500).json({ error: '获取更新后的订单失败' });
+              }
+              res.json({
+                ...row,
+                message: '成功选择物流商，订单已移至历史记录'
+              });
+            });
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error('选择物流商失败:', error);
+    res.status(500).json({ error: '选择物流商失败' });
   }
 });
 

@@ -97,7 +97,7 @@ button:hover {
 }
 
 /* 表格列宽设置 */
-.data-table th:nth-child(2), 
+.data-table th:nth-child(2),
 .data-table td:nth-child(2) {
   min-width: 200px;
   width: 15%;
@@ -173,4 +173,55 @@ button:hover {
 /* 报价列表表头背景色 */
 .quote-container .quote-table thead th {
   background-color: #eaf2f8; /* 与报价内容区背景色一致 */
+}
+
+/* 选择物流商按钮样式 */
+.select-provider-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.select-provider-btn:hover {
+  background-color: #218838;
+}
+
+/* 最低价格行高亮 */
+.best-price-row {
+  background-color: #e8f5e9;
+}
+
+.best-price-row td {
+  font-weight: bold;
+}
+
+/* 自定义Toast提示框样式 */
+.custom-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+}
+
+.custom-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.custom-toast.fadeout {
+  opacity: 0;
+  transform: translateX(100%);
 }

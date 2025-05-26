@@ -2,12 +2,18 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
+const { validateWechatWebhookUrl } = require('../utils/wechatNotification');
 
 // POST /api/providers - 添加新的物流公司
 router.post('/', (req, res) => {
-  const { name, customAccessKey } = req.body;
+  const { name, customAccessKey, wechatWebhookUrl } = req.body;
   if (!name) {
     return res.status(400).json({ error: '物流公司名称是必填的' });
+  }
+
+  // 验证企业微信webhook URL（如果提供）
+  if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
+    return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
   }
 
   let accessKeyToUse = customAccessKey;
@@ -25,13 +31,14 @@ router.post('/', (req, res) => {
   const newProvider = {
     id: uuidv4(),
     name: name,
-    accessKey: accessKeyToUse, 
-    createdAt: new Date().toISOString()
+    accessKey: accessKeyToUse,
+    createdAt: new Date().toISOString(),
+    wechatWebhookUrl: wechatWebhookUrl || null
   };
 
   db.run(
-    'INSERT INTO providers (id, name, accessKey, createdAt) VALUES (?, ?, ?, ?)',
-    [newProvider.id, newProvider.name, newProvider.accessKey, newProvider.createdAt],
+    'INSERT INTO providers (id, name, accessKey, createdAt, wechat_webhook_url) VALUES (?, ?, ?, ?, ?)',
+    [newProvider.id, newProvider.name, newProvider.accessKey, newProvider.createdAt, newProvider.wechatWebhookUrl],
     function(err) {
       if (err) {
         if (err.message && err.message.includes('UNIQUE constraint failed: providers.name')) {
@@ -48,7 +55,8 @@ router.post('/', (req, res) => {
         id: newProvider.id,
         name: newProvider.name,
         accessKey: newProvider.accessKey,
-        createdAt: newProvider.createdAt
+        createdAt: newProvider.createdAt,
+        wechatWebhookUrl: newProvider.wechatWebhookUrl
       });
     }
   );
@@ -56,7 +64,7 @@ router.post('/', (req, res) => {
 
 // GET /api/providers - 获取所有物流公司
 router.get('/', (req, res) => {
-  db.all('SELECT id, name, accessKey, createdAt FROM providers ORDER BY createdAt DESC', [], (err, providers) => {
+  db.all('SELECT id, name, accessKey, createdAt, wechat_webhook_url FROM providers ORDER BY createdAt DESC', [], (err, providers) => {
     if (err) {
       console.error("Error fetching providers:", err);
       return res.status(500).json({ error: '获取物流公司列表失败' });
@@ -121,13 +129,42 @@ router.delete('/:id', (req, res) => {
   });
 });
 
+// PUT /api/providers/:id/webhook - 更新物流公司的企业微信webhook URL
+router.put('/:id/webhook', (req, res) => {
+  const providerId = req.params.id;
+  const { wechatWebhookUrl } = req.body;
+
+  // 验证webhook URL格式（如果提供）
+  if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
+    return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
+  }
+
+  db.run(
+    'UPDATE providers SET wechat_webhook_url = ? WHERE id = ?',
+    [wechatWebhookUrl || null, providerId],
+    function(err) {
+      if (err) {
+        console.error("Error updating provider webhook:", err);
+        return res.status(500).json({ error: '更新webhook URL失败' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: '未找到指定ID的物流公司' });
+      }
+      res.json({
+        message: '企业微信webhook URL更新成功',
+        wechatWebhookUrl: wechatWebhookUrl || null
+      });
+    }
+  );
+});
+
 // GET /api/providers/details - 根据 accessKey 获取单个物流公司详细信息
-router.get('/details', (req, res) => { 
+router.get('/details', (req, res) => {
   const accessKey = req.query.accessKey;
   if (!accessKey) {
     return res.status(400).json({ error: '必须提供 accessKey' });
   }
-  db.get('SELECT id, name, accessKey, createdAt FROM providers WHERE accessKey = ?', [accessKey], (err, provider) => {
+  db.get('SELECT id, name, accessKey, createdAt, wechat_webhook_url FROM providers WHERE accessKey = ?', [accessKey], (err, provider) => {
     if (err) {
       console.error("Error fetching provider details by accessKey:", err);
       return res.status(500).json({ error: '查询物流公司信息失败' });
