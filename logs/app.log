@@ -1812,3 +1812,24 @@
 [2025-05-26 20:17:06.702 PM] info: 	[0mGET /api/quotes/lowest/RX250526-005 [36m304[0m 1.792 ms - -[0m
 [2025-05-26 20:17:11.604 PM] info: 	[0mGET /api/orders/RX250526-003/quotes [32m200[0m 1.141 ms - 168[0m
 [2025-05-26 20:17:16.220 PM] info: 	[0mGET /api/orders/RX250526-008/quotes [36m304[0m 0.979 ms - -[0m
+[2025-05-26 21:01:23.599 PM] info: 	用户认证密码已加载。
+[2025-05-26 21:01:23.708 PM] info: 	服务器运行在 http://localhost:3000
+[2025-05-26 21:01:46.368 PM] info: 	[0mGET /user [36m304[0m 3.204 ms - -[0m
+[2025-05-26 21:01:46.386 PM] info: 	[0mGET /css/styles.css?v=20250125 [36m304[0m 1.161 ms - -[0m
+[2025-05-26 21:01:46.387 PM] info: 	[0mGET /js/user.js?v=20250125 [36m304[0m 1.175 ms - -[0m
+[2025-05-26 21:01:46.511 PM] info: 	[0mGET /api/providers [36m304[0m 4.528 ms - -[0m
+[2025-05-26 21:01:46.513 PM] info: 	[0mGET /api/orders?status=active&page=1&pageSize=10 [36m304[0m 5.495 ms - -[0m
+[2025-05-26 21:01:46.514 PM] info: 	[0mGET /api/orders?status=closed&page=1&pageSize=10 [36m304[0m 4.627 ms - -[0m
+[2025-05-26 21:01:46.540 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250526-003%2CRX250526-002%2C40e1d740-a954-454e-8c4a-470a6957774c%2C948e3064-e8b0-4e4b-bca1-f473293fc773%2Cf3822a21-55c4-4525-a697-b746899501c3%2Ca39ee207-145b-4e2f-9a5a-f71271e5cb28%2Cf088127a-be1c-4555-9901-99282dbe2dff%2C5a038fa9-850f-46be-b88e-ec1456d4ab57%2C73ddcfe7-d1ba-4a1c-a115-40a719f55bee%2Cb6b4d374-b1e5-49f1-a03c-9b31481002fe [36m304[0m 4.823 ms - -[0m
+[2025-05-26 21:01:46.541 PM] info: 	[0mGET /api/quotes/lowest/RX250526-008 [36m304[0m 6.304 ms - -[0m
+[2025-05-26 21:01:46.542 PM] info: 	[0mGET /api/quotes/lowest/RX250526-007 [36m304[0m 5.308 ms - -[0m
+[2025-05-26 21:01:46.544 PM] info: 	[0mGET /api/quotes/lowest/RX250526-006 [36m304[0m 4.718 ms - -[0m
+[2025-05-26 21:01:46.545 PM] info: 	[0mGET /api/quotes/lowest/RX250526-004 [36m304[0m 2.578 ms - -[0m
+[2025-05-26 21:01:46.546 PM] info: 	[0mGET /api/quotes/lowest/ec3618bd-ac77-42dd-b0fc-6fe447b12289 [36m304[0m 3.031 ms - -[0m
+[2025-05-26 21:01:46.547 PM] info: 	[0mGET /api/quotes/lowest/RX250526-005 [36m304[0m 3.766 ms - -[0m
+[2025-05-26 21:01:46.548 PM] info: 	[0mGET /api/quotes/lowest/f98eb855-a3c8-41f7-924b-1ef8aaad2d06 [36m304[0m 4.219 ms - -[0m
+[2025-05-26 21:01:46.548 PM] info: 	[0mGET /api/quotes/lowest/f098db81-829b-4ba0-9d1e-cdaba348ccef [36m304[0m 4.753 ms - -[0m
+[2025-05-26 21:01:46.549 PM] info: 	[0mGET /api/quotes/lowest/eb6c6c37-d667-484d-858e-fb67392ad13d [36m304[0m 4.209 ms - -[0m
+[2025-05-26 21:01:46.549 PM] info: 	[0mGET /api/quotes/lowest/76a1ef58-e5d0-4b6e-8ee4-96112be255cf [36m304[0m 2.462 ms - -[0m
+[2025-05-26 21:02:11.917 PM] info: 	[0mGET /api/orders?status=active&page=2&pageSize=10 [36m304[0m 1.373 ms - -[0m
+[2025-05-26 21:02:11.924 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=4765f15c-87c9-407f-a6ee-fa825f42801e%2C5d934e79-4824-4c59-89c0-d50dccbe8413%2Cd6a51f1a-3462-4db7-b225-aca2aad2522c%2C6cdf9d64-7b71-4914-8577-ce516e264dea%2C233a33be-bffe-43f9-8e57-473686825ba6%2Ca9fdf66d-2272-4cf5-bc29-31f2bc303c81%2Cce18706b-d9d0-4f9f-8afa-d3e84e76b6d5%2Cd627997b-9be0-4192-bf97-be631b73501d [36m304[0m 2.424 ms - -[0m
