@@ -176,4 +176,150 @@ router.get('/details', (req, res) => {
   });
 });
 
+// GET /api/providers/:accessKey/available-orders - 获取物流商可报价的订单
+router.get('/:accessKey/available-orders', (req, res) => {
+  const accessKey = req.params.accessKey;
+  const search = req.query.search;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
+  const offset = (page - 1) * pageSize;
+
+  if (!accessKey) {
+    return res.status(400).json({ error: '必须提供 accessKey' });
+  }
+
+  // 首先验证accessKey并获取物流商名称
+  db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
+    if (err) {
+      console.error("Error fetching provider by accessKey:", err);
+      return res.status(500).json({ error: '查询物流商信息失败' });
+    }
+    if (!providerRow) {
+      return res.status(404).json({ error: '无效的 accessKey 或物流商不存在' });
+    }
+    const providerName = providerRow.name;
+
+    let queryParams = [providerName, 'active'];
+    let countParams = [providerName, 'active'];
+    let whereClauses = [
+      `id NOT IN (SELECT orderId FROM quotes WHERE provider = ?)`,
+      `status = ?`
+    ];
+
+    // 添加搜索过滤
+    if (search && search.trim()) {
+      const searchTerm = `%${search.trim()}%`;
+      whereClauses.push('(id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)');
+      queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+      countParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    }
+
+    const whereString = ' WHERE ' + whereClauses.join(' AND ');
+    let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+    let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders' + whereString;
+
+    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+    queryParams.push(pageSize, offset);
+
+    db.get(countQuery, countParams, (err, countRow) => {
+      if (err) {
+        console.error("Count query error (available orders):", err);
+        return res.status(500).json({ error: '获取可报价订单总数失败' });
+      }
+      const totalItems = countRow ? countRow.total : 0;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      db.all(dataQuery, queryParams, (err, items) => {
+        if (err) {
+          console.error("Data query error (available orders):", err);
+          return res.status(500).json({ error: '获取可报价订单失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize,
+          providerName,
+          hasSearch: !!search
+        });
+      });
+    });
+  });
+});
+
+// GET /api/providers/:accessKey/quote-history - 获取物流商的报价历史
+router.get('/:accessKey/quote-history', (req, res) => {
+  const accessKey = req.params.accessKey;
+  const search = req.query.search;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
+  const offset = (page - 1) * pageSize;
+
+  if (!accessKey) {
+    return res.status(400).json({ error: '必须提供 accessKey' });
+  }
+
+  // 首先验证accessKey并获取物流商名称
+  db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
+    if (err) {
+      console.error("Error fetching provider by accessKey:", err);
+      return res.status(500).json({ error: '查询物流商信息失败' });
+    }
+    if (!providerRow) {
+      return res.status(404).json({ error: '无效的 accessKey 或物流商不存在' });
+    }
+    const providerName = providerRow.name;
+
+    let queryParams = [providerName];
+    let countParams = [providerName];
+    let whereClauses = ['q.provider = ?'];
+
+    // 添加搜索过滤
+    if (search && search.trim()) {
+      const searchTerm = `%${search.trim()}%`;
+      whereClauses.push('(o.id LIKE ? OR o.warehouse LIKE ? OR o.goods LIKE ? OR o.deliveryAddress LIKE ?)');
+      queryParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+      countParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    }
+
+    const whereString = ' WHERE ' + whereClauses.join(' AND ');
+    let countQuery = `SELECT COUNT(*) as total FROM quotes q
+                      JOIN orders o ON q.orderId = o.id` + whereString;
+
+    let dataQuery = `SELECT q.*, o.warehouse as warehouse, o.goods, o.deliveryAddress as deliveryAddress, o.status as orderStatus,
+                            CASE WHEN o.selectedProvider = q.provider THEN 1 ELSE 0 END as selected
+                     FROM quotes q
+                     JOIN orders o ON q.orderId = o.id` + whereString;
+
+    dataQuery += ' ORDER BY q.createdAt DESC LIMIT ? OFFSET ?';
+    queryParams.push(pageSize, offset);
+
+    db.get(countQuery, countParams, (err, countRow) => {
+      if (err) {
+        console.error("Count query error (quote history):", err);
+        return res.status(500).json({ error: '获取报价历史总数失败' });
+      }
+      const totalItems = countRow ? countRow.total : 0;
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      db.all(dataQuery, queryParams, (err, items) => {
+        if (err) {
+          console.error("Data query error (quote history):", err);
+          return res.status(500).json({ error: '获取报价历史失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize,
+          providerName,
+          hasSearch: !!search
+        });
+      });
+    });
+  });
+});
+
 module.exports = router;

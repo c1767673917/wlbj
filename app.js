@@ -138,8 +138,16 @@ function userAuthMiddleware(req, res, next) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-// app.use('/xlsx', express.static(path.join(__dirname, 'node_modules/xlsx/dist'))); // 已移除xlsx库
+
+// 在开发环境中，前端由Vite开发服务器提供服务
+// 在生产环境中，服务构建后的静态文件
+if (process.env.NODE_ENV === 'production') {
+  // 服务构建后的React应用静态文件
+  app.use(express.static(path.join(__dirname, 'frontend/dist')));
+} else {
+  // 开发环境下，前端由Vite开发服务器在5173端口提供服务
+  logger.info('开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)');
+}
 
 // 添加CORS支持
 app.use((req, res, next) => {
@@ -164,15 +172,24 @@ app.use('/api/export', exportRoutes); // 添加导出路由
 
 // 前端路由
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'home.html'));
+  if (process.env.NODE_ENV === 'production') {
+    // 生产环境：服务React应用
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+  } else {
+    // 开发环境：重定向到Vite开发服务器
+    res.redirect('http://localhost:5173/');
+  }
 });
 
-// 用户端登录页面
+// 用户端登录页面 - 现在由React前端处理
 app.get('/login-user-page', (req, res) => {
-  // 可以传递错误信息给登录页面
-  const errorMessage = req.query.error || '';
-  // 为了简单，直接发送HTML文件，或者使用模板引擎渲染错误信息
-  res.sendFile(path.join(__dirname, 'views', 'login_user.html'));
+  if (process.env.NODE_ENV === 'production') {
+    // 生产环境：服务React应用，让前端路由处理
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+  } else {
+    // 开发环境：重定向到Vite开发服务器
+    res.redirect('http://localhost:5173/login-user-page');
+  }
 });
 
 // 用户认证接口
@@ -197,7 +214,7 @@ app.post('/authenticate-user', (req, res) => {
         // 即使保存失败，也应该允许本次登录（已经在内存中），但记录错误
       }
     }
-    logger.info(`用户 ${clientIp} 认证成功，重定向到 /user`);
+    logger.info(`用户 ${clientIp} 认证成功，重定向到用户页面`);
     res.redirect('/user');
   } else {
     // 密码错误，重定向回登录页并带上错误提示
@@ -212,7 +229,13 @@ app.post('/authenticate-user', (req, res) => {
 
 // 修改后的 /user 路由，应用认证中间件
 app.get('/user', userAuthMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  if (process.env.NODE_ENV === 'production') {
+    // 生产环境：服务React应用
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+  } else {
+    // 开发环境：重定向到Vite开发服务器
+    res.redirect('http://localhost:5173/user');
+  }
 });
 
 app.get('/provider/:accessKey', (req, res) => {
@@ -227,12 +250,30 @@ app.get('/provider/:accessKey', (req, res) => {
       return res.status(404).send('页面未找到或无效的访问链接。请确保链接正确，或联系管理员。');
     }
     logger.debug(`供应商 ${provider.name} (${accessKey}) 访问页面。`);
-  res.sendFile(path.join(__dirname, 'views', 'provider.html'));
+    if (process.env.NODE_ENV === 'production') {
+      // 生产环境：服务React应用
+      res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+    } else {
+      // 开发环境：重定向到Vite开发服务器
+      res.redirect(`http://localhost:5173/provider/${accessKey}`);
+    }
   });
 });
 
 // The routes for PUT /api/orders/:id, PUT /api/orders/:id/close,
 // and POST /api/orders/:id/quotes have been moved to wlbj/routes/ordersRoutes.js
+
+// Catch-all handler: 对于所有其他路由，返回React应用
+// 这必须在所有其他路由之后定义
+app.get('*', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    // 生产环境：服务React应用，让前端路由处理
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+  } else {
+    // 开发环境：重定向到Vite开发服务器，保持原始路径
+    res.redirect(`http://localhost:5173${req.path}`);
+  }
+});
 
 // 全局错误处理中间件 (示例)
 app.use((err, req, res, next) => {

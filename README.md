@@ -1,68 +1,95 @@
-# 物流报价平台
+# 物流报价平台 (wlbj)
 
 本项目是一个专业的物流报价 Web 应用程序，允许用户发布物流订单，并允许物流供应商对这些订单进行报价。项目采用现代化的技术栈，具备完整的功能模块和良好的安全性。
 
-## 🌟 项目亮点
+## 🎉 v2.0.0 重大更新 - 现代化前端架构
 
-### 🚀 核心功能完整
+### 🚀 全新React前端
+- **技术栈升级**: 从传统HTML/JS升级到React 18 + TypeScript + Vite
+- **现代化UI**: 使用Tailwind CSS + Lucide React图标构建响应式界面
+- **组件化架构**: 模块化组件设计，包含用户端、供应商端、认证等完整组件
+- **开发体验**: 热重载、TypeScript类型检查、ESLint代码规范、自动化构建
+
+### 🔧 前后端分离架构
+- **开发环境**: 前端开发服务器(5173端口) + 后端API服务器(3000端口)
+- **API代理**: Vite配置自动代理，开发时无缝对接后端API
+- **生产环境**: 后端服务构建后的静态文件，统一3000端口部署
+- **路由系统**: React Router实现SPA路由，支持用户端、供应商端独立访问
+
+### 🌟 项目亮点
+
+#### 🚀 核心功能完整
 - **完整的订单生命周期管理**: 从发布订单到选择物流商的全流程支持
-- **智能订单号生成**: RX格式订单号，包含日期信息，便于管理
+- **智能订单号生成**: RX格式订单号(RXyymmdd-nnn)，包含日期信息，便于管理
 - **一键选择物流商**: 用户可直接在报价列表中选择心仪的物流商
-- **企业微信自动通知**: 新订单发布时自动通知所有物流公司
+- **企业微信自动通知**: 新订单发布时自动通知配置的物流公司群
 
-### 💡 用户体验优化
-- **AI智能识别**: 支持粘贴文本自动识别订单信息
-- **实时搜索**: 支持防抖搜索，响应迅速
-- **Excel导出**: 支持中文文件名的Excel导出功能
-- **状态保持**: 页面刷新后保持用户操作状态
+#### 💡 用户体验优化
+- **AI智能识别**: 集成SiliconFlow API，支持粘贴文本自动识别订单信息
+- **实时搜索**: 支持防抖搜索，响应迅速，前端过滤+后端优化
+- **Excel导出**: 支持中文文件名的Excel导出功能，用户端和供应商端均支持
+- **状态保持**: 页面刷新后保持用户操作状态，标签页记忆功能
 
-### ⚡ 性能优化
+#### ⚡ 性能优化
 - **数据库索引**: 11个关键索引，查询速度提升60-80%
-- **缓存机制**: 多层内存缓存，减少数据库负载
+- **缓存机制**: 多层内存缓存系统，减少数据库负载
 - **批量查询**: 解决N+1查询问题，页面加载时间减少40-50%
-- **前端优化**: 防抖搜索，减少无效请求
+- **前端优化**: 组件懒加载、防抖搜索、API请求优化
 
-### 🔒 安全保障
-- **零安全漏洞**: 通过npm audit验证，无依赖安全问题
+#### 🔒 安全保障
+- **零依赖漏洞**: 通过npm audit验证，无依赖安全问题
 - **访问控制**: IP白名单+密码双重认证机制
 - **数据验证**: 完善的输入验证和SQL注入防护
 - **日志记录**: Winston+Morgan双重日志系统
 
-### 🧪 质量保证
+#### 🧪 质量保证
 - **自动化测试**: 5个完整的测试脚本，覆盖核心功能
 - **功能验证**: 完整的功能验证清单
 - **文档完善**: 详细的功能说明和使用指南
 - **向后兼容**: 所有新功能都保持向后兼容
 
-## 项目状态 (v1.2.0) - 2025年1月
+## 项目状态 (v2.0.0) - 2025年1月
 
 ### ✅ 已完成功能
 
+#### 🎨 前端架构升级 (v2.0.0)
+- **React前端**: 完整的React 18 + TypeScript + Vite前端应用
+- **组件化设计**: 用户端、供应商端、认证等模块化组件
+- **响应式UI**: Tailwind CSS构建的现代化响应式界面
+- **开发工具**: 热重载、TypeScript类型检查、ESLint代码规范
+- **构建优化**: Vite快速构建，支持开发和生产环境
+
+#### 🔧 系统功能完善
 - **依赖安全**: 已升级至安全的 `exceljs` 库，移除高危漏洞依赖
 - **Excel导出**: 完整的后端导出功能，支持用户端和供应商端
 - **数据库优化**: 添加了11个关键索引，提升查询性能
-- **缓存机制**: 实现内存缓存，减少数据库负载
+- **缓存机制**: 实现内存缓存系统，减少数据库负载
 - **批量查询**: 优化最低报价获取，解决N+1查询问题
 - **搜索功能**: 支持后端搜索和前端防抖优化
-- **🆕 企业微信通知**: 集成企业微信群机器人，新订单自动通知物流公司
-- **🆕 订单号优化**: 订单号格式改为 RX + yymmdd + "-" + 3位流水号
-- **🆕 选择物流商**: 用户可选择心仪的物流商，订单自动转入历史记录
-- **🆕 订单状态管理**: 完整的订单生命周期管理，支持活跃/关闭状态转换
-- **🆕 历史记录优化**: 历史订单显示用户选择的物流商和价格信息
+
+#### 🆕 业务功能增强
+- **企业微信通知**: 集成企业微信群机器人，新订单自动通知物流公司
+- **订单号优化**: 订单号格式改为 RX + yymmdd + "-" + 3位流水号
+- **选择物流商**: 用户可选择心仪的物流商，订单自动转入历史记录
+- **订单状态管理**: 完整的订单生命周期管理，支持活跃/关闭状态转换
+- **历史记录优化**: 历史订单显示用户选择的物流商和价格信息
+- **AI智能识别**: 前端集成SiliconFlow API，支持订单信息自动提取
 
 ### 🔧 技术特性
 
-- **安全状态**: 0个安全漏洞 (通过 `npm audit` 验证)
+- **安全状态**: 0个依赖安全漏洞 (通过 `npm audit` 验证)
 - **性能优化**: 数据库查询速度提升60-80%，页面加载时间减少40-50%
 - **用户体验**: 实时搜索、分页浏览、批量操作、一键选择物流商
 - **日志系统**: Winston + Morgan 完整日志记录
 - **自动化测试**: 完整的功能测试脚本，确保代码质量
+- **前端架构**: React组件化、TypeScript类型安全、Vite快速构建
 
 ### ⚠️ 待优化项目
 
 - **AI功能**: 前端仍直接调用第三方API，存在密钥泄露风险
 - **认证机制**: 可考虑升级为JWT会话管理
 - **数据库**: SQLite适合小型应用，大型应用建议升级PostgreSQL
+- **缓存系统**: 当前使用内存缓存，生产环境建议升级Redis
 
 ## 主要功能
 
@@ -106,23 +133,32 @@
 
 ## 技术栈
 
-- **后端**: Node.js, Express.js
-- **数据库**: SQLite
-- **前端**: HTML5, CSS3, JavaScript (原生)
+### 前端 (v2.0.0) - 现代化React架构
+- **核心框架**: React 18 + TypeScript
+- **构建工具**: Vite (快速构建、热重载)
+- **UI框架**: Tailwind CSS (响应式设计)
+- **图标库**: Lucide React (现代化图标)
+- **路由**: React Router DOM v7 (SPA路由)
+- **开发工具**: ESLint + TypeScript编译器
+- **包管理**: npm (前端独立依赖管理)
+
+### 后端 - 稳定的Node.js服务
+- **运行时**: Node.js
+- **框架**: Express.js
+- **数据库**: SQLite (11个性能索引)
 - **HTTP 请求日志**: Morgan
 - **应用日志**: Winston (日志记录到控制台和文件 `logs/app.log`, `logs/error.log`)
 - **Excel 处理**: ExcelJS (安全替代 SheetJS)
 - **AI 服务**: [SiliconFlow API](https://siliconflow.cn/) (用于订单信息智能识别)
-  - ⚠️ **当前状态**: 前端直接调用，存在安全风险
-  - 📋 **建议**: 迁移至后端API调用
 - **唯一ID生成**: UUID
 - **环境变量管理**: dotenv
 - **缓存系统**: 内存缓存 (SimpleCache)
 - **性能优化**: 数据库索引、批量查询、搜索优化
+- **通知服务**: 企业微信群机器人集成
 
 ## 项目结构
 
-项目的主要代码位于 `wlbj/` 目录下：
+项目采用前后端分离架构，主要代码位于 `wlbj/` 目录下：
 
 ```
 wlbj/
@@ -130,35 +166,52 @@ wlbj/
 ├── .env                    # (需手动创建) 环境变量配置文件
 ├── auth_config.json        # (需手动创建) 用户端访问密码配置文件
 ├── ip_whitelist.json       # (自动生成/管理) 用户端IP白名单
+├── start-dev.sh            # 🆕 开发环境一键启动脚本
+├── build-prod.sh           # 🆕 生产环境构建脚本
+├── frontend/               # 🆕 React前端应用 (v2.0.0)
+│   ├── src/
+│   │   ├── components/     # React组件目录
+│   │   │   ├── ui/         # 基础UI组件 (Button, Card, Tabs等)
+│   │   │   ├── user/       # 用户端组件 (UserPortal, OrderList等)
+│   │   │   ├── provider/   # 供应商端组件 (ProviderPortal等)
+│   │   │   ├── auth/       # 认证组件 (LoginPage)
+│   │   │   └── layout/     # 布局组件 (Header, Footer, HomePage)
+│   │   ├── services/       # API服务层
+│   │   │   └── api.ts      # 统一API接口 (订单、报价、供应商、AI等)
+│   │   ├── App.tsx         # 主应用组件 (路由配置)
+│   │   ├── main.tsx        # 应用入口
+│   │   ├── index.css       # 全局样式
+│   │   └── vite-env.d.ts   # Vite类型定义
+│   ├── dist/               # (构建后生成) 生产环境静态文件
+│   ├── public/             # 静态资源目录
+│   ├── package.json        # 前端依赖配置
+│   ├── vite.config.ts      # Vite构建配置 (代理、优化等)
+│   ├── tailwind.config.js  # Tailwind CSS配置
+│   ├── postcss.config.js   # PostCSS配置
+│   ├── tsconfig.json       # TypeScript配置
+│   ├── tsconfig.app.json   # 应用TypeScript配置
+│   ├── tsconfig.node.json  # Node.js TypeScript配置
+│   └── eslint.config.js    # ESLint配置
+├── backup/                 # 🆕 旧前端文件备份
+│   └── old-frontend/       # 备份的传统前端文件
 ├── config/                 # 应用配置目录
 │   ├── logger.js           # Winston 日志系统配置
-│   └── env.js              # 新增: 环境变量配置模块
+│   └── env.js              # 环境变量配置模块
 ├── data/                   # 存放 SQLite 数据库文件
 │   └── logistics.db
 ├── db/                     # 数据库相关模块
-│   └── database.js         # 数据库连接初始化和表结构定义
+│   └── database.js         # 数据库连接初始化和表结构定义 (含11个索引)
 ├── logs/                   # (自动创建) 日志文件存放目录
 │   ├── app.log             # 应用运行日志
 │   └── error.log           # 应用错误日志
-├── node_modules/           # Node.js 依赖包
-├── public/                 # 存放前端静态资源 (CSS, 客户端JS)
-│   ├── css/
-│   │   └── styles.css      # 全局样式表
-│   └── js/
-│       ├── user.js         # 用户端前端逻辑 (⚠️ 仍含硬编码API密钥)
-│       └── provider.js     # 物流供应商端前端逻辑
+├── node_modules/           # Node.js 后端依赖包
 ├── routes/                 # API 路由定义模块
 │   ├── ordersRoutes.js     # 订单相关API路由 (🆕 包含选择物流商功能)
 │   ├── quotesRoutes.js     # 报价相关API路由
-│   ├── quotesOptimized.js  # 优化的报价路由 (批量查询)
+│   ├── quotesOptimized.js  # 优化的报价路由 (批量查询、缓存)
 │   ├── providersRoutes.js  # 物流公司相关API路由 (🆕 支持企业微信webhook)
 │   ├── exportRoutes.js     # Excel导出路由
-│   └── aiRoutes.js         # AI服务API路由 (⚠️ 已实现但未启用)
-├── views/                  # 存放 HTML 视图文件
-│   ├── home.html           # 应用首页 (提示联系管理员)
-│   ├── index.html          # 用户端主操作界面
-│   ├── login_user.html     # 用户端密码认证页面
-│   └── provider.html       # 物流供应商端操作界面
+│   └── aiRoutes.js         # AI服务API路由 (⚠️ 未启用)
 ├── utils/                  # 工具模块
 │   ├── cache.js            # 缓存管理模块 (内存缓存实现)
 │   └── wechatNotification.js # 🆕 企业微信群机器人通知工具模块
@@ -169,10 +222,10 @@ wlbj/
 │   ├── test-wechat-notification.js  # 测试企业微信通知
 │   └── test-siliconflow-api.js      # 测试AI识别功能
 ├── 📚 文档文件/             # 🆕 功能说明文档
-│   ├── 企业微信群机器人通知功能使用说明.md
-│   ├── 功能实现总结.md       # 选择物流商功能实现总结
-│   └── 项目优化建议报告.md   # 性能优化和建议报告
-├── package.json            # 项目依赖和脚本配置
+│   ├── 前端升级完成报告.md   # 前端架构升级详细报告
+│   ├── 数据清理完成报告.md   # 数据清理和系统重置报告
+│   └── 数据清理和URL路由完成报告.md # URL路由优化报告
+├── package.json            # 后端项目依赖和脚本配置
 ├── package-lock.json       # 精确依赖版本锁定
 └── README.md               # 项目说明文件 (本文件)
 ```
@@ -181,21 +234,59 @@ wlbj/
 
 ### 前提条件
 
-- [Node.js](https://nodejs.org/) (建议使用 LTS 版本)
+- [Node.js](https://nodejs.org/) (建议使用 LTS 版本 16+)
 - npm (通常随 Node.js 一起安装)
 
-### 安装步骤
+### 🚀 快速开始 (v2.0.0)
 
-1. 克隆或下载本项目代码。
-2. 打开终端，进入项目根目录下的 `wlbj` 文件夹：
+#### 方法一：一键启动开发环境 (推荐)
 
+1. **进入项目目录**:
    ```bash
    cd path/to/your/project/wlbj
    ```
-3. 安装项目依赖：
 
+2. **一键启动**:
+   ```bash
+   ./start-dev.sh
+   ```
+
+   这个脚本会自动：
+   - 检查Node.js和npm环境
+   - 安装后端和前端依赖
+   - 启动后端服务器 (端口 3000)
+   - 启动前端开发服务器 (端口 5173)
+   - 配置API代理，实现前后端无缝对接
+
+3. **访问应用**:
+   - **前端开发界面**: http://localhost:5173 (推荐)
+   - **后端API**: http://localhost:3000
+   - **用户端**: http://localhost:5173/user
+   - **供应商端**: http://localhost:5173/provider/{accessKey}
+
+#### 方法二：手动安装和启动
+
+1. **安装后端依赖**:
    ```bash
    npm install
+   ```
+
+2. **安装前端依赖**:
+   ```bash
+   cd frontend
+   npm install
+   cd ..
+   ```
+
+3. **启动后端服务器** (终端1):
+   ```bash
+   NODE_ENV=development node app.js
+   ```
+
+4. **启动前端开发服务器** (终端2):
+   ```bash
+   cd frontend
+   npm run dev
    ```
 
    **注意**: 项目已完成安全依赖升级，`npm audit` 显示0个安全漏洞。
@@ -241,18 +332,62 @@ APP_PASSWORD=your_secure_password_here
 #### 3. 自动创建的文件
 
 - `ip_whitelist.json` 和 `logs/` 目录会在应用首次运行时自动创建。
+- 数据库文件 `data/logistics.db` 会在首次启动时自动初始化。
 
 ### 运行服务
 
-1. 在 `wlbj` 目录下，启动应用服务器：
+#### 开发环境 (推荐)
+
+**一键启动**:
+```bash
+./start-dev.sh
+```
+
+**手动启动**:
+```bash
+# 启动后端 (终端1)
+NODE_ENV=development node app.js
+
+# 启动前端 (终端2)
+cd frontend
+npm run dev
+```
+
+**开发环境特性**:
+- 前端热重载，代码修改自动刷新
+- TypeScript类型检查和ESLint代码规范
+- API自动代理到后端服务器
+- 详细的错误提示和调试信息
+
+#### 生产环境
+
+1. **构建前端**:
    ```bash
-   node app.js
+   ./build-prod.sh
    ```
-2. 服务器启动后，默认在 `http://localhost:3000` 上运行。
-3. 访问地址：
-   - 应用主页: `http://localhost:3000/`
-   - 用户端: `http://localhost:3000/user` (首次访问需要密码认证)
-   - 物流供应商端: 通过用户端生成的专属链接访问
+
+2. **启动生产服务器**:
+   ```bash
+   NODE_ENV=production node app.js
+   ```
+
+**生产环境特性**:
+- 前端代码压缩优化
+- 静态文件由后端统一服务
+- 单端口部署，便于运维管理
+
+#### 访问地址
+
+- **开发环境**:
+  - 前端界面: http://localhost:5173 (推荐)
+  - 后端API: http://localhost:3000
+  - 用户端: http://localhost:5173/user
+  - 供应商端: http://localhost:5173/provider/{accessKey}
+
+- **生产环境**:
+  - 统一入口: http://localhost:3000
+  - 用户端: http://localhost:3000/user (首次访问需要密码认证)
+  - 供应商端: http://localhost:3000/provider/{accessKey}
 
 ## 身份认证 (用户端 `/user`)
 
@@ -344,7 +479,7 @@ APP_PASSWORD=your_secure_password_here
 ### ⚠️ 待修复的安全问题
 
 1. **API密钥泄露**: 前端仍有硬编码的SiliconFlow API密钥
-   - 位置: `public/js/user.js:162`
+   - 位置: `frontend/src/services/api.ts:181`
    - 风险: API密钥可被客户端查看
    - 建议: 启用后端AI路由，移除前端密钥
 
@@ -422,25 +557,25 @@ APP_PASSWORD=your_secure_password_here
 
 1. **启用后端AI路由**:
    ```javascript
-   // 在 app.js 中取消注释第156行
+   // 在 app.js 中取消注释相关行
    const aiRoutes = require('./routes/aiRoutes');
    app.use('/api/ai', aiRoutes);
    ```
 
-2. **修改前端调用**:
-   ```javascript
-   // 在 public/js/user.js 中替换 callSiliconFlowAPI 函数
-   async function callSiliconFlowAPI(content) {
-     const response = await fetch('/api/ai/recognize', {
+2. **修改前端API调用**:
+   ```typescript
+   // 在 frontend/src/services/api.ts 中修改 aiAPI.recognizeText 方法
+   recognizeText: async (text: string) => {
+     return apiRequest<any>('/ai/recognize', {
        method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ content })
+       body: JSON.stringify({ content: text }),
      });
-     return response.json();
    }
    ```
 
-3. **移除硬编码密钥**: 删除 `public/js/user.js:162` 行的API密钥
+3. **移除硬编码密钥**: 删除 `frontend/src/services/api.ts:181` 行的API密钥
+
+4. **配置环境变量**: 确保 `.env` 文件中正确配置了 `SILICON_FLOW_API_KEY`
 
 ## 技术支持
 
@@ -589,7 +724,7 @@ node test-wechat-notification.js
 
 ### 1. 环境准备
 ```bash
-# 确保已安装 Node.js (建议 LTS 版本)
+# 确保已安装 Node.js (建议 LTS 版本 16+)
 node --version
 npm --version
 ```
@@ -599,29 +734,43 @@ npm --version
 # 进入项目目录
 cd wlbj
 
-# 安装依赖
-npm install
-
 # 创建环境变量文件
-cp .env.example .env  # 然后编辑 .env 文件
+echo 'SILICON_FLOW_API_KEY=your_api_key_here
+NODE_ENV=development
+PORT=3000' > .env
 
 # 创建认证配置文件
 echo '{"password": "your_secure_password"}' > auth_config.json
 ```
 
 ### 3. 启动服务
-```bash
-# 启动应用
-npm start
 
-# 或直接运行
-node app.js
+#### 开发环境 (推荐)
+```bash
+# 一键启动开发环境
+./start-dev.sh
+```
+
+#### 生产环境
+```bash
+# 构建前端
+./build-prod.sh
+
+# 启动生产服务器
+NODE_ENV=production node app.js
 ```
 
 ### 4. 访问应用
-- **应用首页**: http://localhost:3000/
+
+#### 开发环境
+- **前端界面**: http://localhost:5173 (推荐)
+- **用户端**: http://localhost:5173/user (需要密码认证)
+- **供应商端**: http://localhost:5173/provider/{accessKey}
+
+#### 生产环境
+- **统一入口**: http://localhost:3000
 - **用户端**: http://localhost:3000/user (需要密码认证)
-- **物流商端**: 通过用户端生成的专属链接访问
+- **供应商端**: http://localhost:3000/provider/{accessKey}
 
 ### 5. 功能测试
 ```bash
@@ -633,6 +782,9 @@ node test-select-provider.js
 
 # 测试企业微信通知
 node test-wechat-notification.js
+
+# 测试AI识别功能
+node test-siliconflow-api.js
 ```
 
 ### 6. 企业微信配置 (可选)
@@ -643,14 +795,42 @@ node test-wechat-notification.js
 
 ---
 
-**版本**: v1.2.0
-**状态**: 功能完整，新增选择物流商功能
+**版本**: v2.0.0
+**状态**: 现代化前端架构，功能完整
+**技术栈**: React 18 + TypeScript + Vite + Node.js + Express
 **安全等级**: 0 依赖漏洞，1 API密钥泄露风险
-**性能等级**: 已优化 (数据库+缓存+批量查询+前端通知)
+**性能等级**: 已优化 (数据库+缓存+批量查询+前端优化)
 **测试覆盖**: 完整的自动化测试脚本
 **最后更新**: 2025年1月
 
 ---
+
+## 🎨 前端架构详解 (v2.0.0)
+
+### 组件架构
+- **UI组件**: 可复用的基础组件 (Button, Card, Tabs)
+- **业务组件**: 用户端和供应商端的功能组件
+- **布局组件**: 页面布局和导航组件
+- **认证组件**: 登录和权限控制组件
+
+### 技术特性
+- **TypeScript**: 类型安全，减少运行时错误
+- **React Router**: SPA路由，支持多入口访问
+- **Tailwind CSS**: 原子化CSS，响应式设计
+- **Vite**: 快速构建，热重载开发体验
+- **ESLint**: 代码规范和质量检查
+
+### API集成
+- **统一API服务**: `frontend/src/services/api.ts`
+- **环境适配**: 开发和生产环境自动切换
+- **错误处理**: 完善的API错误处理机制
+- **类型定义**: TypeScript接口定义
+
+### 开发优势
+- **组件复用**: 模块化设计，提高开发效率
+- **类型安全**: TypeScript减少bug，提升代码质量
+- **热重载**: 开发时实时预览，快速迭代
+- **构建优化**: Vite提供快速构建和优化
 
 ## 📞 技术支持与反馈
 
@@ -660,5 +840,6 @@ node test-wechat-notification.js
 2. **运行测试**: 使用测试脚本验证功能是否正常
 3. **查看文档**: 参考项目中的详细文档说明
 4. **安全检查**: 运行 `npm audit` 确保依赖安全
+5. **前端调试**: 使用浏览器开发者工具检查前端错误
 
 **感谢使用物流报价平台！** 🚛📦

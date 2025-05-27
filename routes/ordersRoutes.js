@@ -71,7 +71,110 @@ async function sendWechatNotifications(order) {
   }
 }
 
-// GET /api/orders - 获取所有订单（优化版本）
+// GET /api/orders/active - 获取活跃订单（用户端专用）
+router.get('/active', (req, res) => {
+  const search = req.query.search;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
+  const offset = (page - 1) * pageSize;
+
+  let params = ['active'];
+  let countParams = ['active'];
+  let whereClauses = ['status = ?'];
+
+  // 添加搜索过滤
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`;
+    whereClauses.push('(id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)');
+    params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    countParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+  }
+
+  const whereString = ' WHERE ' + whereClauses.join(' AND ');
+  let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders' + whereString;
+
+  dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+  params.push(pageSize, offset);
+
+  db.get(countQuery, countParams, (err, countRow) => {
+    if (err) {
+      console.error("Count query error (active orders):", err);
+      return res.status(500).json({ error: '获取活跃订单总数失败' });
+    }
+    const totalItems = countRow.total;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    db.all(dataQuery, params, (err, items) => {
+      if (err) {
+        console.error("Data query error (active orders):", err);
+        return res.status(500).json({ error: '获取活跃订单失败' });
+      }
+      res.json({
+        items: items || [],
+        totalItems,
+        totalPages,
+        currentPage: page,
+        pageSize,
+        hasSearch: !!search
+      });
+    });
+  });
+});
+
+// GET /api/orders/closed - 获取历史订单（用户端专用）
+router.get('/closed', (req, res) => {
+  const search = req.query.search;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
+  const offset = (page - 1) * pageSize;
+
+  let params = ['closed'];
+  let countParams = ['closed'];
+  let whereClauses = ['status = ?'];
+
+  // 添加搜索过滤
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`;
+    whereClauses.push('(id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)');
+    params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    countParams.push(searchTerm, searchTerm, searchTerm, searchTerm);
+  }
+
+  const whereString = ' WHERE ' + whereClauses.join(' AND ');
+  let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+  // 历史订单需要包含选择的物流商信息
+  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders' + whereString;
+
+  dataQuery += ' ORDER BY selectedAt DESC, createdAt DESC LIMIT ? OFFSET ?';
+  params.push(pageSize, offset);
+
+  db.get(countQuery, countParams, (err, countRow) => {
+    if (err) {
+      console.error("Count query error (closed orders):", err);
+      return res.status(500).json({ error: '获取历史订单总数失败' });
+    }
+    const totalItems = countRow.total;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    db.all(dataQuery, params, (err, items) => {
+      if (err) {
+        console.error("Data query error (closed orders):", err);
+        return res.status(500).json({ error: '获取历史订单失败' });
+      }
+      res.json({
+        items: items || [],
+        totalItems,
+        totalPages,
+        currentPage: page,
+        pageSize,
+        hasSearch: !!search
+      });
+    });
+  });
+});
+
+// GET /api/orders - 获取所有订单（管理员用，优化版本）
 router.get('/', (req, res) => {
   const status = req.query.status;
   const search = req.query.search; // 新增搜索参数
@@ -99,8 +202,8 @@ router.get('/', (req, res) => {
   }
 
   let countQuery = 'SELECT COUNT(*) as total FROM orders';
-  // 优化：只选择必要的字段，减少数据传输
-  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders';
+  // 包含选择物流商相关字段，用于订单历史显示
+  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders';
 
   if (whereClauses.length > 0) {
     const whereString = ' WHERE ' + whereClauses.join(' AND ');
@@ -172,67 +275,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/orders/available - 获取可报价订单
-router.get('/available', (req, res) => {
-  const accessKey = req.query.accessKey;
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || 10;
-  const offset = (page - 1) * pageSize;
-
-  if (!accessKey) {
-    return res.status(400).json({ error: '必须提供 accessKey 进行查询' });
-  }
-
-  db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
-    if (err) {
-      console.error("Error fetching provider by accessKey:", err);
-      return res.status(500).json({ error: '查询物流商信息失败' });
-    }
-    if (!providerRow) {
-      return res.status(404).json({ error: '无效的 accessKey 或物流商不存在' });
-    }
-    const providerName = providerRow.name;
-
-    let queryParams = [providerName, 'active'];
-    let countQueryParams = [providerName, 'active'];
-
-    let commonWhereClauses = [
-      `id NOT IN (SELECT orderId FROM quotes WHERE provider = ?)`,
-      `status = ?`
-    ];
-
-    const whereString = ' WHERE ' + commonWhereClauses.join(' AND ');
-    let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
-    let dataQuery = 'SELECT * FROM orders' + whereString;
-
-    dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
-    let finalDataParams = [...queryParams, pageSize, offset];
-
-    db.get(countQuery, countQueryParams, (err, countRow) => {
-      if (err) {
-        console.error("Count query error (available orders):", err);
-        return res.status(500).json({ error: '获取可报价订单总数失败' });
-      }
-      const totalItems = countRow ? countRow.total : 0;
-      const totalPages = Math.ceil(totalItems / pageSize);
-
-      db.all(dataQuery, finalDataParams, (err, items) => {
-        if (err) {
-          console.error("Data query error (available orders):", err);
-          return res.status(500).json({ error: '获取可报价订单失败' });
-        }
-        res.json({
-          items: items || [],
-          totalItems,
-          totalPages,
-          currentPage: page,
-          pageSize,
-          providerName
-        });
-      });
-    });
-  });
-});
 
 // GET /api/orders/:id - 获取单个订单
 router.get('/:id', (req, res) => {
