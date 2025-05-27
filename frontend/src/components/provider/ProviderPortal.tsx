@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import AvailableOrdersList from './AvailableOrdersList';
 import QuoteHistory from './QuoteHistory';
 import { TruckIcon, FileTextIcon } from 'lucide-react';
-import api from '../../services/api';
+import api, { exportAPI } from '../../services/api';
 
 interface ProviderPortalProps {
   providerKey: string;
@@ -52,6 +52,26 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
 
     loadProviderData();
   }, [providerKey]);
+
+  // 导出可报价订单
+  const handleExportAvailableOrders = () => {
+    try {
+      exportAPI.exportProviderAvailableOrders(providerKey, searchTerm);
+      console.log('可报价订单导出已开始下载');
+    } catch (error) {
+      console.error('导出可报价订单失败:', error);
+    }
+  };
+
+  // 导出报价历史
+  const handleExportQuoteHistory = () => {
+    try {
+      exportAPI.exportProviderQuoteHistory(providerKey, searchTerm);
+      console.log('报价历史导出已开始下载');
+    } catch (error) {
+      console.error('导出报价历史失败:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -100,6 +120,7 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
             <Button
               variant="outline"
               icon={<FileTextIcon size={16} />}
+              onClick={handleExportAvailableOrders}
             >
               导出Excel
             </Button>
@@ -156,6 +177,7 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
             <Button
               variant="outline"
               icon={<FileTextIcon size={16} />}
+              onClick={handleExportQuoteHistory}
             >
               导出Excel
             </Button>
@@ -175,6 +197,18 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
 
   return (
     <div className="max-w-7xl mx-auto">
+      {/* 顶部标题区域 */}
+      <div className="mb-8 px-4 pt-4">
+        <div className="flex items-center mb-4">
+          <div className="flex items-center justify-center w-10 h-10 mr-3 bg-blue-600 rounded-full">
+            <TruckIcon size={20} className="text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-gray-800">
+            {providerInfo?.name || '物流公司'}
+          </h1>
+        </div>
+      </div>
+
       {/* 快速统计 - 横向排列在顶部 */}
       <div className="mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

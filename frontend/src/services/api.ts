@@ -157,16 +157,74 @@ export const providersAPI = {
 
 // 导出相关API
 export const exportAPI = {
-  // 导出订单数据
-  exportOrders: (format: 'excel' | 'csv' = 'excel') => {
-    const url = `${API_BASE_URL}/export/orders?format=${format}`;
-    window.open(url, '_blank');
+  // 导出活跃订单
+  exportActiveOrders: (searchQuery?: string) => {
+    const params = new URLSearchParams();
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    const url = `${API_BASE_URL}/export/orders/active?${params.toString()}`;
+
+    // 创建临时链接下载文件
+    const link = document.createElement('a');
+    link.href = url;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   },
 
-  // 导出报价数据
-  exportQuotes: (format: 'excel' | 'csv' = 'excel') => {
-    const url = `${API_BASE_URL}/export/quotes?format=${format}`;
-    window.open(url, '_blank');
+  // 导出历史订单
+  exportClosedOrders: (searchQuery?: string) => {
+    const params = new URLSearchParams();
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    const url = `${API_BASE_URL}/export/orders/closed?${params.toString()}`;
+
+    // 创建临时链接下载文件
+    const link = document.createElement('a');
+    link.href = url;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  },
+
+  // 导出供应商可报价订单
+  exportProviderAvailableOrders: (accessKey: string, searchQuery?: string) => {
+    const params = new URLSearchParams();
+    params.append('accessKey', accessKey);
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    const url = `${API_BASE_URL}/export/provider/available-orders?${params.toString()}`;
+
+    // 创建临时链接下载文件
+    const link = document.createElement('a');
+    link.href = url;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  },
+
+  // 导出供应商报价历史
+  exportProviderQuoteHistory: (accessKey: string, searchQuery?: string) => {
+    const params = new URLSearchParams();
+    params.append('accessKey', accessKey);
+    if (searchQuery) {
+      params.append('search', searchQuery);
+    }
+    const url = `${API_BASE_URL}/export/provider/quote-history?${params.toString()}`;
+
+    // 创建临时链接下载文件
+    const link = document.createElement('a');
+    link.href = url;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   },
 };
 

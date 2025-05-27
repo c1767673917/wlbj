@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 import OrderList from './OrderList';
 import ProviderManagement from './ProviderManagement';
 import { PlusIcon, FileTextIcon, HistoryIcon, TruckIcon, CheckCircleIcon, SparklesIcon } from 'lucide-react';
-import api from '../../services/api';
+import api, { exportAPI } from '../../services/api';
 
 const UserPortal = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -86,6 +86,26 @@ const UserPortal = () => {
     }
   };
 
+  // 导出活跃订单
+  const handleExportActiveOrders = () => {
+    try {
+      exportAPI.exportActiveOrders(searchTerm);
+      console.log('活跃订单导出已开始下载');
+    } catch (error) {
+      console.error('导出活跃订单失败:', error);
+    }
+  };
+
+  // 导出历史订单
+  const handleExportClosedOrders = () => {
+    try {
+      exportAPI.exportClosedOrders(searchTerm);
+      console.log('历史订单导出已开始下载');
+    } catch (error) {
+      console.error('导出历史订单失败:', error);
+    }
+  };
+
   const userTabs = [
     {
       id: 'newOrder',
@@ -121,6 +141,7 @@ const UserPortal = () => {
               <Button
                 variant="outline"
                 icon={<FileTextIcon size={16} />}
+                onClick={handleExportActiveOrders}
               >
                 导出Excel
               </Button>
@@ -161,6 +182,7 @@ const UserPortal = () => {
             <Button
               variant="outline"
               icon={<FileTextIcon size={16} />}
+              onClick={handleExportClosedOrders}
             >
               导出Excel
             </Button>

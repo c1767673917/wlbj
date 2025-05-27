@@ -117,8 +117,7 @@ const ProviderManagement = ({ providers: externalProviders, onRefresh }: Provide
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-bold text-gray-800">物流公司管理</h2>
+      <div className="flex justify-end items-center mb-6">
         <Button
           variant="primary"
           icon={<PlusIcon size={16} />}
