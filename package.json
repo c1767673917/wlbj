@@ -1,6 +1,6 @@
 {
   "name": "logistics-quote-system",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "简单物流报价对比系统",
   "main": "app.js",
   "scripts": {
