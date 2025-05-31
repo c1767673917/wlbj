@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
-const CacheManager = require('../utils/cache');
+const { CacheManager } = require('../utils/cache');
 
 // GET /api/quotes - 获取报价 (可按provider过滤, 修改为按 accessKey 过滤)
 router.get('/', (req, res) => {

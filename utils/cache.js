@@ -63,6 +63,11 @@ class SimpleCache {
     this.cache.clear();
   }
 
+  // 获取缓存大小
+  size() {
+    return this.cache.size;
+  }
+
   // 获取缓存统计信息
   stats() {
     return {
@@ -202,4 +207,7 @@ class CacheManager {
   }
 }
 
-module.exports = CacheManager;
+module.exports = {
+  CacheManager,
+  SimpleCache
+};

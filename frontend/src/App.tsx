@@ -1,13 +1,32 @@
 import { BrowserRouter as Router, Routes, Route, useParams, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import UserPortal from './components/user/UserPortal';
 import ProviderPortal from './components/provider/ProviderPortal';
 import LoginPage from './components/auth/LoginPage';
 import HomePage from './components/layout/HomePage';
-import { TruckIcon } from 'lucide-react';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import AuthService from './services/auth';
+import api from './services/api';
 
 // 供应商页面组件
 function ProviderPage() {
   const { accessKey } = useParams<{ accessKey: string }>();
+  
+  useEffect(() => {
+    // 供应商页面通过accessKey自动登录
+    const autoLogin = async () => {
+      if (accessKey && !AuthService.isAuthenticated()) {
+        try {
+          await api.auth.loginProvider(accessKey);
+        } catch (error) {
+          console.error('供应商自动登录失败:', error);
+        }
+      }
+    };
+    
+    autoLogin();
+  }, [accessKey]);
+  
   return <ProviderPortal providerKey={accessKey || ''} />;
 }
 
@@ -26,6 +45,33 @@ function LoginUserPage() {
 }
 
 function App() {
+  useEffect(() => {
+    // 设置定时器检查是否需要刷新token
+    const checkTokenRefresh = async () => {
+      if (AuthService.isAuthenticated() && AuthService.shouldRefreshToken()) {
+        const refreshToken = AuthService.getRefreshToken();
+        if (refreshToken) {
+          try {
+            const response = await api.auth.refresh(refreshToken);
+            if (response?.accessToken) {
+              AuthService.updateAccessToken(response.accessToken);
+            }
+          } catch (error) {
+            console.error('Token刷新失败:', error);
+          }
+        }
+      }
+    };
+
+    // 初始检查
+    checkTokenRefresh();
+
+    // 每分钟检查一次
+    const interval = setInterval(checkTokenRefresh, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-50">
@@ -33,7 +79,14 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login-user-page" element={<LoginUserPage />} />
-            <Route path="/user" element={<UserPage />} />
+            <Route 
+              path="/user" 
+              element={
+                <ProtectedRoute requiredRole="user">
+                  <UserPage />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/provider/:accessKey" element={<ProviderPage />} />
           </Routes>
         </main>

@@ -4,8 +4,9 @@ import Card from '../ui/Card';
 import Button from '../ui/Button';
 import OrderList from './OrderList';
 import ProviderManagement from './ProviderManagement';
-import { PlusIcon, FileTextIcon, HistoryIcon, TruckIcon, CheckCircleIcon, SparklesIcon } from 'lucide-react';
+import { PlusIcon, FileTextIcon, HistoryIcon, TruckIcon, CheckCircleIcon, SparklesIcon, LogOutIcon, UserIcon } from 'lucide-react';
 import api, { exportAPI } from '../../services/api';
+import AuthService from '../../services/auth';
 
 const UserPortal = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -239,11 +240,33 @@ const UserPortal = () => {
     <div className="max-w-7xl mx-auto">
       {/* 顶部标题区域 */}
       <div className="mb-8 px-4 pt-4">
-        <div className="flex items-center mb-4">
-          <div className="flex items-center justify-center w-10 h-10 mr-3 bg-blue-600 rounded-full">
-            <TruckIcon size={20} className="text-white" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <div className="flex items-center justify-center w-10 h-10 mr-3 bg-blue-600 rounded-full">
+              <TruckIcon size={20} className="text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-gray-800">瑞勋报价平台</h1>
           </div>
-          <h1 className="text-xl font-bold text-gray-800">瑞勋报价平台</h1>
+          
+          {/* 用户信息和登出按钮 */}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center text-sm text-gray-600">
+              <UserIcon size={16} className="mr-2" />
+              <span>{AuthService.getCurrentUser()?.email || '用户'}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<LogOutIcon size={16} />}
+              onClick={async () => {
+                if (window.confirm('确定要退出登录吗？')) {
+                  await api.auth.logout();
+                }
+              }}
+            >
+              退出
+            </Button>
+          </div>
         </div>
       </div>
 

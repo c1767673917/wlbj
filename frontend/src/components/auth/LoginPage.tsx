@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { LockIcon } from 'lucide-react';
+import api from '../../services/api';
+import AuthService from '../../services/auth';
 
 interface LoginPageProps {
   hasError?: boolean;
@@ -9,14 +12,21 @@ interface LoginPageProps {
 
 const LoginPage = ({ hasError = false }: LoginPageProps) => {
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // 如果已经登录，直接跳转到用户页面
+    if (AuthService.isAuthenticated()) {
+      navigate('/user');
+    }
+    
     if (hasError) {
       setError('密码不正确，请重试');
     }
-  }, [hasError]);
+  }, [hasError, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,22 +34,17 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/authenticate-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password }),
-      });
-
-      if (response.ok) {
-        // 认证成功，后端会重定向到用户页面
-        window.location.href = '/user';
+      // 使用JWT认证API
+      const response = await api.auth.login(password, email || undefined);
+      
+      if (response.accessToken) {
+        // 认证成功，跳转到用户页面
+        navigate('/user');
       } else {
-        setError('密码不正确，请重试');
+        setError('登录失败，请重试');
       }
-    } catch (error) {
-      setError('网络错误，请稍后重试');
+    } catch (error: any) {
+      setError(error.message || '登录失败，请检查密码是否正确');
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +71,20 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
           )}
 
           <div className="mb-4">
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
+              邮箱（可选）
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="user@example.com"
+            />
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
               访问密码
             </label>
@@ -77,6 +96,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
               placeholder="请输入密码"
               required
+              minLength={4}
             />
           </div>
 
@@ -90,9 +110,14 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
             登录
           </Button>
 
-          <p className="text-sm text-center text-gray-600">
-            首次登录成功后，您的IP将被添加到白名单，后续访问无需再次输入密码。
-          </p>
+          <div className="mt-4 text-sm text-center text-gray-600">
+            <p className="mb-2">
+              使用JWT认证系统，登录后Token有效期15分钟
+            </p>
+            <p>
+              系统会自动刷新Token，无需频繁登录
+            </p>
+          </div>
         </form>
       </Card>
     </div>

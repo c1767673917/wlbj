@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
-const CacheManager = require('../utils/cache');
+const { CacheManager } = require('../utils/cache');
 
 // 批量获取最低报价的优化接口
 router.get('/lowest-batch', (req, res) => {

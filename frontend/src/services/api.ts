@@ -1,23 +1,77 @@
+import AuthService from './auth';
+
 // API服务配置
 const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
+
+// 认证API端点（不需要token）
+const PUBLIC_ENDPOINTS = ['/auth/login', '/auth/login/provider', '/auth/refresh'];
 
 // 通用API请求函数
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // 检查是否需要添加认证头
+  const needsAuth = !PUBLIC_ENDPOINTS.some(publicEndpoint => endpoint.startsWith(publicEndpoint));
+  
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // 复制原有headers（如果有）
+  if (options.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
+
+  // 添加JWT认证头
+  if (needsAuth) {
+    const accessToken = AuthService.getAccessToken();
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+  }
+
   const config: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
     ...options,
+    headers,
   };
 
   try {
-    const response = await fetch(url, config);
+    let response = await fetch(url, config);
+
+    // 如果返回401且有刷新token，尝试刷新token
+    if (response.status === 401 && needsAuth) {
+      const refreshToken = AuthService.getRefreshToken();
+      if (refreshToken) {
+        const refreshed = await authAPI.refresh(refreshToken);
+        if (refreshed) {
+          // 更新访问token并重试请求
+          AuthService.updateAccessToken(refreshed.accessToken);
+          headers['Authorization'] = `Bearer ${refreshed.accessToken}`;
+          response = await fetch(url, { ...config, headers });
+        }
+      }
+    }
+
+    // 如果仍然是401，清除认证信息并跳转到登录页
+    if (response.status === 401 && needsAuth) {
+      AuthService.clearAuth();
+      window.location.href = '/login-user-page';
+      throw new Error('需要重新登录');
+    }
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
     }
 
     return await response.json();
@@ -26,6 +80,66 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     throw error;
   }
 }
+
+// 认证相关API
+export const authAPI = {
+  // 用户登录
+  login: async (password: string, email?: string) => {
+    const response = await apiRequest<any>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ password, email }),
+    });
+    
+    // 保存认证信息
+    if (response.accessToken && response.refreshToken) {
+      AuthService.saveAuth(response);
+    }
+    
+    return response;
+  },
+
+  // 供应商登录
+  loginProvider: async (accessKey: string) => {
+    const response = await apiRequest<any>('/auth/login/provider', {
+      method: 'POST',
+      body: JSON.stringify({ accessKey }),
+    });
+    
+    // 保存认证信息
+    if (response.accessToken && response.refreshToken) {
+      AuthService.saveAuth(response);
+    }
+    
+    return response;
+  },
+
+  // 刷新token
+  refresh: async (refreshToken: string) => {
+    try {
+      return await apiRequest<{ accessToken: string }>('/auth/refresh', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+      });
+    } catch (error) {
+      // 刷新失败，清除认证信息
+      AuthService.clearAuth();
+      return null;
+    }
+  },
+
+  // 登出
+  logout: async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' });
+    } finally {
+      AuthService.clearAuth();
+      window.location.href = '/';
+    }
+  },
+
+  // 获取当前用户信息
+  getMe: () => apiRequest<any>('/auth/me'),
+};
 
 // 订单相关API
 export const ordersAPI = {
@@ -155,7 +269,7 @@ export const providersAPI = {
   getQuoteHistory: (accessKey: string) => apiRequest<any>(`/providers/${accessKey}/quote-history`),
 };
 
-// 导出相关API
+// 导出相关API - 需要添加认证头
 export const exportAPI = {
   // 导出活跃订单
   exportActiveOrders: (searchQuery?: string) => {
@@ -165,13 +279,30 @@ export const exportAPI = {
     }
     const url = `${API_BASE_URL}/export/orders/active?${params.toString()}`;
 
-    // 创建临时链接下载文件
-    const link = document.createElement('a');
-    link.href = url;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 添加认证头
+    const accessToken = AuthService.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    // 使用fetch下载文件
+    fetch(url, { headers })
+      .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+      })
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `active-orders-${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(error => {
+        console.error('Export failed:', error);
+        alert('导出失败，请重试');
+      });
   },
 
   // 导出历史订单
@@ -182,13 +313,30 @@ export const exportAPI = {
     }
     const url = `${API_BASE_URL}/export/orders/closed?${params.toString()}`;
 
-    // 创建临时链接下载文件
-    const link = document.createElement('a');
-    link.href = url;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 添加认证头
+    const accessToken = AuthService.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    // 使用fetch下载文件
+    fetch(url, { headers })
+      .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+      })
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `closed-orders-${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(error => {
+        console.error('Export failed:', error);
+        alert('导出失败，请重试');
+      });
   },
 
   // 导出供应商可报价订单
@@ -200,13 +348,30 @@ export const exportAPI = {
     }
     const url = `${API_BASE_URL}/export/provider/available-orders?${params.toString()}`;
 
-    // 创建临时链接下载文件
-    const link = document.createElement('a');
-    link.href = url;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 添加认证头
+    const accessToken = AuthService.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    // 使用fetch下载文件
+    fetch(url, { headers })
+      .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+      })
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `available-orders-${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(error => {
+        console.error('Export failed:', error);
+        alert('导出失败，请重试');
+      });
   },
 
   // 导出供应商报价历史
@@ -218,13 +383,30 @@ export const exportAPI = {
     }
     const url = `${API_BASE_URL}/export/provider/quote-history?${params.toString()}`;
 
-    // 创建临时链接下载文件
-    const link = document.createElement('a');
-    link.href = url;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 添加认证头
+    const accessToken = AuthService.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    // 使用fetch下载文件
+    fetch(url, { headers })
+      .then(response => {
+        if (!response.ok) throw new Error('Export failed');
+        return response.blob();
+      })
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `quote-history-${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(error => {
+        console.error('Export failed:', error);
+        alert('导出失败，请重试');
+      });
   },
 };
 
@@ -235,7 +417,7 @@ export const aiAPI = {
     try {
       const startTime = Date.now();
 
-      // 固定的API密钥
+      // 固定的API密钥 - 注意：这应该从后端获取
       const apiKey = 'sk-mkwzawhynjmauuhvflpfjhfdijcvmutwswdtunhaoqnsvdos';
 
       const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
@@ -336,9 +518,10 @@ export const aiAPI = {
 };
 
 export default {
+  auth: authAPI,
   orders: ordersAPI,
   quotes: quotesAPI,
   providers: providersAPI,
   export: exportAPI,
   ai: aiAPI,
-};
+}; 

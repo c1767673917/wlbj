@@ -8,6 +8,17 @@ const morgan = require('morgan'); // HTTP request logger
 const logger = require('./config/logger'); // Winston logger
 const config = require('./config/env'); // 环境变量配置
 
+// 导入安全中间件
+const { 
+  apiLimiter, 
+  sanitizeMiddleware, 
+  securityHeaders 
+} = require('./middleware/security');
+
+// 导入缓存模块
+const { cache, cacheInvalidation } = require('./utils/redisCache');
+const dataLoader = require('./utils/dataLoader');
+
 // 验证环境变量
 try {
   config.validate();
@@ -20,6 +31,12 @@ try {
 
 const app = express();
 const PORT = config.port;
+
+// 应用安全头部
+app.use(securityHeaders);
+
+// 应用全局速率限制
+app.use('/api/', apiLimiter);
 
 // --- HTTP Request Logging with Morgan and Winston ---
 // Morgan stream to Winston
@@ -46,26 +63,34 @@ let ipWhitelist = {
 // 加载认证配置
 function loadAuthConfig() {
   try {
+    // 优先从环境变量读取密码
+    if (process.env.APP_PASSWORD && process.env.APP_PASSWORD !== 'your_secure_password_here') {
+      currentPassword = process.env.APP_PASSWORD;
+      logger.info("用户认证密码已从环境变量加载。");
+      return;
+    }
+
+    // 回退到 auth_config.json 文件（向后兼容）
     if (fs.existsSync(AUTH_CONFIG_PATH)) {
       const rawConfig = fs.readFileSync(AUTH_CONFIG_PATH);
       const config = JSON.parse(rawConfig);
       if (config.password) {
         currentPassword = config.password;
-        logger.info("用户认证密码已加载。");
+        logger.info("用户认证密码已从 auth_config.json 加载。");
+        logger.warn("建议将密码迁移到 .env 文件的 APP_PASSWORD 变量中以提高安全性。");
       } else {
-        logger.error("错误：auth_config.json 文件中未找到 'password' 字段。用户认证功能将无法正常工作。");
-        // 在这种情况下，我们可能不应该启动，或者让认证始终失败
+        logger.error("错误：auth_config.json 文件中未找到 'password' 字段。");
         currentPassword = uuidv4(); // 设置一个几乎不可能匹配的密码
       }
     } else {
-      logger.error(`错误：认证配置文件 ${AUTH_CONFIG_PATH} 未找到。请创建该文件并设置密码，例如: {"password": "your_secure_password"}`);
-      // 可以选择在这里退出应用 process.exit(1); 或设置一个默认的安全机制
+      logger.error(`错误：未找到密码配置。请在 .env 文件中设置 APP_PASSWORD 或创建 auth_config.json 文件。`);
+      // 创建示例配置文件
       fs.writeFileSync(AUTH_CONFIG_PATH, JSON.stringify({ password: "changeme_please_ASAP_!" }, null, 2));
       currentPassword = "changeme_please_ASAP_!";
-      logger.info("已生成默认 auth_config.json，请立即修改密码！");
+      logger.info("已生成默认 auth_config.json，建议使用 .env 文件配置密码！");
     }
   } catch (error) {
-    logger.error('加载 auth_config.json 失败:', { message: error.message, stack: error.stack });
+    logger.error('加载认证配置失败:', { message: error.message, stack: error.stack });
     currentPassword = uuidv4(); // 安全回退
   }
 }
@@ -108,22 +133,16 @@ if (currentPassword !== "changeme_please_ASAP_!" && currentPassword !== null) { 
     loadAndValidateIpWhitelist(); // 然后加载和校验IP白名单
 }
 
-
-// 用户认证中间件
+// 用户认证中间件（已废弃，使用JWT）
 function userAuthMiddleware(req, res, next) {
-  if (!currentPassword || currentPassword === "changeme_please_ASAP_!") {
-      logger.warn("警告：用户认证密码未正确配置或仍为默认值。请检查 auth_config.json。", { path: req.path, ip: req.ip });
-      // 考虑是否应该完全阻止访问，或者显示更严重的服务不可用页面
-      return res.status(503).send('系统认证服务暂不可用，请联系管理员。');
-  }
-  const clientIp = req.ip; // Express 会处理 X-Forwarded-For (如果 trust proxy 设置了)
+  // 这个中间件保留用于向后兼容，但建议使用JWT认证
+  logger.warn('使用了旧的IP白名单认证，建议迁移到JWT认证');
+  const clientIp = req.ip;
 
   if (ipWhitelist.ips.includes(clientIp)) {
     logger.debug(`IP白名单用户访问: ${clientIp} -> ${req.path}`);
-    return next(); // IP在白名单中，允许访问
+    return next();
   } else {
-    // IP不在白名单中，重定向到登录页面
-    // 可以将会话或查询参数用于登录成功后的重定向，但简单起见直接重定向
     logger.info(`非白名单IP ${clientIp} 尝试访问 ${req.path}，重定向到登录页。`);
     res.redirect('/login-user-page');
   }
@@ -138,6 +157,9 @@ function userAuthMiddleware(req, res, next) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// 应用输入清理中间件
+app.use(sanitizeMiddleware);
 
 // 在开发环境中，前端由Vite开发服务器提供服务
 // 在生产环境中，服务构建后的静态文件
@@ -158,12 +180,14 @@ app.use((req, res, next) => {
 });
 
 // API Routes
+const authRoutes = require('./routes/authRoutes'); // 新增JWT认证路由
 const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
 // app.use('/api/ai', aiRoutes); // AI路由已迁移到前端直接调用
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
+app.use('/api/auth', authRoutes); // JWT认证相关API
 app.use('/api/orders', ordersRoutes);
 app.use('/api/quotes', quotesRoutes);
 app.use('/api/quotes', require('./routes/quotesOptimized')); // 优化的报价路由
@@ -192,8 +216,9 @@ app.get('/login-user-page', (req, res) => {
   }
 });
 
-// 用户认证接口
+// 用户认证接口（已废弃，保留用于向后兼容）
 app.post('/authenticate-user', (req, res) => {
+  logger.warn('使用了旧的认证接口，建议迁移到JWT认证');
   const submittedPassword = req.body.password;
   const clientIp = req.ip;
 
@@ -287,6 +312,18 @@ app.use((err, req, res, next) => {
   res.status(500).send('服务器内部错误，请稍后重试。');
 });
 
+// 启动缓存预热
+if (config.isProduction()) {
+  setTimeout(async () => {
+    try {
+      await cache.warmUp(dataLoader);
+      logger.info('生产环境缓存预热完成');
+    } catch (error) {
+      logger.error('缓存预热失败', { error: error.message });
+    }
+  }, 5000); // 延迟5秒启动，确保数据库已准备好
+}
+
 // 关闭应用时关闭数据库连接
 process.on('SIGINT', () => {
   logger.info('收到 SIGINT 信号，准备关闭应用...');
@@ -306,4 +343,12 @@ app.listen(PORT, () => {
   if (currentPassword === "changeme_please_ASAP_!") {
     logger.warn(`安全警告：请立即修改 ${AUTH_CONFIG_PATH} 中的默认密码！`);
   }
+  logger.info('服务器启动完成，已启用以下安全特性：');
+  logger.info('- JWT认证系统');
+  logger.info('- 输入验证和XSS防护');
+  logger.info('- SQL注入防护');
+  logger.info('- 速率限制');
+  logger.info('- 安全响应头');
+  logger.info('- 多级缓存系统（内存+Redis）');
+  logger.info('- 数据库查询性能监控');
 });

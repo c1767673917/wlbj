@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
+const logger = require('../config/logger'); // 添加日志支持
 
 // 确保数据文件夹存在
 const dataDir = path.join(__dirname, '..', 'data'); // Adjusted path relative to db/database.js
@@ -11,15 +12,112 @@ if (!fs.existsSync(dataDir)) {
 // 设置SQLite数据库路径
 const dbPath = path.join(dataDir, 'logistics.db');
 
-// 创建数据库实例
-const db = new sqlite3.Database(dbPath, (err) => {
+// 创建数据库实例 - 启用缓存模式以提升性能
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
     console.error('Error opening database', err.message);
   } else {
     console.log('Connected to the SQLite database.');
+    // 优化SQLite性能设置
+    optimizeDatabase();
     initializeDB(); // Call initialization after connection
   }
 });
+
+// 优化数据库性能设置
+function optimizeDatabase() {
+  // 启用WAL模式，提升并发性能
+  db.run('PRAGMA journal_mode = WAL', (err) => {
+    if (err) {
+      logger.error('设置WAL模式失败:', err.message);
+    } else {
+      logger.info('SQLite WAL模式已启用');
+    }
+  });
+
+  // 设置缓存大小（-2000表示2000KB）
+  db.run('PRAGMA cache_size = -2000', (err) => {
+    if (err) {
+      logger.error('设置缓存大小失败:', err.message);
+    }
+  });
+
+  // 设置临时存储在内存中
+  db.run('PRAGMA temp_store = MEMORY', (err) => {
+    if (err) {
+      logger.error('设置临时存储失败:', err.message);
+    }
+  });
+
+  // 启用查询优化
+  db.run('PRAGMA optimize');
+}
+
+// 查询性能监控装饰器
+function trackQueryPerformance(queryName, query, params, callback) {
+  const startTime = Date.now();
+  
+  const wrappedCallback = (err, result) => {
+    const duration = Date.now() - startTime;
+    
+    // 记录慢查询（超过100ms）
+    if (duration > 100) {
+      logger.warn('慢查询检测', {
+        queryName,
+        duration: `${duration}ms`,
+        query: query.substring(0, 200), // 只记录前200个字符
+        paramsCount: params ? params.length : 0
+      });
+    } else if (duration > 50) {
+      logger.debug('查询性能', {
+        queryName,
+        duration: `${duration}ms`
+      });
+    }
+    
+    callback(err, result);
+  };
+  
+  return wrappedCallback;
+}
+
+// 包装数据库方法以添加性能监控
+const originalRun = db.run.bind(db);
+const originalGet = db.get.bind(db);
+const originalAll = db.all.bind(db);
+
+// 重写run方法
+db.run = function(query, params, callback) {
+  if (typeof params === 'function') {
+    callback = params;
+    params = [];
+  }
+  
+  const trackedCallback = callback ? trackQueryPerformance('run', query, params, callback) : undefined;
+  return originalRun(query, params, trackedCallback);
+};
+
+// 重写get方法
+db.get = function(query, params, callback) {
+  if (typeof params === 'function') {
+    callback = params;
+    params = [];
+  }
+  
+  const trackedCallback = callback ? trackQueryPerformance('get', query, params, callback) : undefined;
+  return originalGet(query, params, trackedCallback);
+};
+
+// 重写all方法
+db.all = function(query, params, callback) {
+  if (typeof params === 'function') {
+    callback = params;
+    params = [];
+  }
+  
+  const trackedCallback = callback ? trackQueryPerformance('all', query, params, callback) : undefined;
+  return originalAll(query, params, trackedCallback);
+};
 
 // 初始化数据库表函数
 function initializeDB() {
@@ -184,6 +282,115 @@ function migrateOrdersTable() {
     }
   });
 }
+
+// 批量操作优化函数
+db.batchInsert = function(table, columns, values, callback) {
+  const placeholders = columns.map(() => '?').join(',');
+  const query = `INSERT INTO ${table} (${columns.join(',')}) VALUES (${placeholders})`;
+  
+  const stmt = db.prepare(query);
+  let completed = 0;
+  let hasError = false;
+
+  db.run('BEGIN TRANSACTION');
+
+  values.forEach((valueSet, index) => {
+    stmt.run(valueSet, (err) => {
+      if (err && !hasError) {
+        hasError = true;
+        db.run('ROLLBACK');
+        return callback(err);
+      }
+      
+      completed++;
+      if (completed === values.length && !hasError) {
+        db.run('COMMIT', (err) => {
+          stmt.finalize();
+          callback(err);
+        });
+      }
+    });
+  });
+};
+
+// 查询结果预加载和分页优化
+db.getPaginated = function(query, params, page, limit, callback) {
+  const offset = (page - 1) * limit;
+  const paginatedQuery = `${query} LIMIT ? OFFSET ?`;
+  const countQuery = query.replace(/SELECT.*FROM/i, 'SELECT COUNT(*) as total FROM').replace(/ORDER BY.*/i, '');
+  
+  // 并行执行计数和数据查询
+  let results = {};
+  let completed = 0;
+  let hasError = false;
+
+  // 获取总数
+  db.get(countQuery, params, (err, row) => {
+    if (err) {
+      hasError = true;
+      return callback(err);
+    }
+    results.total = row.total;
+    completed++;
+    if (completed === 2 && !hasError) {
+      callback(null, results);
+    }
+  });
+
+  // 获取分页数据
+  db.all(paginatedQuery, [...params, limit, offset], (err, rows) => {
+    if (err) {
+      hasError = true;
+      return callback(err);
+    }
+    results.data = rows;
+    results.page = page;
+    results.limit = limit;
+    results.pages = Math.ceil(results.total / limit);
+    completed++;
+    if (completed === 2 && !hasError) {
+      callback(null, results);
+    }
+  });
+};
+
+// 添加查询分析功能
+db.explainQuery = function(query, params, callback) {
+  const explainQuery = `EXPLAIN QUERY PLAN ${query}`;
+  db.all(explainQuery, params, (err, plan) => {
+    if (err) {
+      logger.error('查询计划分析失败', { error: err.message });
+      return callback(err);
+    }
+    
+    logger.info('查询执行计划', {
+      query: query.substring(0, 200),
+      plan: plan
+    });
+    
+    callback(null, plan);
+  });
+};
+
+// 定期优化数据库（每天执行一次）
+setInterval(() => {
+  db.run('PRAGMA optimize', (err) => {
+    if (err) {
+      logger.error('数据库优化失败', { error: err.message });
+    } else {
+      logger.info('数据库优化完成');
+    }
+  });
+  
+  // 执行VACUUM以减少数据库文件大小
+  db.run('VACUUM', (err) => {
+    if (err) {
+      logger.error('VACUUM操作失败', { error: err.message });
+    } else {
+      logger.info('数据库VACUUM完成');
+    }
+  });
+}, 24 * 60 * 60 * 1000); // 24小时
 
 // 导出数据库实例
 module.exports = db;
