@@ -56,6 +56,25 @@
 - **数据库**: SQLite适合小型应用，大型应用建议升级PostgreSQL
 - **缓存系统**: 当前使用内存缓存，生产环境建议升级Redis
 
+### 🔄 跨平台数据库兼容性
+
+**重要提醒**: 如果您从Mac ARM环境迁移到Linux x86生产环境，需要注意SQLite数据库的跨平台兼容性：
+
+- **自动检测**: 部署脚本会自动检测系统架构并提示是否需要迁移
+- **数据库迁移**: 提供专用迁移脚本确保完全兼容性
+- **兼容性检查**: 可使用检查脚本验证数据库状态
+
+```bash
+# 检查数据库兼容性
+./deploy/check-database-compatibility.sh
+
+# 执行数据库迁移（如需要）
+./deploy/migrate-database.sh
+
+# 验证迁移结果
+./deploy/check-database-compatibility.sh -r
+```
+
 ## 主要功能
 
 ### 用户端 (货主)
@@ -617,6 +636,121 @@ node test-wechat-notification.js
 
 ---
 
+
+## 🐧 Linux生产环境部署方案
+
+### 📋 部署架构
+
+推荐的生产环境架构：
+
+```
+Internet
+    ↓
+[Nginx反向代理] (80/443端口) - SSL终端、静态文件、负载均衡
+    ↓
+[Node.js应用] (3000端口) - 主应用服务
+    ↓
+[SQLite数据库] + [Redis缓存] - 数据存储
+    ↓
+[PM2进程管理] + [日志轮替] - 进程监控
+```
+
+### 🚀 一键部署脚本
+
+项目提供了完整的生产环境部署脚本，支持自动数据库迁移：
+
+```bash
+# 方法一：完全自动化部署（推荐）
+sudo ./deploy/deploy-production.sh
+
+# 方法二：Docker容器化部署
+docker-compose up -d
+
+# 方法三：分步骤部署
+sudo ./deploy/install-dependencies.sh  # 安装系统依赖
+./deploy/setup-application.sh          # 配置应用
+./deploy/migrate-database.sh           # 数据库迁移（如需要）
+sudo ./deploy/setup-nginx.sh           # 配置Nginx
+sudo ./deploy/setup-ssl.sh             # 配置SSL证书
+./deploy/start-services.sh             # 启动服务
+```
+
+### 🔄 数据库兼容性处理
+
+**自动检测和迁移**：
+```bash
+# 检查数据库兼容性
+./deploy/check-database-compatibility.sh
+
+# 执行数据库迁移（Mac ARM → Linux x86）
+./deploy/migrate-database.sh
+
+# 验证迁移结果
+./deploy/check-database-compatibility.sh -r
+```
+
+### 🔧 系统要求
+
+**最低配置**:
+- CPU: 1核心
+- 内存: 1GB RAM
+- 存储: 10GB SSD
+- 操作系统: Ubuntu 20.04+ / CentOS 8+ / Debian 11+
+
+**推荐配置**:
+- CPU: 2核心
+- 内存: 2GB RAM
+- 存储: 20GB SSD
+- 操作系统: Ubuntu 22.04 LTS
+
+### 📦 部署特性
+
+- **零停机部署**: 支持滚动更新，无服务中断
+- **自动备份**: 数据库和配置文件自动备份
+- **SSL证书**: 自动申请和续期Let's Encrypt证书
+- **监控告警**: 集成系统监控和邮件告警
+- **日志管理**: 自动日志轮替和清理
+- **安全加固**: 防火墙配置和安全优化
+- **🆕 跨平台兼容**: 自动处理Mac ARM到Linux x86的数据库迁移
+- **🆕 Docker支持**: 完整的容器化部署方案
+- **🆕 智能检测**: 自动检测系统架构和兼容性需求
+
+### 🔐 安全配置
+
+- **防火墙**: 仅开放必要端口(80, 443, 22)
+- **SSL/TLS**: 强制HTTPS，A+级SSL配置
+- **访问控制**: IP白名单和速率限制
+- **数据加密**: 敏感数据加密存储
+- **定期更新**: 自动安全补丁更新
+
+### 📊 监控与维护
+
+- **健康检查**: 应用和数据库健康监控
+- **性能监控**: CPU、内存、磁盘使用率监控
+- **日志分析**: 错误日志自动分析和告警
+- **备份策略**: 每日自动备份，保留30天
+- **更新机制**: GitHub webhook自动部署
+
+### 📚 部署文档
+
+- **详细部署指南**: `deploy/README.md`
+- **快速部署指南**: `deploy/QUICK_START.md`
+- **数据库迁移指南**: `deploy/DATABASE_MIGRATION_GUIDE.md`
+- **Docker部署**: `docker-compose.yml` + `Dockerfile`
+
+### 🔧 部署工具
+
+| 脚本 | 功能 | 用途 |
+|------|------|------|
+| `deploy-production.sh` | 一键部署 | 完整的生产环境自动化部署 |
+| `setup-ssl.sh` | SSL配置 | Let's Encrypt证书自动申请 |
+| `migrate-database.sh` | 数据库迁移 | Mac ARM到Linux x86迁移 |
+| `backup.sh` | 数据备份 | 自动备份数据库和配置 |
+| `monitor.sh` | 系统监控 | 实时监控和告警 |
+| `update.sh` | 零停机更新 | 支持回滚的安全更新 |
+| `status.sh` | 状态检查 | 全面的系统状态诊断 |
+
+---
 
 ## 📞 技术支持与反馈
 

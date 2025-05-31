@@ -1,0 +1,118 @@
+# Docker Compose 配置文件
+# 用于容器化部署物流报价系统
+
+version: '3.8'
+
+services:
+  # 主应用服务
+  wlbj-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wlbj-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./auth_config.json:/app/auth_config.json:ro
+      - ./ip_whitelist.json:/app/ip_whitelist.json
+    networks:
+      - wlbj-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - redis
+    labels:
+      - "com.wlbj.service=app"
+      - "com.wlbj.version=2.0.0"
+
+  # Redis 缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: wlbj-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis-data:/data
+    networks:
+      - wlbj-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.wlbj.service=redis"
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: wlbj-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.production.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - nginx-logs:/var/log/nginx
+    networks:
+      - wlbj-network
+    depends_on:
+      - wlbj-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.wlbj.service=nginx"
+
+  # 监控服务 (可选)
+  monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile.monitor
+    container_name: wlbj-monitor
+    restart: unless-stopped
+    environment:
+      - MONITOR_INTERVAL=60
+      - ALERT_EMAIL=${ADMIN_EMAIL:-}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs:/app/logs:ro
+    networks:
+      - wlbj-network
+    depends_on:
+      - wlbj-app
+    labels:
+      - "com.wlbj.service=monitor"
+
+# 网络配置
+networks:
+  wlbj-network:
+    driver: bridge
+    labels:
+      - "com.wlbj.network=main"
+
+# 数据卷配置
+volumes:
+  redis-data:
+    driver: local
+    labels:
+      - "com.wlbj.volume=redis-data"
+  
+  nginx-logs:
+    driver: local
+    labels:
+      - "com.wlbj.volume=nginx-logs"

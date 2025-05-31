@@ -1,0 +1,49 @@
+# Systemd服务配置文件
+# 用于系统级别的服务管理和开机自启
+
+[Unit]
+Description=物流报价系统 (WLBJ) - Logistics Quote System
+Documentation=https://github.com/c1767673917/wlbj
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+User=wlbj
+Group=wlbj
+WorkingDirectory=/opt/wlbj
+
+# 环境变量
+Environment=NODE_ENV=production
+Environment=PORT=3000
+EnvironmentFile=-/opt/wlbj/.env
+
+# 启动命令
+ExecStart=/usr/bin/pm2 start /opt/wlbj/deploy/ecosystem.production.js --no-daemon
+ExecReload=/usr/bin/pm2 reload /opt/wlbj/deploy/ecosystem.production.js
+ExecStop=/usr/bin/pm2 stop /opt/wlbj/deploy/ecosystem.production.js
+
+# 重启策略
+Restart=always
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# 安全配置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/wlbj /var/log/wlbj /tmp
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wlbj
+
+[Install]
+WantedBy=multi-user.target
