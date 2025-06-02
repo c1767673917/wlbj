@@ -184,7 +184,6 @@ const authRoutes = require('./routes/authRoutes'); // 新增JWT认证路由
 const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
-// app.use('/api/ai', aiRoutes); // AI路由已迁移到前端直接调用
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
 app.use('/api/auth', authRoutes); // JWT认证相关API

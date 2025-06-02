@@ -5,10 +5,7 @@ const config = {
   // 应用基础配置
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
-  
-  // API密钥配置
-  siliconFlowApiKey: process.env.SILICON_FLOW_API_KEY || '',
-  
+
   // 数据库配置
   databaseUrl: process.env.DATABASE_URL || '',
   
@@ -23,11 +20,7 @@ const config = {
   // 验证必需的环境变量
   validate: () => {
     const errors = [];
-    
-    if (!config.siliconFlowApiKey && config.isProduction()) {
-      errors.push('SILICON_FLOW_API_KEY is required in production');
-    }
-    
+
     if (!config.appPassword && config.isProduction()) {
       errors.push('APP_PASSWORD is required in production');
     }

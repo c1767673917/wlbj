@@ -667,3 +667,127 @@
 [2025-05-31 14:28:40.868 PM] warn: 	速率限制触发
 [2025-05-31 14:29:06.617 PM] warn: 	速率限制触发
 [2025-05-31 14:30:03.519 PM] warn: 	速率限制触发
+[2025-06-02 22:02:25.037 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-02 22:02:25.044 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-02 22:02:25.044 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-02 22:02:25.193 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-02 22:02:25.193 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-02 22:02:25.193 PM] info: 	- JWT认证系统
+[2025-06-02 22:02:25.193 PM] info: 	- 输入验证和XSS防护
+[2025-06-02 22:02:25.193 PM] info: 	- SQL注入防护
+[2025-06-02 22:02:25.193 PM] info: 	- 速率限制
+[2025-06-02 22:02:25.193 PM] info: 	- 安全响应头
+[2025-06-02 22:02:25.193 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-02 22:02:25.193 PM] info: 	- 数据库查询性能监控
+[2025-06-02 22:02:25.197 PM] info: 	SQLite WAL模式已启用
+[2025-06-02 22:02:50.346 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 1.528 ms - 4[0m
+[2025-06-02 22:02:50.357 PM] info: 	Token刷新成功
+[2025-06-02 22:02:50.358 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 10.491 ms - 227[0m
+[2025-06-02 22:02:50.359 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.224 ms - 4[0m
+[2025-06-02 22:02:50.360 PM] info: 	Token刷新成功
+[2025-06-02 22:02:50.360 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.984 ms - 227[0m
+[2025-06-02 22:02:58.229 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.650 ms - 12[0m
+[2025-06-02 22:02:58.231 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.354 ms - 12[0m
+[2025-06-02 22:02:58.233 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.347 ms - 13[0m
+[2025-06-02 22:02:58.237 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.171 ms - 12[0m
+[2025-06-02 22:02:58.240 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.260 ms - 12[0m
+[2025-06-02 22:02:58.241 PM] info: 	[0mGET /api/providers [36m304[0m 3.312 ms - -[0m
+[2025-06-02 22:02:58.242 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.328 ms - 13[0m
+[2025-06-02 22:02:58.242 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 10.201 ms - -[0m
+[2025-06-02 22:02:58.243 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.833 ms - -[0m
+[2025-06-02 22:02:58.244 PM] info: 	[0mGET /api/providers [36m304[0m 0.890 ms - -[0m
+[2025-06-02 22:02:58.245 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.172 ms - -[0m
+[2025-06-02 22:02:58.246 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.263 ms - -[0m
+[2025-06-02 22:02:58.249 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.209 ms - 8[0m
+[2025-06-02 22:02:58.250 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.256 ms - 8[0m
+[2025-06-02 22:02:58.251 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.887 ms - -[0m
+[2025-06-02 22:02:58.253 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.535 ms - -[0m
+[2025-06-02 22:02:58.257 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.320 ms - -[0m
+[2025-06-02 22:08:04.736 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-02 22:08:04.738 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-02 22:08:04.738 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-02 22:08:04.867 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-02 22:08:04.867 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-02 22:08:04.867 PM] info: 	- JWT认证系统
+[2025-06-02 22:08:04.867 PM] info: 	- 输入验证和XSS防护
+[2025-06-02 22:08:04.867 PM] info: 	- SQL注入防护
+[2025-06-02 22:08:04.867 PM] info: 	- 速率限制
+[2025-06-02 22:08:04.867 PM] info: 	- 安全响应头
+[2025-06-02 22:08:04.867 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-02 22:08:04.867 PM] info: 	- 数据库查询性能监控
+[2025-06-02 22:08:04.871 PM] info: 	SQLite WAL模式已启用
+[2025-06-02 22:09:01.335 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 2.083 ms - 12[0m
+[2025-06-02 22:09:01.337 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.211 ms - 12[0m
+[2025-06-02 22:09:01.338 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.215 ms - 13[0m
+[2025-06-02 22:09:01.340 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.132 ms - 12[0m
+[2025-06-02 22:09:01.341 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.105 ms - 12[0m
+[2025-06-02 22:09:01.342 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.294 ms - -[0m
+[2025-06-02 22:09:01.343 PM] info: 	[0mGET /api/providers [36m304[0m 2.245 ms - -[0m
+[2025-06-02 22:09:01.344 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.156 ms - 13[0m
+[2025-06-02 22:09:01.346 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.998 ms - -[0m
+[2025-06-02 22:09:01.347 PM] info: 	[0mGET /api/providers [36m304[0m 0.405 ms - -[0m
+[2025-06-02 22:09:01.353 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 7.533 ms - -[0m
+[2025-06-02 22:09:01.354 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.261 ms - 8[0m
+[2025-06-02 22:09:01.356 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 1.010 ms - 8[0m
+[2025-06-02 22:09:01.356 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 10.087 ms - -[0m
+[2025-06-02 22:09:01.358 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.614 ms - -[0m
+[2025-06-02 22:09:01.359 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.599 ms - -[0m
+[2025-06-02 22:09:01.379 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.531 ms - -[0m
+[2025-06-02 22:09:47.688 PM] info: 	[0mGET /test-csp-fix.html [36m302[0m 1.871 ms - 68[0m
+[2025-06-02 22:10:19.119 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-02 22:10:19.121 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-02 22:10:19.122 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-02 22:10:19.241 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-02 22:10:19.241 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-02 22:10:19.242 PM] info: 	- JWT认证系统
+[2025-06-02 22:10:19.242 PM] info: 	- 输入验证和XSS防护
+[2025-06-02 22:10:19.242 PM] info: 	- SQL注入防护
+[2025-06-02 22:10:19.242 PM] info: 	- 速率限制
+[2025-06-02 22:10:19.242 PM] info: 	- 安全响应头
+[2025-06-02 22:10:19.242 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-02 22:10:19.242 PM] info: 	- 数据库查询性能监控
+[2025-06-02 22:10:19.244 PM] info: 	SQLite WAL模式已启用
+[2025-06-02 22:10:41.859 PM] info: 	[0mGET /test-csp-fix.html [32m200[0m 2.505 ms - 8238[0m
+[2025-06-02 22:10:42.031 PM] info: 	[0mGET /favicon.ico [36m302[0m 2.827 ms - 55[0m
+[2025-06-02 22:11:01.411 PM] info: 	[0mGET /api/orders [32m200[0m 0.984 ms - 1933[0m
+[2025-06-02 22:11:35.582 PM] info: 	[0mGET /test-csp-fix.html [36m304[0m 1.246 ms - -[0m
+[2025-06-02 22:11:35.639 PM] info: 	[0mGET /favicon.ico [36m302[0m 1.876 ms - 55[0m
+[2025-06-02 22:13:00.995 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.714 ms - 4[0m
+[2025-06-02 22:13:01.018 PM] info: 	Token刷新成功
+[2025-06-02 22:13:01.019 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 21.340 ms - 227[0m
+[2025-06-02 22:31:35.511 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-02 22:31:35.514 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-02 22:31:35.515 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-02 22:31:35.640 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-02 22:31:35.640 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-02 22:31:35.640 PM] info: 	- JWT认证系统
+[2025-06-02 22:31:35.640 PM] info: 	- 输入验证和XSS防护
+[2025-06-02 22:31:35.640 PM] info: 	- SQL注入防护
+[2025-06-02 22:31:35.640 PM] info: 	- 速率限制
+[2025-06-02 22:31:35.640 PM] info: 	- 安全响应头
+[2025-06-02 22:31:35.640 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-02 22:31:35.640 PM] info: 	- 数据库查询性能监控
+[2025-06-02 22:31:35.644 PM] info: 	SQLite WAL模式已启用
+[2025-06-02 22:32:00.504 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 1.411 ms - 4[0m
+[2025-06-02 22:32:00.516 PM] info: 	Token刷新成功
+[2025-06-02 22:32:00.518 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 12.829 ms - 227[0m
+[2025-06-02 22:32:00.520 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.399 ms - 4[0m
+[2025-06-02 22:32:00.524 PM] info: 	Token刷新成功
+[2025-06-02 22:32:00.524 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.111 ms - 227[0m
+[2025-06-02 22:32:21.711 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 1.334 ms - 12[0m
+[2025-06-02 22:32:21.714 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.293 ms - 12[0m
+[2025-06-02 22:32:21.716 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.367 ms - 13[0m
+[2025-06-02 22:32:21.719 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.223 ms - 12[0m
+[2025-06-02 22:32:21.722 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.244 ms - 12[0m
+[2025-06-02 22:32:21.723 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 9.571 ms - -[0m
+[2025-06-02 22:32:21.724 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.272 ms - 13[0m
+[2025-06-02 22:32:21.724 PM] info: 	[0mGET /api/providers [36m304[0m 4.180 ms - -[0m
+[2025-06-02 22:32:21.725 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.271 ms - -[0m
+[2025-06-02 22:32:21.726 PM] info: 	[0mGET /api/providers [36m304[0m 0.458 ms - -[0m
+[2025-06-02 22:32:21.727 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.527 ms - -[0m
+[2025-06-02 22:32:21.727 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.279 ms - -[0m
+[2025-06-02 22:32:21.731 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.269 ms - 8[0m
+[2025-06-02 22:32:21.732 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.129 ms - 8[0m
+[2025-06-02 22:32:21.733 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.442 ms - -[0m
+[2025-06-02 22:32:21.733 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.269 ms - -[0m
+[2025-06-02 22:32:21.734 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.197 ms - -[0m
