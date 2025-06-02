@@ -207,6 +207,13 @@ wlbj/
 - 内存：建议 2GB+ RAM
 - 磁盘空间：建议 1GB+ 可用空间
 
+### 生产环境额外要求
+
+- **Linux服务器** (推荐 Ubuntu 20.04+ 或 CentOS 8+)
+- **PM2** (Node.js 进程管理器)
+- **Nginx** (反向代理服务器)
+- **域名和SSL证书** (可选，推荐用于生产环境)
+
 ### 🚀 快速开始 (v2.0.0)
 
 #### 方法一：一键启动开发环境 (推荐)
@@ -324,7 +331,432 @@ APP_PASSWORD=your_secure_password_here
 - 前端代码压缩优化
 - 静态文件由后端统一服务
 - 单端口部署，便于运维管理
+- 进程管理和自动重启
+- 负载均衡和性能优化
+- SSL支持和安全配置
 
+**方法二：PM2 + Nginx 生产部署（推荐）**
+
+详细的生产环境部署指南请参考下方的 **"生产环境部署指南"** 章节。
+
+## 生产环境部署指南
+
+### 🚀 PM2 + Nginx 部署方案（推荐）
+
+本方案提供了简单易维护的生产环境部署解决方案，具备进程管理、自动重启、负载均衡和SSL支持等特性。
+
+#### 1. 服务器环境准备
+
+**系统要求**:
+- Ubuntu 20.04+ 或 CentOS 8+
+- 2GB+ RAM，1GB+ 可用磁盘空间
+- 域名（可选，用于SSL配置）
+
+**安装基础软件**:
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install -y nodejs npm nginx
+
+# CentOS/RHEL
+sudo yum install -y nodejs npm nginx
+```
+
+#### 2. 安装PM2进程管理器
+
+```bash
+# 全局安装PM2
+sudo npm install -g pm2
+
+# 验证安装
+pm2 --version
+```
+
+#### 3. 应用部署
+
+**3.1 上传代码到服务器**:
+```bash
+# 方法一：Git克隆
+git clone https://github.com/your-repo/wlbj.git
+cd wlbj
+
+# 方法二：直接上传代码包
+# 将代码包上传到服务器并解压
+```
+
+**3.2 安装依赖和构建**:
+```bash
+# 安装后端依赖
+npm install --production
+
+# 安装前端依赖并构建
+cd frontend
+npm install
+npm run build
+cd ..
+```
+
+**3.3 配置环境变量**:
+```bash
+# 创建生产环境配置
+cp env.example .env
+
+# 编辑配置文件
+nano .env
+```
+
+配置示例：
+```env
+NODE_ENV=production
+PORT=3000
+JWT_SECRET=your_very_long_and_secure_jwt_secret_here
+SILICON_FLOW_API_KEY=your_siliconflow_api_key
+LOG_LEVEL=info
+```
+
+**3.4 配置用户认证**:
+```bash
+# 创建认证配置
+nano auth_config.json
+```
+
+```json
+{
+  "password": "your_secure_production_password"
+}
+```
+
+#### 4. PM2配置
+
+**4.1 创建PM2配置文件**:
+```bash
+nano ecosystem.config.js
+```
+
+```javascript
+module.exports = {
+  apps: [{
+    name: 'wlbj-logistics',
+    script: 'app.js',
+    instances: 2,  // 启动2个实例实现负载均衡
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    error_file: './logs/pm2-error.log',
+    out_file: './logs/pm2-out.log',
+    log_file: './logs/pm2-combined.log',
+    time: true,
+    max_memory_restart: '500M',
+    node_args: '--max-old-space-size=1024'
+  }]
+};
+```
+
+**4.2 启动应用**:
+```bash
+# 使用PM2启动应用
+pm2 start ecosystem.config.js
+
+# 查看应用状态
+pm2 status
+
+# 查看日志
+pm2 logs wlbj-logistics
+
+# 设置开机自启动
+pm2 startup
+pm2 save
+```
+
+#### 5. Nginx配置
+
+**5.1 创建Nginx配置文件**:
+```bash
+sudo nano /etc/nginx/sites-available/wlbj
+```
+
+**基础配置（HTTP）**:
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;  # 替换为您的域名或IP
+
+    # 静态文件缓存
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri @backend;
+    }
+
+    # API请求代理到后端
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 75s;
+    }
+
+    # 所有其他请求代理到后端
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # 安全配置
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+}
+```
+
+**5.2 启用配置**:
+```bash
+# 创建软链接启用站点
+sudo ln -s /etc/nginx/sites-available/wlbj /etc/nginx/sites-enabled/
+
+# 测试配置
+sudo nginx -t
+
+# 重启Nginx
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+```
+
+#### 6. SSL配置（推荐）
+
+**6.1 安装Certbot**:
+```bash
+# Ubuntu/Debian
+sudo apt install -y certbot python3-certbot-nginx
+
+# CentOS/RHEL
+sudo yum install -y certbot python3-certbot-nginx
+```
+
+**6.2 获取SSL证书**:
+```bash
+# 自动配置SSL
+sudo certbot --nginx -d your-domain.com
+
+# 设置自动续期
+sudo crontab -e
+# 添加以下行：
+# 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+#### 7. 防火墙配置
+
+```bash
+# Ubuntu UFW
+sudo ufw allow 22    # SSH
+sudo ufw allow 80    # HTTP
+sudo ufw allow 443   # HTTPS
+sudo ufw enable
+
+# CentOS firewalld
+sudo firewall-cmd --permanent --add-service=ssh
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --reload
+```
+
+#### 8. 监控和维护
+
+**8.1 创建监控脚本**:
+```bash
+nano monitor.sh
+```
+
+```bash
+#!/bin/bash
+# 物流报价系统监控脚本
+
+echo "=== 物流报价系统状态监控 ==="
+echo "时间: $(date)"
+echo ""
+
+# 检查PM2状态
+echo "📊 PM2应用状态:"
+pm2 status
+
+echo ""
+echo "💾 系统资源使用:"
+echo "内存使用: $(free -h | grep '^Mem:' | awk '{print $3 "/" $2}')"
+echo "磁盘使用: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 ")"}')"
+
+echo ""
+echo "📁 数据库文件大小:"
+if [ -f "data/logistics.db" ]; then
+    echo "SQLite数据库: $(du -h data/logistics.db | cut -f1)"
+else
+    echo "❌ 数据库文件不存在"
+fi
+
+echo ""
+echo "📝 最近的错误日志:"
+if [ -f "logs/error.log" ]; then
+    tail -5 logs/error.log
+else
+    echo "无错误日志"
+fi
+```
+
+```bash
+chmod +x monitor.sh
+```
+
+**8.2 创建备份脚本**:
+```bash
+nano backup.sh
+```
+
+```bash
+#!/bin/bash
+# 物流报价系统备份脚本
+
+BACKUP_DIR="/backup/wlbj"
+DATE=$(date +%Y%m%d_%H%M%S)
+APP_DIR="/path/to/your/wlbj"  # 替换为实际路径
+
+mkdir -p $BACKUP_DIR
+
+echo "🔄 开始备份物流报价系统..."
+
+# 备份数据库
+if [ -f "$APP_DIR/data/logistics.db" ]; then
+    cp "$APP_DIR/data/logistics.db" "$BACKUP_DIR/logistics_${DATE}.db"
+    echo "✅ 数据库备份完成"
+fi
+
+# 备份配置文件
+cp "$APP_DIR/.env" "$BACKUP_DIR/env_${DATE}.backup" 2>/dev/null
+cp "$APP_DIR/auth_config.json" "$BACKUP_DIR/auth_config_${DATE}.json" 2>/dev/null
+
+# 压缩日志文件
+tar -czf "$BACKUP_DIR/logs_${DATE}.tar.gz" -C "$APP_DIR" logs/ 2>/dev/null
+
+# 清理7天前的备份
+find $BACKUP_DIR -name "*.db" -mtime +7 -delete
+find $BACKUP_DIR -name "*.backup" -mtime +7 -delete
+find $BACKUP_DIR -name "*.tar.gz" -mtime +7 -delete
+
+echo "✅ 备份完成，文件保存在: $BACKUP_DIR"
+```
+
+```bash
+chmod +x backup.sh
+
+# 设置定时备份
+crontab -e
+# 添加以下行（每天凌晨2点备份）：
+# 0 2 * * * /path/to/your/wlbj/backup.sh
+```
+
+#### 9. 常用运维命令
+
+```bash
+# PM2管理
+pm2 restart wlbj-logistics    # 重启应用
+pm2 reload wlbj-logistics     # 零停机重载
+pm2 stop wlbj-logistics       # 停止应用
+pm2 delete wlbj-logistics     # 删除应用
+
+# 查看日志
+pm2 logs wlbj-logistics       # 实时日志
+pm2 logs wlbj-logistics --lines 100  # 查看最近100行
+
+# Nginx管理
+sudo systemctl restart nginx  # 重启Nginx
+sudo systemctl reload nginx   # 重载配置
+sudo nginx -t                 # 测试配置
+
+# 系统监控
+./monitor.sh                  # 运行监控脚本
+./backup.sh                   # 手动备份
+```
+
+#### 10. 故障排查
+
+**常见问题及解决方案**:
+
+1. **应用无法启动**:
+   ```bash
+   # 检查日志
+   pm2 logs wlbj-logistics
+   # 检查端口占用
+   sudo netstat -tlnp | grep :3000
+   ```
+
+2. **Nginx 502错误**:
+   ```bash
+   # 检查后端是否运行
+   pm2 status
+   # 检查Nginx配置
+   sudo nginx -t
+   ```
+
+3. **数据库锁定**:
+   ```bash
+   # 重启应用
+   pm2 restart wlbj-logistics
+   ```
+
+4. **磁盘空间不足**:
+   ```bash
+   # 清理日志
+   pm2 flush
+   # 清理旧备份
+   find /backup -mtime +30 -delete
+   ```
+
+### 🎯 部署检查清单
+
+部署完成后，请确认以下项目：
+
+- [ ] PM2应用状态正常 (`pm2 status`)
+- [ ] Nginx配置测试通过 (`sudo nginx -t`)
+- [ ] 应用可通过域名/IP访问
+- [ ] SSL证书配置正确（如果使用）
+- [ ] 防火墙规则配置完成
+- [ ] 备份脚本测试成功
+- [ ] 监控脚本运行正常
+- [ ] 定时任务配置完成
+
+### 📈 性能优化建议
+
+1. **数据库优化**:
+   - 定期清理历史数据
+   - 监控数据库文件大小
+   - 考虑迁移到PostgreSQL（订单量>10万时）
+
+2. **缓存优化**:
+   - 启用Nginx静态文件缓存
+   - 考虑引入Redis缓存
+
+3. **监控告警**:
+   - 设置磁盘空间告警
+   - 配置应用异常告警
+   - 监控响应时间
+
+这个PM2 + Nginx部署方案为您提供了一个稳定、可维护的生产环境，具备自动重启、负载均衡、SSL支持等企业级特性。
 
 ## 身份认证 (用户端 `/user`)
 
@@ -612,7 +1044,7 @@ node test-wechat-notification.js
 **安全等级**: 前后端均0依赖漏洞，1 API密钥泄露风险
 **性能等级**: 已优化 (数据库+缓存+批量查询+前端优化)
 **测试覆盖**: 完整的自动化测试脚本
-**部署方式**: 支持开发环境和生产环境部署
+**部署方式**: 支持开发环境和生产环境部署（推荐PM2 + Nginx方案）
 **最后更新**: 2025年1月
 
 ---
