@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
 import { Tabs } from '../ui/Tabs';
-import { 
-  Cloud, 
-  Settings, 
-  Play, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
+import {
+  Cloud,
+  Settings,
+  Play,
+  CheckCircle,
+  XCircle,
+  Clock,
   Database,
   Shield,
   AlertTriangle,
@@ -347,7 +347,7 @@ const BackupManagement: React.FC = () => {
 
             <div className="border-t pt-6">
               <h4 className="text-md font-medium text-gray-900 mb-4">备份策略</h4>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -397,7 +397,7 @@ const BackupManagement: React.FC = () => {
 
             <div className="border-t pt-6">
               <h4 className="text-md font-medium text-gray-900 mb-4">通知设置</h4>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -442,7 +442,7 @@ const BackupManagement: React.FC = () => {
         <Card>
           <div className="p-6">
             <h3 className="text-lg font-semibold mb-4">备份状态</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center justify-between">
@@ -491,7 +491,7 @@ const BackupManagement: React.FC = () => {
         <Card>
           <div className="p-6">
             <h3 className="text-lg font-semibold mb-4">备份历史</h3>
-            
+
             {history.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 暂无备份历史记录

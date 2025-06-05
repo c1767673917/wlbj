@@ -15,7 +15,7 @@ function main() {
 
     // 读取配置
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    
+
     if (!config.access_key || !config.secret_key || !config.bucket) {
       throw new Error('配置信息不完整');
     }
@@ -27,12 +27,22 @@ function main() {
       throw new Error('qshell工具未安装');
     }
 
+    // 生成唯一的账号名称
+    const accountName = `test-account-${Date.now()}`;
+
     // 配置qshell
-    execSync(`qshell account "${config.access_key}" "${config.secret_key}" "test-account"`);
+    execSync(`qshell account "${config.access_key}" "${config.secret_key}" "${accountName}"`);
 
     // 测试连接 - 列出存储空间
     const result = execSync('qshell buckets', { encoding: 'utf8' });
-    
+
+    // 清理账号
+    try {
+      execSync(`qshell user rm "${accountName}"`, { stdio: 'ignore' });
+    } catch (e) {
+      // 忽略清理错误
+    }
+
     if (result.includes(config.bucket)) {
       console.log('✅ 七牛云连接测试成功');
       console.log(`✅ 存储空间 ${config.bucket} 可访问`);

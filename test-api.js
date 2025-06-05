@@ -5,51 +5,48 @@ const { URL } = require('url');
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
-async function testAPI() {
-  console.log('开始测试API连接...\n');
+async function adminLogin() {
+  console.log('开始测试管理员登录...\n');
 
   try {
-    // 测试获取订单列表
-    console.log('1. 测试获取订单列表...');
-    const ordersResponse = await fetch(`${API_BASE_URL}/orders`);
-    const ordersData = await ordersResponse.json();
-    console.log('✅ 订单列表获取成功:', ordersData);
-    console.log(`   - 总订单数: ${ordersData.totalItems}`);
-    console.log(`   - 当前页订单数: ${ordersData.items.length}\n`);
-
-    // 测试获取物流公司列表
-    console.log('2. 测试获取物流公司列表...');
-    const providersResponse = await fetch(`${API_BASE_URL}/providers`);
-    const providersData = await providersResponse.json();
-    console.log('✅ 物流公司列表获取成功:', providersData);
-    console.log(`   - 物流公司数量: ${providersData.length}\n`);
-
-    // 测试创建新订单
-    console.log('3. 测试创建新订单...');
-    const newOrderData = {
-      warehouse: '测试仓库-API测试',
-      goods: '测试货物-API测试',
-      deliveryAddress: '测试地址-API测试'
+    const loginData = {
+      password: 'shrx', // 从 .env 获取的 APP_PASSWORD
+      role: 'admin'    // 从 utils/auth.js 确认的管理员角色
     };
 
-    const createResponse = await fetch(`${API_BASE_URL}/orders`, {
+    console.log('登录请求数据:', JSON.stringify(loginData, null, 2));
+
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newOrderData)
+      body: JSON.stringify(loginData)
     });
 
-    const newOrder = await createResponse.json();
-    console.log('✅ 订单创建成功:', newOrder);
-    console.log(`   - 订单ID: ${newOrder.id}`);
-    console.log(`   - 订单状态: ${newOrder.status}\n`);
+    const responseData = await response.json();
 
-    console.log('🎉 所有API测试通过！');
+    if (!response.ok) {
+      console.error('❌ 登录失败:', responseData);
+      throw new Error(`登录请求失败: ${response.status} ${response.statusText}`);
+    }
+    
+    console.log('✅ 管理员登录成功:');
+    console.log('   - Access Token:', responseData.accessToken);
+    console.log('   - Refresh Token:', responseData.refreshToken);
+    console.log('   - User Info:', JSON.stringify(responseData.user, null, 2));
+
+    // 后续可以使用 accessToken 进行其他管理员操作的测试
+    // 例如: const adminToken = responseData.accessToken;
+    // await testAdminFunction(adminToken);
 
   } catch (error) {
-    console.error('❌ API测试失败:', error.message);
+    console.error('❌ 管理员登录测试失败:', error.message);
+    if (error.response) {
+        const errorData = await error.response.json();
+        console.error('错误详情:', errorData);
+    }
   }
 }
 
-testAPI();
+adminLogin();
