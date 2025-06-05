@@ -135,10 +135,10 @@ const AvailableOrdersList = ({ orders, accessKey, onQuoteSubmitted }: AvailableO
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-900">{order.from}</div>
-                  <div className="text-sm text-gray-500 truncate max-w-xs">{order.goods}</div>
+                  <div className="text-sm text-gray-500 break-words max-w-sm leading-relaxed">{order.goods}</div>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 truncate max-w-xs">{order.to}</div>
+                  <div className="text-sm text-gray-900 break-words max-w-sm leading-relaxed">{order.to}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{order.createdAt}</div>
@@ -184,8 +184,8 @@ const AvailableOrdersList = ({ orders, accessKey, onQuoteSubmitted }: AvailableO
               <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-800"><span className="font-medium">订单编号:</span> {selectedOrder.id}</p>
                 <p className="text-sm text-gray-800 mt-1"><span className="font-medium">发货信息:</span> {selectedOrder.from}</p>
-                <p className="text-sm text-gray-800 mt-1"><span className="font-medium">货物信息:</span> {selectedOrder.goods}</p>
-                <p className="text-sm text-gray-800 mt-1"><span className="font-medium">收货信息:</span> {selectedOrder.to}</p>
+                <p className="text-sm text-gray-800 mt-1 break-words leading-relaxed"><span className="font-medium">货物信息:</span> {selectedOrder.goods}</p>
+                <p className="text-sm text-gray-800 mt-1 break-words leading-relaxed"><span className="font-medium">收货信息:</span> {selectedOrder.to}</p>
               </div>
             </div>
 

@@ -204,10 +204,10 @@ const OrderList = ({ orders, showSelected = false, onRefresh }: OrderListProps) 
               </td>
               <td className="px-6 py-4">
                 <div className="text-sm text-gray-900">{order.from}</div>
-                <div className="text-sm text-gray-500 truncate max-w-xs">{order.goods}</div>
+                <div className="text-sm text-gray-500 break-words max-w-sm leading-relaxed">{order.goods}</div>
               </td>
               <td className="px-6 py-4">
-                <div className="text-sm text-gray-900 truncate max-w-xs">{order.to}</div>
+                <div className="text-sm text-gray-900 break-words max-w-sm leading-relaxed">{order.to}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-500">{order.createdAt}</div>
@@ -301,7 +301,7 @@ const OrderList = ({ orders, showSelected = false, onRefresh }: OrderListProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div><span className="font-medium">发货仓库:</span> {selectedOrder.from}</div>
                   <div><span className="font-medium">货物信息:</span> {selectedOrder.goods}</div>
-                  <div className="md:col-span-2"><span className="font-medium">收货地址:</span> {selectedOrder.to}</div>
+                  <div className="md:col-span-2 break-words leading-relaxed"><span className="font-medium">收货地址:</span> {selectedOrder.to}</div>
                 </div>
               </div>
 

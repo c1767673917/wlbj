@@ -791,3 +791,90 @@
 [2025-06-02 22:32:21.733 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.442 ms - -[0m
 [2025-06-02 22:32:21.733 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.269 ms - -[0m
 [2025-06-02 22:32:21.734 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.197 ms - -[0m
+[2025-06-02 22:42:59.990 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.880 ms - 4[0m
+[2025-06-02 22:42:59.994 PM] info: 	Token刷新成功
+[2025-06-02 22:42:59.995 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 3.455 ms - 227[0m
+[2025-06-05 12:38:04.022 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-05 12:38:04.025 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-05 12:38:04.026 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-05 12:38:04.107 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-05 12:38:04.107 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-05 12:38:04.107 PM] info: 	- JWT认证系统
+[2025-06-05 12:38:04.107 PM] info: 	- 输入验证和XSS防护
+[2025-06-05 12:38:04.107 PM] info: 	- SQL注入防护
+[2025-06-05 12:38:04.107 PM] info: 	- 速率限制
+[2025-06-05 12:38:04.107 PM] info: 	- 安全响应头
+[2025-06-05 12:38:04.108 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-05 12:38:04.108 PM] info: 	- 数据库查询性能监控
+[2025-06-05 12:38:04.111 PM] info: 	SQLite WAL模式已启用
+[2025-06-05 12:38:10.527 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 3.235 ms - 4[0m
+[2025-06-05 12:38:10.565 PM] info: 	Token刷新成功
+[2025-06-05 12:38:10.566 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 36.578 ms - 227[0m
+[2025-06-05 12:38:10.567 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.224 ms - 4[0m
+[2025-06-05 12:38:10.571 PM] info: 	Token刷新成功
+[2025-06-05 12:38:10.572 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.228 ms - 227[0m
+[2025-06-05 12:38:13.407 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 2.251 ms - 12[0m
+[2025-06-05 12:38:13.409 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.154 ms - 12[0m
+[2025-06-05 12:38:13.414 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.246 ms - 13[0m
+[2025-06-05 12:38:13.416 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.262 ms - 12[0m
+[2025-06-05 12:38:13.418 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.217 ms - 12[0m
+[2025-06-05 12:38:13.419 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 11.239 ms - -[0m
+[2025-06-05 12:38:13.419 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.138 ms - -[0m
+[2025-06-05 12:38:13.420 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.186 ms - 13[0m
+[2025-06-05 12:38:13.426 PM] info: 	[0mGET /api/providers [36m304[0m 5.570 ms - -[0m
+[2025-06-05 12:38:13.435 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.131 ms - -[0m
+[2025-06-05 12:38:13.435 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.829 ms - -[0m
+[2025-06-05 12:38:13.436 PM] info: 	[0mGET /api/providers [36m304[0m 0.206 ms - -[0m
+[2025-06-05 12:38:13.440 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.566 ms - 8[0m
+[2025-06-05 12:38:13.441 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.245 ms - 8[0m
+[2025-06-05 12:38:13.442 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.256 ms - 8[0m
+[2025-06-05 12:38:13.447 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 1.447 ms - -[0m
+[2025-06-05 12:38:13.448 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.393 ms - -[0m
+[2025-06-05 12:38:13.449 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.233 ms - -[0m
+[2025-06-05 12:38:17.399 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 1.082 ms - -[0m
+[2025-06-05 12:39:02.248 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.446 ms - 8[0m
+[2025-06-05 12:39:02.250 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.259 ms - 8[0m
+[2025-06-05 12:39:02.253 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 1.313 ms - -[0m
+[2025-06-05 12:39:02.256 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.826 ms - -[0m
+[2025-06-05 12:41:11.748 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.205 ms - 12[0m
+[2025-06-05 12:41:11.749 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.133 ms - 12[0m
+[2025-06-05 12:41:11.750 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.218 ms - 13[0m
+[2025-06-05 12:41:11.752 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.153 ms - 12[0m
+[2025-06-05 12:41:11.753 PM] info: 	[0mGET /api/providers [36m304[0m 2.009 ms - -[0m
+[2025-06-05 12:41:11.754 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.160 ms - 12[0m
+[2025-06-05 12:41:11.754 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.112 ms - 13[0m
+[2025-06-05 12:41:11.755 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.421 ms - -[0m
+[2025-06-05 12:41:11.755 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.683 ms - -[0m
+[2025-06-05 12:41:11.756 PM] info: 	[0mGET /api/providers [36m304[0m 0.739 ms - -[0m
+[2025-06-05 12:41:11.757 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.344 ms - -[0m
+[2025-06-05 12:41:11.757 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.517 ms - -[0m
+[2025-06-05 12:41:11.765 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.142 ms - 8[0m
+[2025-06-05 12:41:11.765 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.140 ms - 8[0m
+[2025-06-05 12:41:11.766 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.066 ms - 8[0m
+[2025-06-05 12:41:11.766 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.224 ms - -[0m
+[2025-06-05 12:41:11.767 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.180 ms - -[0m
+[2025-06-05 12:41:11.768 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.447 ms - -[0m
+[2025-06-05 12:41:42.212 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.285 ms - 8[0m
+[2025-06-05 12:41:42.215 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.617 ms - -[0m
+[2025-06-05 12:41:56.206 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.128 ms - 8[0m
+[2025-06-05 12:41:56.208 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.291 ms - -[0m
+[2025-06-05 12:42:41.212 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.865 ms - 8[0m
+[2025-06-05 12:42:41.215 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.604 ms - -[0m
+[2025-06-05 12:43:31.909 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.309 ms - 12[0m
+[2025-06-05 12:43:31.910 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.184 ms - 12[0m
+[2025-06-05 12:43:31.912 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.151 ms - 13[0m
+[2025-06-05 12:43:31.915 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.618 ms - 12[0m
+[2025-06-05 12:43:31.918 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.172 ms - 12[0m
+[2025-06-05 12:43:31.922 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.510 ms - 13[0m
+[2025-06-05 12:43:31.924 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 12.895 ms - -[0m
+[2025-06-05 12:43:31.932 PM] info: 	[0mGET /api/providers [36m304[0m 8.221 ms - -[0m
+[2025-06-05 12:43:31.932 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 19.680 ms - -[0m
+[2025-06-05 12:43:31.933 PM] info: 	[0mGET /api/providers [36m304[0m 0.485 ms - -[0m
+[2025-06-05 12:43:31.934 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.084 ms - -[0m
+[2025-06-05 12:43:31.934 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.033 ms - -[0m
+[2025-06-05 12:43:31.938 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.151 ms - 8[0m
+[2025-06-05 12:43:31.938 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.057 ms - 8[0m
+[2025-06-05 12:43:31.939 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [32m200[0m 0.125 ms - 8[0m
+[2025-06-05 12:43:31.943 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 1.107 ms - -[0m
+[2025-06-05 12:43:31.949 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.298 ms - -[0m
+[2025-06-05 12:43:31.951 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250531-003%2CRX250531-002%2CRX250531-001%2CRX250527-001 [36m304[0m 0.951 ms - -[0m
