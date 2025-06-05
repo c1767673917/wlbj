@@ -187,6 +187,7 @@ const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
+const backupRoutes = require('./routes/backupRoutes'); // 备份路由
 
 app.use('/api/auth', authRoutes); // JWT认证相关API
 app.use('/api/users', usersRoutes); // 用户管理API
@@ -196,6 +197,7 @@ app.use('/api/quotes', quotesRoutes);
 app.use('/api/quotes', require('./routes/quotesOptimized')); // 优化的报价路由
 app.use('/api/providers', providersRoutes);
 app.use('/api/export', exportRoutes); // 添加导出路由
+app.use('/api/backup', backupRoutes); // 添加备份路由
 
 // 前端路由
 app.get('/', (req, res) => {

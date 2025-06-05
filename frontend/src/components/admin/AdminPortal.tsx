@@ -8,7 +8,8 @@ import {
   Settings,
   LogOut,
   BarChart3,
-  Shield
+  Shield,
+  Database
 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -17,6 +18,7 @@ import api from '../../services/api';
 import UserManagement from './UserManagement';
 import OrderManagement from './OrderManagement';
 import SystemSettings from './SystemSettings';
+import BackupManagement from './BackupManagement';
 
 interface SystemStats {
   users: {
@@ -146,6 +148,7 @@ const AdminPortal = () => {
               { id: 'dashboard', name: '仪表板', icon: BarChart3 },
               { id: 'users', name: '用户管理', icon: Users },
               { id: 'orders', name: '订单管理', icon: Package },
+              { id: 'backup', name: '备份管理', icon: Database },
               { id: 'settings', name: '系统设置', icon: Settings },
             ].map((tab) => (
               <button
@@ -243,6 +246,9 @@ const AdminPortal = () => {
 
         {/* 订单管理 */}
         {activeTab === 'orders' && <OrderManagement />}
+
+        {/* 备份管理 */}
+        {activeTab === 'backup' && <BackupManagement />}
 
         {/* 系统设置 */}
         {activeTab === 'settings' && <SystemSettings />}

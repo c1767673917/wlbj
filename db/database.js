@@ -187,6 +187,27 @@ function initializeDB() {
       )
     `);
 
+    // 创建备份配置表
+    db.run(`
+      CREATE TABLE IF NOT EXISTS backup_config (
+        id INTEGER PRIMARY KEY,
+        qiniu_access_key TEXT,
+        qiniu_secret_key TEXT,
+        qiniu_bucket TEXT,
+        qiniu_zone TEXT DEFAULT 'z0',
+        backup_frequency TEXT DEFAULT 'daily',
+        auto_backup_enabled INTEGER DEFAULT 0,
+        last_backup_time TEXT,
+        last_backup_status TEXT,
+        last_backup_size TEXT,
+        retention_days INTEGER DEFAULT 30,
+        wechat_webhook_url TEXT,
+        notification_enabled INTEGER DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      )
+    `);
+
     // 数据库迁移：为现有providers表添加wechat_webhook_url字段
     migrateProvidersTable();
 
@@ -203,6 +224,9 @@ function initializeDB() {
 
     // 初始化管理员配置
     initializeAdminConfig();
+
+    // 初始化备份配置
+    initializeBackupConfig();
 
     console.log('Database tables checked/created.');
   });
@@ -490,6 +514,37 @@ function initializeAdminConfig() {
       });
     } else {
       console.log('管理员配置已存在');
+    }
+  });
+}
+
+// 初始化备份配置
+function initializeBackupConfig() {
+  db.get('SELECT COUNT(*) as count FROM backup_config', (err, row) => {
+    if (err) {
+      console.error('检查备份配置失败:', err.message);
+      return;
+    }
+
+    // 如果没有备份配置，创建默认配置
+    if (row.count === 0) {
+      const now = new Date().toISOString();
+      db.run(
+        `INSERT INTO backup_config (
+          qiniu_zone, backup_frequency, auto_backup_enabled,
+          retention_days, notification_enabled, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        ['z0', 'daily', 0, 30, 1, now, now],
+        (err) => {
+          if (err) {
+            console.error('初始化备份配置失败:', err.message);
+          } else {
+            console.log('已初始化默认备份配置');
+          }
+        }
+      );
+    } else {
+      console.log('备份配置已存在');
     }
   });
 }

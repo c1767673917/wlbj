@@ -1,0 +1,247 @@
+# 物流报价系统异地备份配置文件
+# 复制此文件为 backup-config.conf 并根据实际情况修改
+
+# =============================================================================
+# 基础配置
+# =============================================================================
+
+# 应用信息
+APP_NAME="wlbj-logistics"
+APP_DIR="/path/to/your/wlbj"  # 替换为实际路径
+BACKUP_ROOT="/backup"
+
+# 备份策略
+BACKUP_FREQUENCY="hourly"     # hourly, daily, weekly
+LOCAL_RETENTION_DAYS=7        # 本地备份保留天数
+CLOUD_RETENTION_DAYS=30       # 云端备份保留天数
+COMPRESSION_ENABLED=true      # 是否启用压缩
+
+# =============================================================================
+# 云存储配置 (选择一种或多种)
+# =============================================================================
+
+# 阿里云OSS配置
+ALIYUN_OSS_ENABLED=false
+ALIYUN_OSS_ENDPOINT="oss-cn-hangzhou.aliyuncs.com"
+ALIYUN_OSS_BUCKET="your-backup-bucket"
+ALIYUN_ACCESS_KEY="your-access-key"
+ALIYUN_SECRET_KEY="your-secret-key"
+ALIYUN_OSS_STORAGE_CLASS="Standard"  # Standard, IA, Archive
+
+# 腾讯云COS配置
+TENCENT_COS_ENABLED=false
+TENCENT_COS_REGION="ap-guangzhou"
+TENCENT_COS_BUCKET="your-backup-bucket"
+TENCENT_SECRET_ID="your-secret-id"
+TENCENT_SECRET_KEY="your-secret-key"
+TENCENT_COS_STORAGE_CLASS="STANDARD"  # STANDARD, STANDARD_IA, ARCHIVE
+
+# 华为云OBS配置
+HUAWEI_OBS_ENABLED=false
+HUAWEI_OBS_ENDPOINT="obs.cn-north-4.myhuaweicloud.com"
+HUAWEI_OBS_BUCKET="your-backup-bucket"
+HUAWEI_ACCESS_KEY="your-access-key"
+HUAWEI_SECRET_KEY="your-secret-key"
+
+# 七牛云配置
+QINIU_ENABLED=false
+QINIU_ACCESS_KEY="your-access-key"
+QINIU_SECRET_KEY="your-secret-key"
+QINIU_BUCKET="your-backup-bucket"
+QINIU_ZONE="z0"  # z0(华东), z1(华北), z2(华南), na0(北美), as0(东南亚)
+
+# AWS S3配置
+AWS_S3_ENABLED=false
+AWS_S3_REGION="us-west-2"
+AWS_S3_BUCKET="your-backup-bucket"
+AWS_ACCESS_KEY_ID="your-access-key"
+AWS_SECRET_ACCESS_KEY="your-secret-key"
+AWS_S3_STORAGE_CLASS="STANDARD"  # STANDARD, STANDARD_IA, GLACIER
+
+# Google Cloud Storage配置
+GCS_ENABLED=false
+GCS_PROJECT_ID="your-project-id"
+GCS_BUCKET="your-backup-bucket"
+GCS_KEY_FILE="/path/to/service-account-key.json"
+GCS_STORAGE_CLASS="STANDARD"  # STANDARD, NEARLINE, COLDLINE, ARCHIVE
+
+# =============================================================================
+# 通知配置
+# =============================================================================
+
+# 企业微信通知
+WECHAT_NOTIFICATION_ENABLED=true
+WECHAT_WEBHOOK_URL="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_BOT_KEY"
+
+# 邮件通知
+EMAIL_NOTIFICATION_ENABLED=false
+EMAIL_SMTP_SERVER="smtp.example.com"
+EMAIL_SMTP_PORT=587
+EMAIL_USERNAME="your-email@example.com"
+EMAIL_PASSWORD="your-email-password"
+EMAIL_TO="admin@example.com"
+
+# 钉钉通知
+DINGTALK_NOTIFICATION_ENABLED=false
+DINGTALK_WEBHOOK_URL="https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN"
+
+# =============================================================================
+# 监控配置
+# =============================================================================
+
+# 监控阈值
+DISK_USAGE_THRESHOLD=80       # 磁盘使用率告警阈值 (%)
+BACKUP_AGE_THRESHOLD=24       # 备份文件最大年龄 (小时)
+MIN_BACKUP_COUNT=3            # 最少备份文件数量
+DATABASE_SIZE_THRESHOLD=1024  # 数据库大小告警阈值 (MB)
+
+# 监控频率
+MONITOR_FREQUENCY="daily"     # hourly, daily, weekly
+HEALTH_CHECK_ENABLED=true     # 是否启用健康检查
+INTEGRITY_CHECK_ENABLED=true  # 是否启用完整性检查
+
+# =============================================================================
+# 安全配置
+# =============================================================================
+
+# 加密配置
+ENCRYPTION_ENABLED=true       # 是否启用加密
+ENCRYPTION_KEY="your-encryption-key-32-chars-long"  # 32字符加密密钥
+ENCRYPTION_ALGORITHM="AES-256-CBC"
+
+# 访问控制
+BACKUP_USER="backup"          # 备份用户
+BACKUP_GROUP="backup"         # 备份用户组
+FILE_PERMISSIONS="640"        # 备份文件权限
+DIR_PERMISSIONS="750"         # 备份目录权限
+
+# =============================================================================
+# 高级配置
+# =============================================================================
+
+# 并发配置
+MAX_PARALLEL_UPLOADS=3        # 最大并行上传数
+UPLOAD_TIMEOUT=3600          # 上传超时时间 (秒)
+RETRY_COUNT=3                # 重试次数
+RETRY_DELAY=60               # 重试延迟 (秒)
+
+# 带宽控制
+BANDWIDTH_LIMIT=""           # 带宽限制 (如: 10M, 1G)
+UPLOAD_RATE_LIMIT=""         # 上传速率限制
+
+# 日志配置
+LOG_LEVEL="INFO"             # DEBUG, INFO, WARN, ERROR
+LOG_FILE="/var/log/backup-wlbj.log"
+LOG_MAX_SIZE="100M"          # 日志文件最大大小
+LOG_MAX_FILES=5              # 最大日志文件数量
+
+# =============================================================================
+# 备份内容配置
+# =============================================================================
+
+# 数据库备份
+DATABASE_BACKUP_ENABLED=true
+DATABASE_BACKUP_METHOD="sqlite_backup"  # sqlite_backup, dump, copy
+DATABASE_VACUUM_BEFORE_BACKUP=true      # 备份前是否执行VACUUM
+
+# 配置文件备份
+CONFIG_BACKUP_ENABLED=true
+CONFIG_FILES=(".env" "auth_config.json" "ip_whitelist.json" "package.json")
+
+# 日志文件备份
+LOG_BACKUP_ENABLED=true
+LOG_COMPRESSION_ENABLED=true
+LOG_RETENTION_DAYS=7
+
+# 前端文件备份
+FRONTEND_BACKUP_ENABLED=true
+FRONTEND_BUILD_BEFORE_BACKUP=false  # 备份前是否重新构建
+
+# 代码备份
+CODE_BACKUP_ENABLED=false
+CODE_EXCLUDE_PATTERNS=("node_modules" ".git" "logs" "data" "backup")
+
+# =============================================================================
+# 恢复配置
+# =============================================================================
+
+# 恢复策略
+AUTO_BACKUP_BEFORE_RESTORE=true  # 恢复前是否自动备份
+RESTORE_VERIFICATION_ENABLED=true # 是否启用恢复验证
+SERVICE_RESTART_AFTER_RESTORE=true # 恢复后是否重启服务
+
+# 恢复权限
+RESTORE_USER="root"              # 恢复操作用户
+RESTORE_GROUP="root"             # 恢复操作用户组
+
+# =============================================================================
+# 性能优化
+# =============================================================================
+
+# 压缩配置
+COMPRESSION_LEVEL=6              # 压缩级别 (1-9)
+COMPRESSION_THREADS=2            # 压缩线程数
+
+# 缓存配置
+CACHE_ENABLED=true               # 是否启用缓存
+CACHE_DIR="/tmp/backup-cache"    # 缓存目录
+CACHE_SIZE_LIMIT="1G"            # 缓存大小限制
+
+# 网络优化
+CONNECTION_TIMEOUT=30            # 连接超时 (秒)
+READ_TIMEOUT=300                 # 读取超时 (秒)
+MAX_RETRIES=3                    # 最大重试次数
+
+# =============================================================================
+# 环境特定配置
+# =============================================================================
+
+# 开发环境
+if [ "$NODE_ENV" = "development" ]; then
+    BACKUP_FREQUENCY="daily"
+    LOCAL_RETENTION_DAYS=3
+    CLOUD_RETENTION_DAYS=7
+    MONITOR_FREQUENCY="daily"
+fi
+
+# 测试环境
+if [ "$NODE_ENV" = "test" ]; then
+    BACKUP_FREQUENCY="daily"
+    LOCAL_RETENTION_DAYS=2
+    CLOUD_RETENTION_DAYS=5
+    ENCRYPTION_ENABLED=false
+fi
+
+# 生产环境
+if [ "$NODE_ENV" = "production" ]; then
+    BACKUP_FREQUENCY="hourly"
+    LOCAL_RETENTION_DAYS=7
+    CLOUD_RETENTION_DAYS=30
+    ENCRYPTION_ENABLED=true
+    MONITOR_FREQUENCY="hourly"
+fi
+
+# =============================================================================
+# 自定义脚本钩子
+# =============================================================================
+
+# 备份前执行的脚本
+PRE_BACKUP_SCRIPT=""
+# 备份后执行的脚本
+POST_BACKUP_SCRIPT=""
+# 上传前执行的脚本
+PRE_UPLOAD_SCRIPT=""
+# 上传后执行的脚本
+POST_UPLOAD_SCRIPT=""
+
+# =============================================================================
+# 使用说明
+# =============================================================================
+
+# 1. 复制此文件为 backup-config.conf
+# 2. 根据实际情况修改配置参数
+# 3. 确保云存储凭证正确配置
+# 4. 测试备份脚本: ./backup-system.sh --test
+# 5. 设置定时任务: crontab -e
+#    示例: 0 */4 * * * /path/to/backup-system.sh
+# 6. 设置监控任务: 0 8 * * * /path/to/backup-monitor.sh --cron
