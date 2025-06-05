@@ -3,6 +3,9 @@ import { useEffect } from 'react';
 import UserPortal from './components/user/UserPortal';
 import ProviderPortal from './components/provider/ProviderPortal';
 import LoginPage from './components/auth/LoginPage';
+import RegisterPage from './components/auth/RegisterPage';
+import AdminLoginPage from './components/admin/AdminLoginPage';
+import AdminPortal from './components/admin/AdminPortal';
 import HomePage from './components/layout/HomePage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AuthService from './services/auth';
@@ -11,7 +14,7 @@ import api from './services/api';
 // 供应商页面组件
 function ProviderPage() {
   const { accessKey } = useParams<{ accessKey: string }>();
-  
+
   useEffect(() => {
     // 供应商页面通过accessKey自动登录
     const autoLogin = async () => {
@@ -23,10 +26,10 @@ function ProviderPage() {
         }
       }
     };
-    
+
     autoLogin();
   }, [accessKey]);
-  
+
   return <ProviderPortal providerKey={accessKey || ''} />;
 }
 
@@ -42,6 +45,15 @@ function LoginUserPage() {
   const hasError = searchParams.get('error') === '1';
 
   return <LoginPage hasError={hasError} />;
+}
+
+// 管理员登录页面组件
+function AdminLoginPageWrapper() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const hasError = searchParams.get('error') === '1';
+
+  return <AdminLoginPage hasError={hasError} />;
 }
 
 function App() {
@@ -79,13 +91,23 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login-user-page" element={<LoginUserPage />} />
-            <Route 
-              path="/user" 
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/admin/login" element={<AdminLoginPageWrapper />} />
+            <Route
+              path="/user"
               element={
                 <ProtectedRoute requiredRole="user">
                   <UserPage />
                 </ProtectedRoute>
-              } 
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminPortal />
+                </ProtectedRoute>
+              }
             />
             <Route path="/provider/:accessKey" element={<ProviderPage />} />
           </Routes>

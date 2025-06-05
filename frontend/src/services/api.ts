@@ -12,7 +12,7 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 
   // 检查是否需要添加认证头
   const needsAuth = !PUBLIC_ENDPOINTS.some(publicEndpoint => endpoint.startsWith(publicEndpoint));
-  
+
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
@@ -89,12 +89,12 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify({ password, email }),
     });
-    
+
     // 保存认证信息
     if (response.accessToken && response.refreshToken) {
       AuthService.saveAuth(response);
     }
-    
+
     return response;
   },
 
@@ -104,12 +104,12 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify({ accessKey }),
     });
-    
+
     // 保存认证信息
     if (response.accessToken && response.refreshToken) {
       AuthService.saveAuth(response);
     }
-    
+
     return response;
   },
 
@@ -139,6 +139,138 @@ export const authAPI = {
 
   // 获取当前用户信息
   getMe: () => apiRequest<any>('/auth/me'),
+};
+
+// 用户管理相关API
+export const usersAPI = {
+  // 用户注册
+  register: async (userData: {
+    email: string;
+    password: string;
+    name?: string;
+  }) => {
+    const response = await apiRequest<any>('/users/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+
+    // 保存认证信息
+    if (response.accessToken && response.refreshToken) {
+      AuthService.saveAuth(response);
+    }
+
+    return response;
+  },
+
+  // 用户登录（邮箱密码方式）
+  login: async (email: string, password: string) => {
+    const response = await apiRequest<any>('/users/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+
+    // 保存认证信息
+    if (response.accessToken && response.refreshToken) {
+      AuthService.saveAuth(response);
+    }
+
+    return response;
+  },
+
+  // 获取所有用户（管理员专用）
+  getAll: (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    return apiRequest<any>(`/users?${searchParams.toString()}`);
+  },
+
+  // 获取单个用户信息（管理员专用）
+  getById: (userId: string) => apiRequest<any>(`/users/${userId}`),
+
+  // 更新用户信息（管理员专用）
+  update: (userId: string, userData: {
+    email?: string;
+    name?: string;
+    isActive?: boolean;
+  }) => apiRequest<any>(`/users/${userId}`, {
+    method: 'PUT',
+    body: JSON.stringify(userData),
+  }),
+
+  // 重置用户密码（管理员专用）
+  resetPassword: (userId: string, newPassword: string) => apiRequest<any>(`/users/${userId}/password`, {
+    method: 'PUT',
+    body: JSON.stringify({ newPassword }),
+  }),
+
+  // 删除用户（管理员专用）
+  delete: (userId: string) => apiRequest<any>(`/users/${userId}`, {
+    method: 'DELETE',
+  }),
+};
+
+// 管理员相关API
+export const adminAPI = {
+  // 管理员登录
+  login: async (password: string) => {
+    const response = await apiRequest<any>('/admin/login', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+    });
+
+    // 保存认证信息
+    if (response.accessToken && response.refreshToken) {
+      AuthService.saveAuth(response);
+    }
+
+    return response;
+  },
+
+  // 更新管理员密码
+  updatePassword: (currentPassword: string, newPassword: string) => apiRequest<any>('/admin/password', {
+    method: 'PUT',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  }),
+
+  // 获取系统统计信息
+  getStats: () => apiRequest<any>('/admin/stats'),
+
+  // 获取所有订单（管理员视图）
+  getOrders: (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.status) searchParams.append('status', params.status);
+
+    return apiRequest<any>(`/admin/orders?${searchParams.toString()}`);
+  },
+
+  // 获取用户活动记录
+  getUserActivities: (params?: {
+    page?: number;
+    limit?: number;
+    userId?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
+    if (params?.userId) searchParams.append('userId', params.userId);
+
+    return apiRequest<any>(`/admin/user-activities?${searchParams.toString()}`);
+  },
 };
 
 // 订单相关API
@@ -519,9 +651,11 @@ export const aiAPI = {
 
 export default {
   auth: authAPI,
+  users: usersAPI,
+  admin: adminAPI,
   orders: ordersAPI,
   quotes: quotesAPI,
   providers: providersAPI,
   export: exportAPI,
   ai: aiAPI,
-}; 
+};

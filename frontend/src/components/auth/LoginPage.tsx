@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { LockIcon } from 'lucide-react';
@@ -22,7 +22,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
     if (AuthService.isAuthenticated()) {
       navigate('/user');
     }
-    
+
     if (hasError) {
       setError('密码不正确，请重试');
     }
@@ -36,7 +36,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
     try {
       // 使用JWT认证API
       const response = await api.auth.login(password, email || undefined);
-      
+
       if (response.accessToken) {
         // 认证成功，跳转到用户页面
         navigate('/user');
@@ -110,12 +110,32 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
             登录
           </Button>
 
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              还没有账户？{' '}
+              <Link
+                to="/register"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                立即注册
+              </Link>
+            </p>
+          </div>
+
           <div className="mt-4 text-sm text-center text-gray-600">
             <p className="mb-2">
               使用JWT认证系统，登录后Token有效期15分钟
             </p>
             <p>
               系统会自动刷新Token，无需频繁登录
+            </p>
+            <p className="mt-2">
+              <Link
+                to="/"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                返回首页
+              </Link>
             </p>
           </div>
         </form>

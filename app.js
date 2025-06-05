@@ -9,10 +9,10 @@ const logger = require('./config/logger'); // Winston logger
 const config = require('./config/env'); // 环境变量配置
 
 // 导入安全中间件
-const { 
-  apiLimiter, 
-  sanitizeMiddleware, 
-  securityHeaders 
+const {
+  apiLimiter,
+  sanitizeMiddleware,
+  securityHeaders
 } = require('./middleware/security');
 
 // 导入缓存模块
@@ -180,13 +180,17 @@ app.use((req, res, next) => {
 });
 
 // API Routes
-const authRoutes = require('./routes/authRoutes'); // 新增JWT认证路由
+const authRoutes = require('./routes/authRoutes'); // JWT认证路由
+const usersRoutes = require('./routes/usersRoutes'); // 用户管理路由
+const adminRoutes = require('./routes/adminRoutes'); // 管理员路由
 const ordersRoutes = require('./routes/ordersRoutes');
 const quotesRoutes = require('./routes/quotesRoutes');
 const providersRoutes = require('./routes/providersRoutes');
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 
 app.use('/api/auth', authRoutes); // JWT认证相关API
+app.use('/api/users', usersRoutes); // 用户管理API
+app.use('/api/admin', adminRoutes); // 管理员API
 app.use('/api/orders', ordersRoutes);
 app.use('/api/quotes', quotesRoutes);
 app.use('/api/quotes', require('./routes/quotesOptimized')); // 优化的报价路由

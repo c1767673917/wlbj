@@ -34,16 +34,55 @@ function handleValidationErrors(req, res) {
   return null;
 }
 
-// 用户登录
+// 用户登录（兼容旧版本的简单密码登录）
 router.post('/login', loginValidation, async (req, res) => {
   const validationError = handleValidationErrors(req, res);
   if (validationError) return;
 
   const { email, password, role = ROLES.USER } = req.body;
-  
+
   try {
-    // 这里简化处理，实际应该从用户表查询
-    // 优先从环境变量读取密码，回退到配置文件
+    // 如果提供了邮箱，尝试从用户表查询
+    if (email && email !== 'user@example.com') {
+      db.get('SELECT * FROM users WHERE email = ? AND isActive = 1', [email], async (err, user) => {
+        if (err) {
+          logger.error('用户登录查询失败', { error: err.message });
+          return res.status(500).json({ error: '服务器错误' });
+        }
+
+        if (user) {
+          // 验证密码
+          const bcrypt = require('bcryptjs');
+          const isValidPassword = await bcrypt.compare(password, user.password);
+          if (!isValidPassword) {
+            logger.warn('用户登录失败：密码错误', { email, ip: req.ip });
+            return res.status(401).json({ error: '邮箱或密码错误' });
+          }
+
+          // 生成tokens
+          const userInfo = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role
+          };
+
+          const accessToken = generateAccessToken(userInfo);
+          const refreshToken = generateRefreshToken(userInfo);
+
+          logger.info('用户登录成功', { userId: user.id, email, ip: req.ip });
+
+          return res.json({
+            accessToken,
+            refreshToken,
+            user: userInfo
+          });
+        }
+      });
+      return; // 等待数据库查询完成
+    }
+
+    // 兼容旧版本的简单密码登录
     const fs = require('fs');
     const path = require('path');
     const authConfigPath = path.join(__dirname, '..', 'auth_config.json');
@@ -160,9 +199,9 @@ router.post('/refresh', refreshValidation, (req, res) => {
 
   try {
     const newAccessToken = refreshAccessToken(refreshToken);
-    
+
     logger.info('Token刷新成功', { ip: req.ip });
-    
+
     res.json({
       accessToken: newAccessToken
     });
@@ -179,7 +218,7 @@ router.post('/logout', authenticateToken, (req, res) => {
     role: req.user.role,
     ip: req.ip
   });
-  
+
   // 实际的token失效应该在客户端处理
   // 或者维护一个token黑名单（需要额外的存储）
   res.json({ message: '登出成功' });
@@ -198,4 +237,4 @@ router.get('/me', authenticateToken, (req, res) => {
   });
 });
 
-module.exports = router; 
+module.exports = router;

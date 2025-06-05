@@ -56,10 +56,10 @@ function optimizeDatabase() {
 // 查询性能监控装饰器
 function trackQueryPerformance(queryName, query, params, callback) {
   const startTime = Date.now();
-  
+
   const wrappedCallback = (err, result) => {
     const duration = Date.now() - startTime;
-    
+
     // 记录慢查询（超过100ms）
     if (duration > 100) {
       logger.warn('慢查询检测', {
@@ -74,10 +74,10 @@ function trackQueryPerformance(queryName, query, params, callback) {
         duration: `${duration}ms`
       });
     }
-    
+
     callback(err, result);
   };
-  
+
   return wrappedCallback;
 }
 
@@ -92,7 +92,7 @@ db.run = function(query, params, callback) {
     callback = params;
     params = [];
   }
-  
+
   const trackedCallback = callback ? trackQueryPerformance('run', query, params, callback) : undefined;
   return originalRun(query, params, trackedCallback);
 };
@@ -103,7 +103,7 @@ db.get = function(query, params, callback) {
     callback = params;
     params = [];
   }
-  
+
   const trackedCallback = callback ? trackQueryPerformance('get', query, params, callback) : undefined;
   return originalGet(query, params, trackedCallback);
 };
@@ -114,7 +114,7 @@ db.all = function(query, params, callback) {
     callback = params;
     params = [];
   }
-  
+
   const trackedCallback = callback ? trackQueryPerformance('all', query, params, callback) : undefined;
   return originalAll(query, params, trackedCallback);
 };
@@ -122,6 +122,20 @@ db.all = function(query, params, callback) {
 // 初始化数据库表函数
 function initializeDB() {
   db.serialize(() => {
+    // 创建用户表
+    db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        name TEXT,
+        role TEXT DEFAULT 'user',
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT,
+        isActive INTEGER DEFAULT 1
+      )
+    `);
+
     // 创建订单表
     db.run(`
       CREATE TABLE IF NOT EXISTS orders (
@@ -134,7 +148,9 @@ function initializeDB() {
         status TEXT DEFAULT 'active',
         selectedProvider TEXT,
         selectedPrice REAL,
-        selectedAt TEXT
+        selectedAt TEXT,
+        userId TEXT,
+        FOREIGN KEY (userId) REFERENCES users(id)
       )
     `);
 
@@ -162,14 +178,31 @@ function initializeDB() {
       )
     `);
 
-    // 创建性能优化索引
-    createPerformanceIndexes();
+    // 创建管理员配置表
+    db.run(`
+      CREATE TABLE IF NOT EXISTS admin_config (
+        id INTEGER PRIMARY KEY,
+        password TEXT NOT NULL,
+        updatedAt TEXT NOT NULL
+      )
+    `);
 
     // 数据库迁移：为现有providers表添加wechat_webhook_url字段
     migrateProvidersTable();
 
     // 数据库迁移：为现有orders表添加选择物流商相关字段
     migrateOrdersTable();
+
+    // 数据库迁移：为现有orders表添加用户ID字段
+    migrateOrdersTableForUsers();
+
+    // 在所有迁移完成后创建性能优化索引
+    setTimeout(() => {
+      createPerformanceIndexes();
+    }, 1000);
+
+    // 初始化管理员配置
+    initializeAdminConfig();
 
     console.log('Database tables checked/created.');
   });
@@ -178,11 +211,18 @@ function initializeDB() {
 // 创建性能优化索引
 function createPerformanceIndexes() {
   const indexes = [
+    // 用户表索引
+    'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)',
+    'CREATE INDEX IF NOT EXISTS idx_users_role ON users(role)',
+    'CREATE INDEX IF NOT EXISTS idx_users_active ON users(isActive)',
+
     // 订单表索引
     'CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)',
     'CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(createdAt DESC)',
     'CREATE INDEX IF NOT EXISTS idx_orders_status_created ON orders(status, createdAt DESC)',
     'CREATE INDEX IF NOT EXISTS idx_orders_warehouse ON orders(warehouse)',
+    'CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(userId)',
+    'CREATE INDEX IF NOT EXISTS idx_orders_user_status ON orders(userId, status)',
 
     // 报价表索引
     'CREATE INDEX IF NOT EXISTS idx_quotes_order_id ON quotes(orderId)',
@@ -287,7 +327,7 @@ function migrateOrdersTable() {
 db.batchInsert = function(table, columns, values, callback) {
   const placeholders = columns.map(() => '?').join(',');
   const query = `INSERT INTO ${table} (${columns.join(',')}) VALUES (${placeholders})`;
-  
+
   const stmt = db.prepare(query);
   let completed = 0;
   let hasError = false;
@@ -301,7 +341,7 @@ db.batchInsert = function(table, columns, values, callback) {
         db.run('ROLLBACK');
         return callback(err);
       }
-      
+
       completed++;
       if (completed === values.length && !hasError) {
         db.run('COMMIT', (err) => {
@@ -318,7 +358,7 @@ db.getPaginated = function(query, params, page, limit, callback) {
   const offset = (page - 1) * limit;
   const paginatedQuery = `${query} LIMIT ? OFFSET ?`;
   const countQuery = query.replace(/SELECT.*FROM/i, 'SELECT COUNT(*) as total FROM').replace(/ORDER BY.*/i, '');
-  
+
   // 并行执行计数和数据查询
   let results = {};
   let completed = 0;
@@ -362,12 +402,12 @@ db.explainQuery = function(query, params, callback) {
       logger.error('查询计划分析失败', { error: err.message });
       return callback(err);
     }
-    
+
     logger.info('查询执行计划', {
       query: query.substring(0, 200),
       plan: plan
     });
-    
+
     callback(null, plan);
   });
 };
@@ -381,7 +421,7 @@ setInterval(() => {
       logger.info('数据库优化完成');
     }
   });
-  
+
   // 执行VACUUM以减少数据库文件大小
   db.run('VACUUM', (err) => {
     if (err) {
@@ -391,6 +431,68 @@ setInterval(() => {
     }
   });
 }, 24 * 60 * 60 * 1000); // 24小时
+
+// 数据库迁移：为现有orders表添加用户ID字段
+function migrateOrdersTableForUsers() {
+  db.all("PRAGMA table_info(orders)", (err, columns) => {
+    if (err) {
+      console.error('获取orders表列信息失败:', err.message);
+      return;
+    }
+
+    const columnNames = columns.map(col => col.name);
+
+    // 添加userId字段
+    if (!columnNames.includes('userId')) {
+      db.run('ALTER TABLE orders ADD COLUMN userId TEXT', (err) => {
+        if (err) {
+          console.error('添加userId字段失败:', err.message);
+        } else {
+          console.log('成功为orders表添加userId字段');
+        }
+      });
+    } else {
+      console.log('orders表已包含userId字段');
+    }
+  });
+}
+
+// 初始化管理员配置
+function initializeAdminConfig() {
+  db.get('SELECT COUNT(*) as count FROM admin_config', (err, row) => {
+    if (err) {
+      console.error('检查管理员配置失败:', err.message);
+      return;
+    }
+
+    // 如果没有管理员配置，创建默认配置
+    if (row.count === 0) {
+      const bcrypt = require('bcryptjs');
+      const defaultPassword = 'admin123'; // 默认管理员密码
+
+      bcrypt.hash(defaultPassword, 10, (err, hashedPassword) => {
+        if (err) {
+          console.error('生成管理员密码哈希失败:', err.message);
+          return;
+        }
+
+        db.run(
+          'INSERT INTO admin_config (password, updatedAt) VALUES (?, ?)',
+          [hashedPassword, new Date().toISOString()],
+          (err) => {
+            if (err) {
+              console.error('初始化管理员配置失败:', err.message);
+            } else {
+              console.log('已初始化管理员配置，默认密码: admin123');
+            }
+          }
+        );
+      });
+    } else {
+      console.log('管理员配置已存在');
+    }
+  });
+}
 
 // 导出数据库实例
 module.exports = db;

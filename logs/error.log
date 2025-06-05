@@ -107,3 +107,115 @@ TypeError: SimpleCache is not a constructor
 [2025-05-31 14:18:27.989 PM] error: 	未捕获的服务器错误: CacheManager.getLowestQuoteCache is not a function
 [2025-05-31 14:18:39.860 PM] error: 	未捕获的服务器错误: CacheManager.getLowestQuoteCache is not a function
 [2025-05-31 14:18:39.861 PM] error: 	未捕获的服务器错误: CacheManager.getLowestQuoteCache is not a function
+[2025-06-05 13:01:04.620 PM] error: 	uncaughtException: Cannot find module 'bcrypt'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+Error: Cannot find module 'bcrypt'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1405:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1061:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1066:22)
+    at Function._load (node:internal/modules/cjs/loader:1215:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js:4:16)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+[2025-06-05 13:01:19.120 PM] error: 	uncaughtException: Cannot find module 'bcrypt'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+Error: Cannot find module 'bcrypt'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1405:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1061:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1066:22)
+    at Function._load (node:internal/modules/cjs/loader:1215:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/usersRoutes.js:4:16)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+[2025-06-05 13:02:58.112 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:344:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-05 13:03:04.595 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:344:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-05 13:04:11.598 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:344:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-05 13:04:22.651 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:344:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-05 13:06:02.297 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:06:02.297 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:02.301 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:02.301 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:06:48.482 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:48.483 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:06:48.486 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:48.486 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:06:51.357 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:51.357 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:06:51.362 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:06:51.362 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:20:06.409 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:20:06.409 PM] error: 	获取已关闭订单数失败
+[2025-06-05 13:22:56.259 PM] error: 	获取活跃订单数失败
+[2025-06-05 13:22:56.259 PM] error: 	获取已关闭订单数失败
