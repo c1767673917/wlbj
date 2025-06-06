@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import AuthService from '../../services/auth';
+import { AdminAuthService } from '../../services/auth';
 
 interface Order {
   id: string;
@@ -47,14 +47,29 @@ const OrderManagement = () => {
   const [total, setTotal] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [systemStats, setSystemStats] = useState<any>(null);
 
   useEffect(() => {
     loadOrders();
   }, [currentPage, searchTerm, statusFilter]);
 
+  useEffect(() => {
+    loadSystemStats();
+  }, []);
+
   const loadOrders = async () => {
     try {
       setLoading(true);
+      const accessToken = AdminAuthService.getAccessToken();
+
+      // 检查token是否存在和有效
+      if (!accessToken || AdminAuthService.isTokenExpired(accessToken)) {
+        console.warn('管理员token无效或已过期');
+        AdminAuthService.clearAuth();
+        window.location.href = '/admin/login';
+        return;
+      }
+
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '20',
@@ -64,11 +79,17 @@ const OrderManagement = () => {
 
       const response = await fetch(`/api/admin/orders?${params}`, {
         headers: {
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          console.warn('管理员认证失败');
+          AdminAuthService.clearAuth();
+          window.location.href = '/admin/login';
+          return;
+        }
         throw new Error('获取订单列表失败');
       }
 
@@ -80,6 +101,30 @@ const OrderManagement = () => {
       console.error('加载订单列表失败:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadSystemStats = async () => {
+    try {
+      const accessToken = AdminAuthService.getAccessToken();
+
+      // 检查token是否存在和有效
+      if (!accessToken || AdminAuthService.isTokenExpired(accessToken)) {
+        return;
+      }
+
+      const response = await fetch('/api/admin/stats', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const stats = await response.json();
+        setSystemStats(stats);
+      }
+    } catch (error) {
+      console.error('加载系统统计信息失败:', error);
     }
   };
 
@@ -103,7 +148,7 @@ const OrderManagement = () => {
 
       const response = await fetch(`/api/export/orders?${params}`, {
         headers: {
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
         },
       });
 
@@ -236,17 +281,29 @@ const OrderManagement = () => {
       </Card>
 
       {/* 订单统计 */}
+      <div className="mb-2 flex justify-end">
+        <button
+          onClick={loadSystemStats}
+          className="text-xs text-gray-500 flex items-center hover:text-blue-600"
+          title="刷新统计数据"
+        >
+          <RefreshCw size={12} className="mr-1" />
+          刷新统计
+        </button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card className="p-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">{total}</p>
+            <p className="text-2xl font-bold text-blue-600">
+              {systemStats ? systemStats.orders.total : '-'}
+            </p>
             <p className="text-sm text-gray-600">总订单数</p>
           </div>
         </Card>
         <Card className="p-4">
           <div className="text-center">
             <p className="text-2xl font-bold text-green-600">
-              {orders.filter(o => o.status === 'active').length}
+              {systemStats ? systemStats.orders.active : '-'}
             </p>
             <p className="text-sm text-gray-600">活跃订单</p>
           </div>
@@ -254,7 +311,7 @@ const OrderManagement = () => {
         <Card className="p-4">
           <div className="text-center">
             <p className="text-2xl font-bold text-gray-600">
-              {orders.filter(o => o.status === 'closed').length}
+              {systemStats ? systemStats.orders.closed : '-'}
             </p>
             <p className="text-sm text-gray-600">已关闭订单</p>
           </div>

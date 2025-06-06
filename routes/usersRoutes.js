@@ -17,9 +17,9 @@ const {
 
 // 用户注册验证规则
 const registerValidation = [
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 4 }).trim(),
-  body('name').optional().trim().isLength({ min: 1, max: 100 })
+  body('email').isEmail().normalizeEmail().withMessage('请输入有效的邮箱地址'),
+  body('password').isLength({ min: 4 }).trim().withMessage('密码至少需要4个字符'),
+  body('name').notEmpty().trim().isLength({ min: 1, max: 100 }).withMessage('用户名不能为空且不超过100个字符')
 ];
 
 // 用户更新验证规则
@@ -43,72 +43,103 @@ function handleValidationErrors(req, res) {
   return null;
 }
 
-// 用户注册
-router.post('/register', registerValidation, async (req, res) => {
-  const validationError = handleValidationErrors(req, res);
-  if (validationError) return;
+// 用户注册 - 已禁用，只允许管理员创建用户
+router.post('/register', (req, res) => {
+  logger.warn('用户尝试自主注册，已被拒绝', { ip: req.ip, userAgent: req.get('User-Agent') });
+  res.status(403).json({
+    error: '用户注册功能已关闭，请联系管理员开通账户',
+    message: '系统采用管理员统一管理模式，用户账户由管理员创建'
+  });
+});
 
-  const { email, password, name } = req.body;
+// 管理员创建用户
+router.post('/create',
+  authenticateToken,
+  requireRole(ROLES.ADMIN),
+  registerValidation,
+  async (req, res) => {
+    const validationError = handleValidationErrors(req, res);
+    if (validationError) return;
 
-  try {
-    // 检查邮箱是否已存在
-    db.get('SELECT id FROM users WHERE email = ?', [email], async (err, existingUser) => {
-      if (err) {
-        logger.error('检查用户邮箱失败', { error: err.message });
-        return res.status(500).json({ error: '服务器错误' });
-      }
+    const { email, password, name } = req.body;
+    const userId = uuidv4();
+    const createdAt = new Date().toISOString();
 
-      if (existingUser) {
-        return res.status(400).json({ error: '该邮箱已被注册' });
-      }
+    try {
+      // 检查邮箱是否已存在
+      db.get('SELECT id FROM users WHERE email = ?', [email], async (err, existingUser) => {
+        if (err) {
+          logger.error('检查用户邮箱失败', { error: err.message });
+          return res.status(500).json({ error: '创建用户失败' });
+        }
 
-      // 生成密码哈希
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const userId = uuidv4();
-      const now = new Date().toISOString();
+        if (existingUser) {
+          return res.status(400).json({ error: '邮箱已被使用' });
+        }
 
-      // 创建用户
-      db.run(
-        'INSERT INTO users (id, email, password, name, role, createdAt, updatedAt, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [userId, email, hashedPassword, name || '', ROLES.USER, now, now, 1],
-        function(err) {
+        // 检查用户名是否已存在（用户名现在是必填项）
+        db.get('SELECT id FROM users WHERE name = ?', [name], async (err, existingUserByName) => {
           if (err) {
-            logger.error('创建用户失败', { error: err.message, email });
+            logger.error('检查用户名失败', { error: err.message });
             return res.status(500).json({ error: '创建用户失败' });
           }
 
-          logger.info('用户注册成功', { userId, email, ip: req.ip });
+          if (existingUserByName) {
+            return res.status(400).json({ error: '用户名已被使用' });
+          }
 
-          // 生成tokens
-          const user = {
-            id: userId,
-            email,
-            name: name || '',
-            role: ROLES.USER
-          };
+          // 创建用户
+          await createUserRecord();
+        });
 
-          const accessToken = generateAccessToken(user);
-          const refreshToken = generateRefreshToken(user);
+        async function createUserRecord() {
+          try {
+            // 加密密码
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-          res.status(201).json({
-            message: '注册成功',
-            accessToken,
-            refreshToken,
-            user: {
-              id: user.id,
-              email: user.email,
-              name: user.name,
-              role: user.role
-            }
-          });
+            // 插入用户记录
+            db.run(
+              'INSERT INTO users (id, email, password, name, role, createdAt, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
+              [userId, email, hashedPassword, name, ROLES.USER, createdAt, 1],
+              function(err) {
+                if (err) {
+                  logger.error('创建用户失败', { error: err.message, email, name });
+                  return res.status(500).json({ error: '创建用户失败' });
+                }
+
+                logger.info('管理员创建用户成功', {
+                  userId,
+                  email,
+                  name,
+                  adminId: req.user.id,
+                  ip: req.ip
+                });
+
+                res.status(201).json({
+                  message: '用户创建成功',
+                  user: {
+                    id: userId,
+                    email,
+                    name,
+                    role: ROLES.USER,
+                    createdAt,
+                    isActive: 1
+                  }
+                });
+              }
+            );
+          } catch (error) {
+            logger.error('密码加密失败', { error: error.message });
+            res.status(500).json({ error: '创建用户失败' });
+          }
         }
-      );
-    });
-  } catch (error) {
-    logger.error('用户注册处理失败', { error: error.message, stack: error.stack });
-    res.status(500).json({ error: '注册失败，请稍后重试' });
+      });
+    } catch (error) {
+      logger.error('创建用户处理失败', { error: error.message, stack: error.stack });
+      res.status(500).json({ error: '创建用户失败，请稍后重试' });
+    }
   }
-});
+);
 
 // 用户登录（邮箱密码方式）
 router.post('/login', [

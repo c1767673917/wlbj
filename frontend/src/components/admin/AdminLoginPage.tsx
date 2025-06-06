@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LockIcon } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import AuthService from '../../services/auth';
+import { AdminAuthService } from '../../services/auth';
 import api from '../../services/api';
 
 interface AdminLoginPageProps {
@@ -18,10 +18,10 @@ const AdminLoginPage = ({ hasError = false }: AdminLoginPageProps) => {
 
   useEffect(() => {
     // 如果已经是管理员登录，直接跳转到管理员页面
-    if (AuthService.isAuthenticated() && AuthService.isAdmin()) {
+    if (AdminAuthService.isAuthenticated() && AdminAuthService.isAdmin()) {
       navigate('/admin');
     }
-    
+
     if (hasError) {
       setError('密码不正确，请重试');
     }
@@ -48,10 +48,10 @@ const AdminLoginPage = ({ hasError = false }: AdminLoginPageProps) => {
       }
 
       const result = await response.json();
-      
+
       if (result.accessToken) {
-        // 保存认证信息
-        AuthService.saveAuth(result);
+        // 保存管理员认证信息
+        AdminAuthService.saveAuth(result);
         // 认证成功，跳转到管理员页面
         navigate('/admin');
       } else {
@@ -115,8 +115,8 @@ const AdminLoginPage = ({ hasError = false }: AdminLoginPageProps) => {
               管理员可以查看所有用户数据和系统统计信息
             </p>
             <p>
-              <a 
-                href="/" 
+              <a
+                href="/"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
                 返回首页

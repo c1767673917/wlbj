@@ -7,11 +7,12 @@ import {
   UserCheck,
   UserX,
   Plus,
-  RefreshCw
+  RefreshCw,
+  Key
 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import AuthService from '../../services/auth';
+import { AdminAuthService } from '../../services/auth';
 
 interface User {
   id: string;
@@ -39,6 +40,17 @@ const UserManagement = () => {
   const [total, setTotal] = useState(0);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addUserForm, setAddUserForm] = useState({
+    email: '',
+    password: '',
+    name: ''
+  });
+  const [addUserErrors, setAddUserErrors] = useState<{[key: string]: string}>({});
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [resetPasswordError, setResetPasswordError] = useState('');
 
   useEffect(() => {
     loadUsers();
@@ -47,6 +59,16 @@ const UserManagement = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
+      const accessToken = AdminAuthService.getAccessToken();
+
+      // 检查token是否存在和有效
+      if (!accessToken || AdminAuthService.isTokenExpired(accessToken)) {
+        console.warn('管理员token无效或已过期');
+        AdminAuthService.clearAuth();
+        window.location.href = '/admin/login';
+        return;
+      }
+
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '20',
@@ -55,11 +77,17 @@ const UserManagement = () => {
 
       const response = await fetch(`/api/users?${params}`, {
         headers: {
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          console.warn('管理员认证失败');
+          AdminAuthService.clearAuth();
+          window.location.href = '/admin/login';
+          return;
+        }
         throw new Error('获取用户列表失败');
       }
 
@@ -86,7 +114,7 @@ const UserManagement = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
         },
         body: JSON.stringify({
           isActive: currentStatus === 1 ? 0 : 1
@@ -114,7 +142,7 @@ const UserManagement = () => {
       const response = await fetch(`/api/users/${userId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
         },
       });
 
@@ -143,7 +171,7 @@ const UserManagement = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
         },
         body: JSON.stringify(userData),
       });
@@ -158,6 +186,109 @@ const UserManagement = () => {
     } catch (error) {
       console.error('更新用户信息失败:', error);
       alert('更新用户信息失败');
+    }
+  };
+
+  const handleAddUser = async () => {
+    // 重置错误
+    setAddUserErrors({});
+
+    // 表单验证
+    const errors: {[key: string]: string} = {};
+
+    if (!addUserForm.email.trim()) {
+      errors.email = '邮箱不能为空';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addUserForm.email)) {
+      errors.email = '邮箱格式不正确';
+    }
+
+    if (!addUserForm.password.trim()) {
+      errors.password = '密码不能为空';
+    } else if (addUserForm.password.length < 4) {
+      errors.password = '密码至少需要4个字符';
+    }
+
+    if (!addUserForm.name.trim()) {
+      errors.name = '用户名不能为空';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setAddUserErrors(errors);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/users/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
+        },
+        body: JSON.stringify(addUserForm),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '创建用户失败');
+      }
+
+      // 成功创建用户
+      setShowAddModal(false);
+      setAddUserForm({ email: '', password: '', name: '' });
+      setAddUserErrors({});
+      loadUsers(); // 重新加载用户列表
+      alert('用户创建成功');
+    } catch (error: any) {
+      console.error('创建用户失败:', error);
+      alert(error.message || '创建用户失败');
+    }
+  };
+
+  const handleResetPassword = (user: User) => {
+    setResetPasswordUser(user);
+    setNewPassword('');
+    setResetPasswordError('');
+    setShowResetPasswordModal(true);
+  };
+
+  const handleConfirmResetPassword = async () => {
+    if (!resetPasswordUser) return;
+
+    // 验证新密码
+    if (!newPassword.trim()) {
+      setResetPasswordError('新密码不能为空');
+      return;
+    }
+
+    if (newPassword.length < 4) {
+      setResetPasswordError('密码至少需要4个字符');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/users/${resetPasswordUser.id}/password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AdminAuthService.getAccessToken()}`,
+        },
+        body: JSON.stringify({ newPassword }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '重置密码失败');
+      }
+
+      // 成功重置密码
+      setShowResetPasswordModal(false);
+      setResetPasswordUser(null);
+      setNewPassword('');
+      setResetPasswordError('');
+      alert(`用户 ${resetPasswordUser.name || resetPasswordUser.email} 的密码重置成功`);
+    } catch (error: any) {
+      console.error('重置密码失败:', error);
+      setResetPasswordError(error.message || '重置密码失败');
     }
   };
 
@@ -183,15 +314,26 @@ const UserManagement = () => {
           <Users className="mr-3" size={28} />
           用户管理
         </h2>
-        <Button
-          onClick={loadUsers}
-          variant="outline"
-          size="sm"
-          className="flex items-center"
-        >
-          <RefreshCw size={16} className="mr-2" />
-          刷新
-        </Button>
+        <div className="flex space-x-3">
+          <Button
+            onClick={() => setShowAddModal(true)}
+            variant="primary"
+            size="sm"
+            className="flex items-center"
+          >
+            <Plus size={16} className="mr-2" />
+            添加用户
+          </Button>
+          <Button
+            onClick={loadUsers}
+            variant="outline"
+            size="sm"
+            className="flex items-center"
+          >
+            <RefreshCw size={16} className="mr-2" />
+            刷新
+          </Button>
+        </div>
       </div>
 
       {/* 搜索栏 */}
@@ -202,7 +344,7 @@ const UserManagement = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="搜索用户邮箱或姓名..."
+                placeholder="搜索用户邮箱、姓名或用户名..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -314,6 +456,13 @@ const UserManagement = () => {
                         title="编辑用户"
                       >
                         <Edit size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleResetPassword(user)}
+                        className="text-orange-600 hover:text-orange-900"
+                        title="重置密码"
+                      >
+                        <Key size={16} />
                       </button>
                       <button
                         onClick={() => handleToggleUserStatus(user.id, user.isActive)}
@@ -442,6 +591,146 @@ const UserManagement = () => {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* 添加用户模态框 */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">添加新用户</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  邮箱 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={addUserForm.email}
+                  onChange={(e) => setAddUserForm(prev => ({ ...prev, email: e.target.value }))}
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    addUserErrors.email ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="user@example.com"
+                />
+                {addUserErrors.email && (
+                  <p className="mt-1 text-sm text-red-600">{addUserErrors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  用户名 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={addUserForm.name}
+                  onChange={(e) => setAddUserForm(prev => ({ ...prev, name: e.target.value }))}
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    addUserErrors.name ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="支持中文和英文用户名"
+                />
+                {addUserErrors.name && (
+                  <p className="mt-1 text-sm text-red-600">{addUserErrors.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  密码 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={addUserForm.password}
+                  onChange={(e) => setAddUserForm(prev => ({ ...prev, password: e.target.value }))}
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    addUserErrors.password ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="至少4个字符"
+                  minLength={4}
+                />
+                {addUserErrors.password && (
+                  <p className="mt-1 text-sm text-red-600">{addUserErrors.password}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowAddModal(false);
+                  setAddUserForm({ email: '', password: '', name: '' });
+                  setAddUserErrors({});
+                }}
+              >
+                取消
+              </Button>
+              <Button
+                type="button"
+                onClick={handleAddUser}
+              >
+                创建用户
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 重置密码模态框 */}
+      {showResetPasswordModal && resetPasswordUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">重置用户密码</h3>
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-4">
+                正在为用户 <span className="font-medium">{resetPasswordUser.name || resetPasswordUser.email}</span> 重置密码
+              </p>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  新密码 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    resetPasswordError ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="请输入新密码（至少4个字符）"
+                  minLength={4}
+                />
+                {resetPasswordError && (
+                  <p className="mt-1 text-sm text-red-600">{resetPasswordError}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowResetPasswordModal(false);
+                  setResetPasswordUser(null);
+                  setNewPassword('');
+                  setResetPasswordError('');
+                }}
+              >
+                取消
+              </Button>
+              <Button
+                type="button"
+                onClick={handleConfirmResetPassword}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
+                重置密码
+              </Button>
+            </div>
           </div>
         </div>
       )}

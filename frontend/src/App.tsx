@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import UserPortal from './components/user/UserPortal';
 import ProviderPortal from './components/provider/ProviderPortal';
 import LoginPage from './components/auth/LoginPage';
-import RegisterPage from './components/auth/RegisterPage';
 import AdminLoginPage from './components/admin/AdminLoginPage';
 import AdminPortal from './components/admin/AdminPortal';
 import HomePage from './components/layout/HomePage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import AdminProtectedRoute from './components/auth/AdminProtectedRoute';
 import AuthService from './services/auth';
 import api from './services/api';
 
@@ -91,7 +91,6 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login-user-page" element={<LoginUserPage />} />
-            <Route path="/register" element={<RegisterPage />} />
             <Route path="/admin/login" element={<AdminLoginPageWrapper />} />
             <Route
               path="/user"
@@ -104,9 +103,9 @@ function App() {
             <Route
               path="/admin"
               element={
-                <ProtectedRoute requiredRole="admin">
+                <AdminProtectedRoute>
                   <AdminPortal />
-                </ProtectedRoute>
+                </AdminProtectedRoute>
               }
             />
             <Route path="/provider/:accessKey" element={<ProviderPage />} />

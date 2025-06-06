@@ -4,7 +4,7 @@ import AuthService from './auth';
 const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
 
 // 认证API端点（不需要token）
-const PUBLIC_ENDPOINTS = ['/auth/login', '/auth/login/provider', '/auth/refresh'];
+const PUBLIC_ENDPOINTS = ['/auth/login', '/auth/login/provider', '/auth/refresh', '/providers/details'];
 
 // 通用API请求函数
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -143,24 +143,25 @@ export const authAPI = {
 
 // 用户管理相关API
 export const usersAPI = {
-  // 用户注册
+  // 用户注册 - 已禁用，仅保留接口定义用于错误处理
   register: async (userData: {
     email: string;
     password: string;
     name?: string;
   }) => {
-    const response = await apiRequest<any>('/users/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
-
-    // 保存认证信息
-    if (response.accessToken && response.refreshToken) {
-      AuthService.saveAuth(response);
-    }
-
-    return response;
+    // 注册功能已禁用，直接返回错误
+    throw new Error('用户注册功能已关闭，请联系管理员开通账户');
   },
+
+  // 管理员创建用户
+  create: async (userData: {
+    email: string;
+    password: string;
+    name?: string;
+  }) => apiRequest<any>('/users/create', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+  }),
 
   // 用户登录（邮箱密码方式）
   login: async (email: string, password: string) => {

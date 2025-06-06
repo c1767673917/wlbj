@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import AuthService from '../../services/auth';
+import { AdminAuthService } from '../../services/auth';
 import api from '../../services/api';
 import UserManagement from './UserManagement';
 import OrderManagement from './OrderManagement';
@@ -46,25 +46,53 @@ const AdminPortal = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 检查管理员权限
-    if (!AuthService.isAuthenticated() || !AuthService.isAdmin()) {
+    // 检查管理员权限和token有效性
+    const accessToken = AdminAuthService.getAccessToken();
+    const isAuthenticated = AdminAuthService.isAuthenticated();
+    const isAdmin = AdminAuthService.isAdmin();
+
+    // 检查token是否过期
+    if (accessToken && AdminAuthService.isTokenExpired(accessToken)) {
+      console.warn('管理员token已过期，清除认证信息');
+      AdminAuthService.clearAuth();
+      navigate('/admin/login');
+      return;
+    }
+
+    if (!isAuthenticated || !isAdmin) {
       navigate('/admin/login');
       return;
     }
 
     loadStats();
-  }, [navigate]);
+  }, []); // 移除navigate依赖，避免无限循环
 
   const loadStats = async () => {
     try {
       setLoading(true);
+      const accessToken = AdminAuthService.getAccessToken();
+
+      // 检查token是否存在和有效
+      if (!accessToken || AdminAuthService.isTokenExpired(accessToken)) {
+        console.warn('管理员token无效或已过期，重定向到登录页面');
+        AdminAuthService.clearAuth();
+        navigate('/admin/login');
+        return;
+      }
+
       const response = await fetch('/api/admin/stats', {
         headers: {
-          'Authorization': `Bearer ${AuthService.getAccessToken()}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          console.warn('管理员认证失败，重定向到登录页面');
+          AdminAuthService.clearAuth();
+          navigate('/admin/login');
+          return;
+        }
         throw new Error('获取统计信息失败');
       }
 
@@ -72,13 +100,14 @@ const AdminPortal = () => {
       setStats(data);
     } catch (error) {
       console.error('加载统计信息失败:', error);
+      // 如果是网络错误或其他错误，不清除认证信息
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogout = () => {
-    AuthService.clearAuth();
+    AdminAuthService.clearAuth();
     navigate('/');
   };
 
@@ -124,7 +153,7 @@ const AdminPortal = () => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                管理员：{AuthService.getCurrentUser()?.name || '系统管理员'}
+                管理员：{AdminAuthService.getCurrentUser()?.name || '系统管理员'}
               </span>
               <Button
                 variant="outline"

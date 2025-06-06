@@ -15,8 +15,8 @@ const {
 
 // 用户登录验证规则
 const loginValidation = [
-  body('email').optional().isEmail().normalizeEmail(),
-  body('password').notEmpty().isLength({ min: 4 }).trim(),
+  body('email').notEmpty().trim().isLength({ min: 1, max: 255 }).withMessage('用户名/邮箱不能为空'),
+  body('password').notEmpty().isLength({ min: 4 }).trim().withMessage('密码不能为空且至少4个字符'),
   body('role').optional().isIn(Object.values(ROLES))
 ];
 
@@ -34,7 +34,7 @@ function handleValidationErrors(req, res) {
   return null;
 }
 
-// 用户登录（兼容旧版本的简单密码登录）
+// 用户登录（仅支持用户名+密码登录）
 router.post('/login', loginValidation, async (req, res) => {
   const validationError = handleValidationErrors(req, res);
   if (validationError) return;
@@ -42,95 +42,51 @@ router.post('/login', loginValidation, async (req, res) => {
   const { email, password, role = ROLES.USER } = req.body;
 
   try {
-    // 如果提供了邮箱，尝试从用户表查询
-    if (email && email !== 'user@example.com') {
-      db.get('SELECT * FROM users WHERE email = ? AND isActive = 1', [email], async (err, user) => {
-        if (err) {
-          logger.error('用户登录查询失败', { error: err.message });
-          return res.status(500).json({ error: '服务器错误' });
-        }
+    // 必须提供用户名/邮箱，支持邮箱或用户名登录
+    const query = 'SELECT * FROM users WHERE (email = ? OR name = ?) AND isActive = 1';
+    db.get(query, [email, email], async (err, user) => {
+      if (err) {
+        logger.error('用户登录查询失败', { error: err.message });
+        return res.status(500).json({ error: '服务器错误' });
+      }
 
-        if (user) {
-          // 验证密码
-          const bcrypt = require('bcryptjs');
-          const isValidPassword = await bcrypt.compare(password, user.password);
-          if (!isValidPassword) {
-            logger.warn('用户登录失败：密码错误', { email, ip: req.ip });
-            return res.status(401).json({ error: '邮箱或密码错误' });
-          }
+      if (!user) {
+        logger.warn('用户登录失败：用户不存在或已禁用', { identifier: email, ip: req.ip });
+        return res.status(401).json({ error: '用户名/邮箱或密码错误' });
+      }
 
-          // 生成tokens
-          const userInfo = {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role
-          };
+      // 验证密码
+      const bcrypt = require('bcryptjs');
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        logger.warn('用户登录失败：密码错误', { identifier: email, ip: req.ip });
+        return res.status(401).json({ error: '用户名/邮箱或密码错误' });
+      }
 
-          const accessToken = generateAccessToken(userInfo);
-          const refreshToken = generateRefreshToken(userInfo);
-
-          logger.info('用户登录成功', { userId: user.id, email, ip: req.ip });
-
-          return res.json({
-            accessToken,
-            refreshToken,
-            user: userInfo
-          });
-        }
-      });
-      return; // 等待数据库查询完成
-    }
-
-    // 兼容旧版本的简单密码登录
-    const fs = require('fs');
-    const path = require('path');
-    const authConfigPath = path.join(__dirname, '..', 'auth_config.json');
-
-    let storedPassword;
-
-    // 优先从环境变量读取
-    if (process.env.APP_PASSWORD && process.env.APP_PASSWORD !== 'your_secure_password_here') {
-      storedPassword = process.env.APP_PASSWORD;
-    } else if (fs.existsSync(authConfigPath)) {
-      // 回退到配置文件
-      const authConfig = JSON.parse(fs.readFileSync(authConfigPath, 'utf8'));
-      storedPassword = authConfig.password;
-    }
-
-    // 验证密码
-    if (password !== storedPassword) {
-      logger.warn('登录失败：密码错误', { email, ip: req.ip });
-      return res.status(401).json({ error: '用户名或密码错误' });
-    }
-
-    // 生成用户信息（简化版，实际应从数据库获取）
-    const user = {
-      id: email || 'default_user',
-      email: email || 'user@example.com',
-      role: role
-    };
-
-    // 生成tokens
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-
-    // 记录登录成功
-    logger.info('用户登录成功', {
-      userId: user.id,
-      role: user.role,
-      ip: req.ip
-    });
-
-    // 返回tokens
-    res.json({
-      accessToken,
-      refreshToken,
-      user: {
+      // 生成tokens
+      const userInfo = {
         id: user.id,
         email: user.email,
+        name: user.name,
         role: user.role
-      }
+      };
+
+      const accessToken = generateAccessToken(userInfo);
+      const refreshToken = generateRefreshToken(userInfo);
+
+      logger.info('用户登录成功', {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        loginIdentifier: email,
+        ip: req.ip
+      });
+
+      return res.json({
+        accessToken,
+        refreshToken,
+        user: userInfo
+      });
     });
 
   } catch (error) {

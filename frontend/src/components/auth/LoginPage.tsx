@@ -33,9 +33,22 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
     setError('');
     setIsLoading(true);
 
+    // 验证必填字段
+    if (!email.trim()) {
+      setError('请输入用户名或邮箱');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!password.trim()) {
+      setError('请输入密码');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // 使用JWT认证API
-      const response = await api.auth.login(password, email || undefined);
+      // 使用JWT认证API，必须提供用户名和密码
+      const response = await api.auth.login(password, email);
 
       if (response.accessToken) {
         // 认证成功，跳转到用户页面
@@ -44,7 +57,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
         setError('登录失败，请重试');
       }
     } catch (error: any) {
-      setError(error.message || '登录失败，请检查密码是否正确');
+      setError(error.message || '登录失败，请检查用户名和密码是否正确');
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +72,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800">货主端登录</h2>
           <p className="mt-2 text-center text-gray-600">
-            请输入访问密码以继续操作
+            请输入用户名和密码以继续操作
           </p>
         </div>
 
@@ -72,21 +85,23 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
 
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
-              邮箱（可选）
+              用户名/邮箱 <span className="text-red-500">*</span>
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="user@example.com"
+              placeholder="请输入用户名或邮箱"
+              required
+              minLength={1}
             />
           </div>
 
           <div className="mb-4">
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-700">
-              访问密码
+              密码 <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -112,13 +127,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              还没有账户？{' '}
-              <Link
-                to="/register"
-                className="text-blue-600 hover:text-blue-800 underline"
-              >
-                立即注册
-              </Link>
+              还没有账户？请联系管理员开通
             </p>
           </div>
 
