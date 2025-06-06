@@ -69,6 +69,17 @@
 - **数据隔离**: 用户级订单数据隔离，全局物流公司可见
 - **管理后台**: 专用管理页面(/admin)，用户管理、订单管理、系统设置
 
+#### 💾 异地备份系统 (v2.0.0新增)
+
+- **七牛云集成**: 支持七牛云对象存储的自动化备份
+- **管理后台配置**: 可视化配置AccessKey、SecretKey、存储空间等参数
+- **自动定时备份**: 支持每小时/每天/每周的定时备份策略
+- **手动备份**: 一键手动执行备份，实时查看备份状态
+- **备份监控**: 备份历史记录、状态监控、大小统计
+- **企业微信通知**: 备份成功/失败自动通知到企业微信群
+- **数据完整性**: 备份数据库、配置文件、日志文件、前端构建文件
+- **连接测试**: 配置后可测试七牛云连接状态，确保配置正确
+
 ### 🔧 技术特性
 
 - **安全等级**: 前后端均0依赖漏洞，JWT认证，输入验证，XSS防护
@@ -194,6 +205,17 @@
 - **批量操作**: 支持批量状态变更和管理
 - **数据导出**: 全局订单数据导出和分析
 
+#### 💾 备份管理 (v2.0.0新增)
+
+- **七牛云配置**: 可视化配置AccessKey、SecretKey、存储空间名称
+- **备份策略**: 设置备份频率(每小时/每天/每周)、保留天数(1-365天)
+- **自动备份**: 启用/禁用自动备份，支持定时任务
+- **手动备份**: 一键执行备份，实时查看执行状态
+- **连接测试**: 测试七牛云连接状态，验证配置正确性
+- **备份监控**: 查看最后备份时间、状态、大小等信息
+- **备份历史**: 完整的备份历史记录和状态跟踪
+- **通知设置**: 企业微信群通知，及时了解备份状态
+
 #### ⚙️ 系统设置
 
 - **系统配置**: 全局参数配置和管理
@@ -276,6 +298,15 @@
 - **消息队列**: 异步消息处理
 - **通知模板**: 可配置的消息模板
 
+#### 备份服务 (v2.0.0新增)
+
+- **七牛云SDK**: qshell命令行工具集成
+- **自动化备份**: 定时备份脚本和任务调度
+- **数据压缩**: gzip压缩减少存储空间和传输时间
+- **完整性验证**: SQLite备份API确保数据一致性
+- **多文件备份**: 数据库、配置、日志、前端文件全覆盖
+- **云端管理**: 自动清理过期备份，支持生命周期管理
+
 ### 开发与部署
 
 #### 开发环境
@@ -321,7 +352,7 @@ wlbj/                                    # 项目根目录
 │       │   │   ├── ui/               # 基础UI组件 (Button, Card, Tabs)
 │       │   │   ├── user/             # 用户端组件 (UserPortal, OrderList)
 │       │   │   ├── provider/         # 供应商端组件 (ProviderPortal)
-│       │   │   ├── admin/            # 管理员组件 (AdminPortal, UserManagement)
+│       │   │   ├── admin/            # 管理员组件 (AdminPortal, UserManagement, BackupManagement)
 │       │   │   ├── auth/             # 认证组件 (LoginPage, RegisterPage)
 │       │   │   └── layout/           # 布局组件 (Header, Footer, HomePage)
 │       │   ├── services/             # API服务层
@@ -352,6 +383,7 @@ wlbj/                                    # 项目根目录
 │   │   ├── authRoutes.js            # JWT认证路由
 │   │   ├── usersRoutes.js           # 用户管理路由 (v2.0.0新增)
 │   │   ├── adminRoutes.js           # 管理员路由 (v2.0.0新增)
+│   │   ├── backupRoutes.js          # 备份管理路由 (v2.0.0新增)
 │   │   ├── ordersRoutes.js          # 订单管理路由 (选择物流商功能)
 │   │   ├── quotesRoutes.js          # 报价管理路由
 │   │   ├── quotesOptimized.js       # 优化报价路由 (批量查询、缓存)
@@ -388,13 +420,26 @@ wlbj/                                    # 项目根目录
 │   ├── clear-data.sh               # 数据清理脚本
 │   └── clear-frontend-mock-data.sh # 前端模拟数据清理
 │
+├── 💾 备份系统 (v2.0.0新增)
+│   ├── scripts/                    # 备份脚本目录
+│   │   ├── qiniu-backup.js         # 七牛云备份执行脚本
+│   │   ├── test-qiniu-connection.js # 七牛云连接测试脚本
+│   │   └── setup-backup-cron.sh    # 定时备份任务设置脚本
+│   ├── install-qiniu-tools.sh      # 七牛云工具安装脚本
+│   ├── backup-system.sh            # 通用备份系统脚本
+│   ├── restore-system.sh           # 数据恢复脚本
+│   ├── backup-monitor.sh           # 备份监控脚本
+│   ├── backup-config.example       # 备份配置模板
+│   └── 异地备份部署指南.md         # 备份部署详细指南
+│
 ├── 📚 文档与备份
 │   ├── Knowledge/                   # 知识库文档
 │   │   └── 群机器人配置说明.md      # 企业微信配置指南
 │   ├── docs/                       # 技术文档
 │   │   ├── frontend-jwt-integration-guide.md    # JWT集成指南
 │   │   ├── jwt-authentication-testing-guide.md # JWT测试指南
-│   │   └── optimization-implementation-guide.md # 优化实施指南
+│   │   ├── optimization-implementation-guide.md # 优化实施指南
+│   │   └── backup-setup-guide.md                # 备份系统部署指南
 │   ├── backup/                     # 备份文件
 │   │   └── old-frontend/           # 旧版前端文件备份
 │   └── README.md                   # 项目说明文档 (本文件)
@@ -620,6 +665,73 @@ node verify-system-status.js
 - **调试支持**: 详细的错误信息和调试日志
 - **性能监控**: 开发环境性能指标监控
 
+### 💾 异地备份系统 (v2.0.0新增)
+
+#### 🎯 备份系统概述
+
+物流报价系统集成了完整的异地备份解决方案，支持七牛云对象存储的自动化备份，确保数据安全和业务连续性。
+
+#### 🔧 备份功能特性
+
+- **管理后台集成**: 在管理员后台可视化配置备份参数
+- **七牛云支持**: 完整的七牛云对象存储集成
+- **自动定时备份**: 支持每小时/每天/每周的备份策略
+- **手动备份**: 一键执行备份，实时查看状态
+- **备份监控**: 完整的备份历史和状态监控
+- **企业微信通知**: 备份成功/失败自动通知
+- **数据完整性**: 备份数据库、配置、日志、前端文件
+
+#### 📋 备份内容
+
+| 备份类型 | 内容 | 压缩方式 | 说明 |
+|---------|------|----------|------|
+| 数据库 | `data/logistics.db` | gzip | SQLite备份API确保一致性 |
+| 配置文件 | `.env`, `auth_config.json`, `ip_whitelist.json` | tar.gz | 系统配置文件 |
+| 日志文件 | `logs/app.log`, `logs/error.log` | tar.gz | 应用运行日志 |
+| 前端文件 | `frontend/dist/` | tar.gz | 生产环境前端构建文件 |
+
+#### 🚀 快速配置
+
+1. **安装七牛云工具**:
+   ```bash
+   chmod +x install-qiniu-tools.sh
+   ./install-qiniu-tools.sh
+   ```
+
+2. **配置备份参数**:
+   - 访问管理后台: `http://localhost:3000/admin`
+   - 点击"备份管理"标签
+   - 填写七牛云AccessKey、SecretKey、存储空间名称
+   - 设置备份频率和保留天数
+
+3. **测试备份功能**:
+   - 点击"测试连接"验证配置
+   - 点击"立即备份"执行首次备份
+   - 查看"备份状态"和"备份历史"
+
+4. **设置定时备份** (可选):
+   ```bash
+   chmod +x scripts/setup-backup-cron.sh
+   sudo ./scripts/setup-backup-cron.sh
+   ```
+
+#### 📊 备份策略建议
+
+| 环境类型 | 备份频率 | 保留天数 | 自动备份 | 通知 |
+|---------|---------|---------|---------|------|
+| 生产环境 | 每天 | 30天 | ✅ 启用 | ✅ 启用 |
+| 测试环境 | 每周 | 7天 | ✅ 启用 | 可选 |
+| 开发环境 | 手动 | 3天 | 可选 | 可选 |
+
+#### 🔒 安全特性
+
+- **传输加密**: HTTPS/TLS安全传输
+- **访问控制**: 七牛云IAM权限管理
+- **密钥保护**: 敏感信息加密存储
+- **审计日志**: 完整的备份操作记录
+
+详细的备份系统部署和配置指南请参考：`docs/backup-setup-guide.md`
+
 ### 📊 性能优化建议
 
 #### 开发环境
@@ -784,6 +896,28 @@ CREATE TABLE admin_config (
   id INTEGER PRIMARY KEY,           -- 配置ID
   password TEXT NOT NULL,           -- 管理员密码
   updatedAt TEXT NOT NULL           -- 更新时间
+);
+```
+
+##### 💾 备份配置表 (backup_config) - v2.0.0新增
+
+```sql
+CREATE TABLE backup_config (
+  id INTEGER PRIMARY KEY,           -- 配置ID
+  qiniu_access_key TEXT,            -- 七牛云AccessKey
+  qiniu_secret_key TEXT,            -- 七牛云SecretKey
+  qiniu_bucket TEXT,                -- 七牛云存储空间名称
+  qiniu_zone TEXT DEFAULT 'z0',     -- 七牛云存储区域
+  backup_frequency TEXT DEFAULT 'daily',        -- 备份频率
+  auto_backup_enabled INTEGER DEFAULT 0,        -- 自动备份开关
+  last_backup_time TEXT,            -- 最后备份时间
+  last_backup_status TEXT,          -- 最后备份状态
+  last_backup_size TEXT,            -- 最后备份大小
+  retention_days INTEGER DEFAULT 30,            -- 保留天数
+  wechat_webhook_url TEXT,          -- 企业微信通知URL
+  notification_enabled INTEGER DEFAULT 1,       -- 通知开关
+  created_at TEXT NOT NULL,         -- 创建时间
+  updated_at TEXT NOT NULL          -- 更新时间
 );
 ```
 
@@ -2432,10 +2566,10 @@ node test-wechat-notification.js
 
 #### 定期维护任务
 
-- **每周**: 检查系统日志，清理临时文件
-- **每月**: 更新依赖包，备份数据库
-- **每季度**: 安全审计，性能优化
-- **每年**: 系统升级，架构评估
+- **每周**: 检查系统日志，清理临时文件，验证备份状态
+- **每月**: 更新依赖包，备份数据库，测试数据恢复流程
+- **每季度**: 安全审计，性能优化，更新备份密钥
+- **每年**: 系统升级，架构评估，备份策略评估
 
 #### 监控指标
 
@@ -2467,6 +2601,10 @@ node test-wechat-notification.js
 - [ ] 防火墙规则已设置
 - [ ] 环境变量已配置 (生产环境值)
 - [ ] 数据库备份策略已实施
+- [ ] 异地备份系统已配置 (七牛云)
+- [ ] 备份定时任务已设置
+- [ ] 备份连接测试已通过
+- [ ] 备份通知已配置 (企业微信)
 - [ ] 监控和告警已配置
 - [ ] 日志轮替已配置
 - [ ] 性能测试已通过
@@ -2495,6 +2633,7 @@ node test-wechat-notification.js
 - **现代化架构**: React 18 + TypeScript + Vite前端，Node.js + Express后端
 - **高性能**: 11个数据库索引，缓存机制，查询性能提升60-80%
 - **安全可靠**: JWT认证，0依赖漏洞，完整的安全防护机制
+- **数据安全**: 集成七牛云异地备份，自动化备份策略，数据零丢失
 - **易于维护**: 模块化设计，完整的测试覆盖，详细的文档
 
 #### 业务价值
