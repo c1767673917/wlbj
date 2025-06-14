@@ -2062,3 +2062,486 @@
 [2025-06-06 15:32:41.096 PM] info: 	[0mGET /api/backup/history [36m304[0m 2.036 ms - -[0m
 [2025-06-06 15:32:41.102 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.352 ms - -[0m
 [2025-06-06 15:32:41.104 PM] info: 	[0mGET /api/backup/history [36m304[0m 2.256 ms - -[0m
+[2025-06-06 15:42:07.829 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 1.774 ms - 4[0m
+[2025-06-06 15:42:07.832 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.684 ms - 4[0m
+[2025-06-06 15:42:07.835 PM] info: 	Token刷新成功
+[2025-06-06 15:42:07.835 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.281 ms - 257[0m
+[2025-06-06 15:42:07.838 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.546 ms - 4[0m
+[2025-06-06 15:42:07.841 PM] info: 	Token刷新成功
+[2025-06-06 15:42:07.842 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.927 ms - 257[0m
+[2025-06-06 15:42:07.843 PM] info: 	Token刷新成功
+[2025-06-06 15:42:07.844 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.972 ms - 257[0m
+[2025-06-06 16:06:20.615 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 1.782 ms - 12[0m
+[2025-06-06 16:06:20.616 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.133 ms - 4[0m
+[2025-06-06 16:06:20.616 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.247 ms - 12[0m
+[2025-06-06 16:06:20.617 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.152 ms - 12[0m
+[2025-06-06 16:06:20.618 PM] warn: 	认证失败：Token已过期
+[2025-06-06 16:06:20.619 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [33m403[0m 0.641 ms - 26[0m
+[2025-06-06 16:06:20.620 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.557 ms - 13[0m
+[2025-06-06 16:06:20.621 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.282 ms - 13[0m
+[2025-06-06 16:06:20.622 PM] warn: 	认证失败：Token已过期
+[2025-06-06 16:06:20.622 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [33m403[0m 0.563 ms - 26[0m
+[2025-06-06 16:06:20.624 PM] info: 	Token刷新成功
+[2025-06-06 16:06:20.624 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.613 ms - 257[0m
+[2025-06-06 16:06:20.625 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.089 ms - 4[0m
+[2025-06-06 16:06:20.625 PM] info: 	[0mGET /api/providers [36m304[0m 2.946 ms - -[0m
+[2025-06-06 16:06:20.626 PM] warn: 	认证失败：Token已过期
+[2025-06-06 16:06:20.626 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [33m403[0m 0.392 ms - 26[0m
+[2025-06-06 16:06:20.626 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.104 ms - 12[0m
+[2025-06-06 16:06:20.628 PM] info: 	Token刷新成功
+[2025-06-06 16:06:20.628 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.703 ms - 257[0m
+[2025-06-06 16:06:20.629 PM] warn: 	认证失败：Token已过期
+[2025-06-06 16:06:20.629 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [33m403[0m 0.311 ms - 26[0m
+[2025-06-06 16:06:20.630 PM] info: 	[0mGET /api/providers [36m304[0m 1.204 ms - -[0m
+[2025-06-06 16:06:22.072 PM] info: 	[0mGET /api/providers [36m304[0m 0.816 ms - -[0m
+[2025-06-06 16:06:22.073 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 3.491 ms - 92[0m
+[2025-06-06 16:06:22.073 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 2.595 ms - 92[0m
+[2025-06-06 16:06:22.074 PM] info: 	[0mGET /api/providers [36m304[0m 1.974 ms - -[0m
+[2025-06-06 16:06:22.075 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.571 ms - -[0m
+[2025-06-06 16:06:22.076 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.941 ms - -[0m
+[2025-06-06 16:06:32.764 PM] info: 	[0mOPTIONS /api/auth/logout [32m200[0m 0.444 ms - 4[0m
+[2025-06-06 16:06:32.767 PM] info: 	用户登出
+[2025-06-06 16:06:32.768 PM] info: 	[0mPOST /api/auth/logout [32m200[0m 1.799 ms - 26[0m
+[2025-06-06 16:06:41.132 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.368 ms - 4[0m
+[2025-06-06 16:06:41.217 PM] info: 	用户登录成功
+[2025-06-06 16:06:41.217 PM] info: 	[0mPOST /api/auth/login [32m200[0m 83.045 ms - 653[0m
+[2025-06-06 16:06:41.254 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.115 ms - 12[0m
+[2025-06-06 16:06:41.258 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.168 ms - 12[0m
+[2025-06-06 16:06:41.260 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.137 ms - 13[0m
+[2025-06-06 16:06:41.260 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.150 ms - 12[0m
+[2025-06-06 16:06:41.261 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.068 ms - 12[0m
+[2025-06-06 16:06:41.262 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.047 ms - 13[0m
+[2025-06-06 16:06:41.262 PM] info: 	[0mGET /api/providers [36m304[0m 0.440 ms - -[0m
+[2025-06-06 16:06:41.263 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.083 ms - -[0m
+[2025-06-06 16:06:41.264 PM] info: 	[0mGET /api/providers [36m304[0m 0.614 ms - -[0m
+[2025-06-06 16:06:41.264 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.316 ms - -[0m
+[2025-06-06 16:06:41.265 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.313 ms - -[0m
+[2025-06-06 16:06:41.265 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 0.674 ms - -[0m
+[2025-06-06 16:07:27.444 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.356 ms - 13[0m
+[2025-06-06 16:07:27.454 PM] info: 	[0mPOST /api/orders [32m201[0m 7.633 ms - 179[0m
+[2025-06-06 16:07:30.461 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.236 ms - 12[0m
+[2025-06-06 16:07:30.462 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.191 ms - 12[0m
+[2025-06-06 16:07:30.463 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.111 ms - 13[0m
+[2025-06-06 16:07:30.465 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 2.183 ms - 258[0m
+[2025-06-06 16:07:30.465 PM] info: 	[0mGET /api/providers [36m304[0m 0.664 ms - -[0m
+[2025-06-06 16:07:30.466 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.582 ms - -[0m
+[2025-06-06 16:07:30.472 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250606-001 [32m200[0m 0.375 ms - 8[0m
+[2025-06-06 16:07:30.473 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250606-001 [32m200[0m 0.903 ms - 21[0m
+[2025-06-06 16:07:38.688 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.196 ms - 15[0m
+[2025-06-06 16:07:38.690 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.295 ms - 15[0m
+[2025-06-06 16:07:38.694 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.812 ms - -[0m
+[2025-06-06 16:07:38.695 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.383 ms - -[0m
+[2025-06-06 16:07:38.721 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.202 ms - 8[0m
+[2025-06-06 16:07:38.722 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.255 ms - 8[0m
+[2025-06-06 16:07:38.725 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [32m200[0m 1.900 ms - 938[0m
+[2025-06-06 16:07:38.727 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.138 ms - 8[0m
+[2025-06-06 16:07:38.728 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 2.199 ms - -[0m
+[2025-06-06 16:07:38.729 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 1.815 ms - -[0m
+[2025-06-06 16:07:38.730 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.409 ms - -[0m
+[2025-06-06 16:07:43.940 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.183 ms - 15[0m
+[2025-06-06 16:07:43.941 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.162 ms - 15[0m
+[2025-06-06 16:07:43.943 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [32m200[0m 0.682 ms - 159[0m
+[2025-06-06 16:07:43.944 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.360 ms - -[0m
+[2025-06-06 16:07:43.971 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.176 ms - 8[0m
+[2025-06-06 16:07:43.972 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.150 ms - 8[0m
+[2025-06-06 16:07:43.973 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [32m200[0m 1.107 ms - 932[0m
+[2025-06-06 16:07:43.975 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.870 ms - -[0m
+[2025-06-06 16:07:43.976 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.119 ms - 8[0m
+[2025-06-06 16:07:43.977 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [32m200[0m 0.465 ms - 681[0m
+[2025-06-06 16:07:43.978 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.514 ms - -[0m
+[2025-06-06 16:07:55.161 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.334 ms - 13[0m
+[2025-06-06 16:07:55.168 PM] info: 	[0mPOST /api/quotes [32m201[0m 4.323 ms - 186[0m
+[2025-06-06 16:07:55.174 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.491 ms - 8[0m
+[2025-06-06 16:07:55.180 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [32m200[0m 3.062 ms - 771[0m
+[2025-06-06 16:07:55.184 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.238 ms - 8[0m
+[2025-06-06 16:07:55.187 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [32m200[0m 1.244 ms - 419[0m
+[2025-06-06 16:08:09.677 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.385 ms - 13[0m
+[2025-06-06 16:08:09.682 PM] info: 	[0mPOST /api/quotes [32m201[0m 2.827 ms - 179[0m
+[2025-06-06 16:08:09.688 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.415 ms - 8[0m
+[2025-06-06 16:08:09.692 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [32m200[0m 1.012 ms - 765[0m
+[2025-06-06 16:08:09.696 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.381 ms - 8[0m
+[2025-06-06 16:08:09.699 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [32m200[0m 0.969 ms - 968[0m
+[2025-06-06 16:08:13.621 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.169 ms - 15[0m
+[2025-06-06 16:08:13.622 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.113 ms - 15[0m
+[2025-06-06 16:08:13.624 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.650 ms - -[0m
+[2025-06-06 16:08:13.626 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 1.056 ms - -[0m
+[2025-06-06 16:08:13.643 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.686 ms - -[0m
+[2025-06-06 16:08:13.644 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.575 ms - -[0m
+[2025-06-06 16:08:13.645 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.497 ms - -[0m
+[2025-06-06 16:08:13.647 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.626 ms - -[0m
+[2025-06-06 16:08:22.847 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250606-001 [32m200[0m 0.561 ms - 8[0m
+[2025-06-06 16:08:22.849 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250606-001 [32m200[0m 0.204 ms - 8[0m
+[2025-06-06 16:08:22.852 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250606-001 [32m200[0m 1.363 ms - 55[0m
+[2025-06-06 16:08:22.855 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250606-001 [36m304[0m 0.304 ms - -[0m
+[2025-06-06 16:08:25.210 PM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.360 ms - 13[0m
+[2025-06-06 16:08:25.213 PM] info: 	[0mGET /api/orders/RX250606-001/quotes [32m200[0m 0.974 ms - 368[0m
+[2025-06-06 16:08:26.809 PM] info: 	[0mOPTIONS /api/orders/RX250606-001/select-provider [32m200[0m 0.391 ms - 3[0m
+[2025-06-06 16:08:26.818 PM] info: 	[0mPUT /api/orders/RX250606-001/select-provider [32m200[0m 5.503 ms - 393[0m
+[2025-06-06 16:08:28.231 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.660 ms - 12[0m
+[2025-06-06 16:08:28.234 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.598 ms - 12[0m
+[2025-06-06 16:08:28.236 PM] warn: 	速率限制触发
+[2025-06-06 16:08:28.237 PM] warn: 	速率限制触发
+[2025-06-06 16:08:28.240 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.917 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.918 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.919 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.919 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.919 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.920 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.920 PM] warn: 	速率限制触发
+[2025-06-06 16:08:31.921 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.447 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.448 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.449 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.449 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.450 PM] warn: 	速率限制触发
+[2025-06-06 16:08:33.451 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.073 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.074 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.075 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.075 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.076 PM] warn: 	速率限制触发
+[2025-06-06 16:08:34.076 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.592 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.593 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.593 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.594 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.594 PM] warn: 	速率限制触发
+[2025-06-06 16:08:35.594 PM] warn: 	速率限制触发
+[2025-06-06 16:09:07.871 PM] warn: 	速率限制触发
+[2025-06-06 16:09:07.872 PM] warn: 	速率限制触发
+[2025-06-06 16:09:11.871 PM] warn: 	速率限制触发
+[2025-06-06 16:09:11.872 PM] warn: 	速率限制触发
+[2025-06-06 16:09:55.512 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-06 16:09:55.514 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-06 16:09:55.514 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-06 16:09:55.637 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-06 16:09:55.637 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-06 16:09:55.637 PM] info: 	- JWT认证系统
+[2025-06-06 16:09:55.638 PM] info: 	- 输入验证和XSS防护
+[2025-06-06 16:09:55.638 PM] info: 	- SQL注入防护
+[2025-06-06 16:09:55.638 PM] info: 	- 速率限制
+[2025-06-06 16:09:55.638 PM] info: 	- 安全响应头
+[2025-06-06 16:09:55.638 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-06 16:09:55.638 PM] info: 	- 数据库查询性能监控
+[2025-06-06 16:09:55.644 PM] info: 	SQLite WAL模式已启用
+[2025-06-06 16:10:46.183 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.352 ms - -[0m
+[2025-06-06 16:10:46.185 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.039 ms - -[0m
+[2025-06-06 16:10:46.187 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 2.830 ms - -[0m
+[2025-06-06 16:10:46.190 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.926 ms - -[0m
+[2025-06-06 16:10:46.197 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.119 ms - -[0m
+[2025-06-06 16:10:46.198 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.030 ms - -[0m
+[2025-06-06 16:10:46.199 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.861 ms - -[0m
+[2025-06-06 16:10:46.201 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.039 ms - -[0m
+[2025-06-06 16:10:46.202 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 2.379 ms - -[0m
+[2025-06-06 16:10:46.205 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [32m200[0m 0.981 ms - 968[0m
+[2025-06-06 16:10:46.214 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.481 ms - -[0m
+[2025-06-06 16:10:49.680 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.362 ms - -[0m
+[2025-06-06 16:10:49.681 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.321 ms - -[0m
+[2025-06-06 16:10:49.692 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 6.552 ms - -[0m
+[2025-06-06 16:10:49.693 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.663 ms - -[0m
+[2025-06-06 16:10:49.706 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.077 ms - -[0m
+[2025-06-06 16:10:49.707 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.033 ms - -[0m
+[2025-06-06 16:10:49.712 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 2.162 ms - -[0m
+[2025-06-06 16:10:49.714 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.057 ms - -[0m
+[2025-06-06 16:10:49.716 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 2.127 ms - -[0m
+[2025-06-06 16:10:49.717 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [32m200[0m 1.853 ms - 419[0m
+[2025-06-06 16:10:49.720 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 1.242 ms - -[0m
+[2025-06-06 16:10:50.829 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.284 ms - -[0m
+[2025-06-06 16:10:50.830 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.075 ms - -[0m
+[2025-06-06 16:10:50.844 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.078 ms - -[0m
+[2025-06-06 16:10:50.847 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.037 ms - -[0m
+[2025-06-06 16:10:50.852 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.649 ms - -[0m
+[2025-06-06 16:10:50.853 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 21.394 ms - 92[0m
+[2025-06-06 16:10:50.855 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.132 ms - -[0m
+[2025-06-06 16:10:50.857 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 14.064 ms - 373[0m
+[2025-06-06 16:10:50.858 PM] info: 	[0mGET /api/providers [36m304[0m 7.543 ms - -[0m
+[2025-06-06 16:10:50.861 PM] info: 	[0mGET /api/providers [36m304[0m 1.141 ms - -[0m
+[2025-06-06 16:10:50.862 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.729 ms - -[0m
+[2025-06-06 16:10:50.864 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.540 ms - -[0m
+[2025-06-06 16:11:06.795 PM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.148 ms - -[0m
+[2025-06-06 16:11:06.799 PM] info: 	[0mGET /api/orders/RX250606-001/quotes [36m304[0m 1.075 ms - -[0m
+[2025-06-06 16:11:08.204 PM] info: 	[0mOPTIONS /api/orders/active [32m200[0m 0.049 ms - -[0m
+[2025-06-06 16:11:16.619 PM] warn: 	认证失败：缺少token
+[2025-06-06 16:11:16.619 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [33m401[0m 0.549 ms - 24[0m
+[2025-06-06 16:11:37.307 PM] info: 	管理员登录成功
+[2025-06-06 16:11:37.308 PM] info: 	[0mPOST /api/admin/login [32m200[0m 90.930 ms - 601[0m
+[2025-06-06 16:11:37.329 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.216 ms - 133[0m
+[2025-06-06 16:11:37.331 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.638 ms - -[0m
+[2025-06-06 16:11:38.704 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.031 ms - -[0m
+[2025-06-06 16:11:38.705 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.951 ms - -[0m
+[2025-06-06 16:11:38.711 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.335 ms - -[0m
+[2025-06-06 16:11:38.714 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.788 ms - -[0m
+[2025-06-06 16:11:39.358 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.988 ms - -[0m
+[2025-06-06 16:11:39.359 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [32m200[0m 2.785 ms - 2852[0m
+[2025-06-06 16:11:39.369 PM] info: 	[0mGET /api/admin/stats [36m304[0m 4.925 ms - -[0m
+[2025-06-06 16:11:39.371 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 3.645 ms - -[0m
+[2025-06-06 16:12:42.067 PM] warn: 	认证失败：无效的Token
+[2025-06-06 16:12:42.067 PM] info: 	[0mGET /api/users [33m403[0m 0.422 ms - 26[0m
+[2025-06-06 16:12:59.551 PM] info: 	管理员登录成功
+[2025-06-06 16:12:59.552 PM] info: 	[0mPOST /api/admin/login [32m200[0m 55.134 ms - 601[0m
+[2025-06-06 16:13:09.074 PM] info: 	[0mPOST /api/users/create [33m400[0m 2.355 ms - 30[0m
+[2025-06-06 16:13:19.195 PM] info: 	管理员登录成功
+[2025-06-06 16:13:19.195 PM] info: 	[0mPOST /api/admin/login [32m200[0m 66.238 ms - 601[0m
+[2025-06-06 16:13:26.550 PM] info: 	[0mPOST /api/users/create [33m400[0m 1.408 ms - 30[0m
+[2025-06-06 16:14:02.290 PM] info: 	管理员登录成功
+[2025-06-06 16:14:02.291 PM] info: 	[0mPOST /api/admin/login [32m200[0m 61.079 ms - 601[0m
+[2025-06-06 16:14:08.884 PM] info: 	[0mPOST /api/users/create [33m400[0m 1.262 ms - 30[0m
+[2025-06-06 16:15:00.779 PM] info: 	[0mGET /api/admin/stats [36m304[0m 6.982 ms - -[0m
+[2025-06-06 16:15:00.787 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.962 ms - -[0m
+[2025-06-06 16:16:47.138 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.255 ms - -[0m
+[2025-06-06 16:16:47.142 PM] info: 	Token刷新成功
+[2025-06-06 16:16:47.143 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.961 ms - 257[0m
+[2025-06-06 16:20:47.449 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.263 ms - -[0m
+[2025-06-06 16:20:47.453 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.178 ms - -[0m
+[2025-06-06 16:20:47.468 PM] info: 	[0mGET /api/admin/stats [36m304[0m 5.863 ms - -[0m
+[2025-06-06 16:20:47.474 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 17.101 ms - -[0m
+[2025-06-06 16:20:47.480 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.080 ms - -[0m
+[2025-06-06 16:20:47.482 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.171 ms - -[0m
+[2025-06-06 16:20:47.483 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.035 ms - -[0m
+[2025-06-06 16:20:47.484 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 1.685 ms - -[0m
+[2025-06-06 16:20:47.485 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.050 ms - -[0m
+[2025-06-06 16:20:47.487 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.029 ms - -[0m
+[2025-06-06 16:20:47.489 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.051 ms - -[0m
+[2025-06-06 16:20:47.489 PM] info: 	[0mGET /api/providers [36m304[0m 2.910 ms - -[0m
+[2025-06-06 16:20:47.491 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 7.431 ms - -[0m
+[2025-06-06 16:20:47.492 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.021 ms - -[0m
+[2025-06-06 16:20:47.493 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.671 ms - -[0m
+[2025-06-06 16:20:47.501 PM] info: 	[0mGET /api/admin/stats [36m304[0m 11.215 ms - -[0m
+[2025-06-06 16:20:47.502 PM] info: 	[0mGET /api/providers [36m304[0m 9.515 ms - -[0m
+[2025-06-06 16:20:47.514 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 15.499 ms - -[0m
+[2025-06-06 16:20:47.515 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.098 ms - -[0m
+[2025-06-06 16:20:47.516 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 10.483 ms - -[0m
+[2025-06-06 16:20:47.519 PM] info: 	[0mGET /api/admin/stats [36m304[0m 7.646 ms - -[0m
+[2025-06-06 16:20:47.520 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.039 ms - -[0m
+[2025-06-06 16:20:47.522 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 15.278 ms - -[0m
+[2025-06-06 16:20:47.522 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 1.168 ms - -[0m
+[2025-06-06 16:20:47.526 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.031 ms - -[0m
+[2025-06-06 16:20:47.527 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 1.799 ms - -[0m
+[2025-06-06 16:20:47.527 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.994 ms - -[0m
+[2025-06-06 16:20:47.528 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 5.011 ms - -[0m
+[2025-06-06 16:20:47.530 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 1.073 ms - -[0m
+[2025-06-06 16:20:47.531 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.427 ms - -[0m
+[2025-06-06 16:20:47.560 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.044 ms - -[0m
+[2025-06-06 16:20:47.560 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.026 ms - -[0m
+[2025-06-06 16:20:47.561 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.347 ms - -[0m
+[2025-06-06 16:20:47.562 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.254 ms - -[0m
+[2025-06-06 16:20:47.563 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.026 ms - -[0m
+[2025-06-06 16:20:47.564 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.301 ms - -[0m
+[2025-06-06 16:20:47.564 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.303 ms - -[0m
+[2025-06-06 16:58:45.830 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.077 ms - -[0m
+[2025-06-06 16:58:45.833 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.118 ms - -[0m
+[2025-06-06 16:58:45.836 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.836 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.320 ms - 257[0m
+[2025-06-06 16:58:45.838 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.838 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.111 ms - 257[0m
+[2025-06-06 16:58:45.879 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.885 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 14.585 ms - 257[0m
+[2025-06-06 16:58:45.888 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.888 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.145 ms - 257[0m
+[2025-06-06 16:58:45.891 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.892 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.321 ms - 257[0m
+[2025-06-06 16:58:45.894 PM] info: 	Token刷新成功
+[2025-06-06 16:58:45.895 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.098 ms - 257[0m
+[2025-06-06 16:58:46.143 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.089 ms - -[0m
+[2025-06-06 16:58:46.144 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.071 ms - -[0m
+[2025-06-06 16:58:46.146 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.486 ms - -[0m
+[2025-06-06 16:58:46.147 PM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.417 ms - -[0m
+[2025-06-06 16:58:46.169 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.084 ms - -[0m
+[2025-06-06 16:58:46.170 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.069 ms - -[0m
+[2025-06-06 16:58:46.171 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.068 ms - -[0m
+[2025-06-06 16:58:46.172 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.049 ms - -[0m
+[2025-06-06 16:58:46.172 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.047 ms - -[0m
+[2025-06-06 16:58:46.174 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.044 ms - -[0m
+[2025-06-06 16:58:46.175 PM] info: 	[0mGET /api/providers [36m304[0m 0.504 ms - -[0m
+[2025-06-06 16:58:46.175 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.500 ms - -[0m
+[2025-06-06 16:58:46.176 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.074 ms - -[0m
+[2025-06-06 16:58:46.178 PM] info: 	[0mGET /api/providers [36m304[0m 1.742 ms - -[0m
+[2025-06-06 16:58:46.178 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.111 ms - -[0m
+[2025-06-06 16:58:46.179 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.643 ms - -[0m
+[2025-06-06 16:58:46.191 PM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.076 ms - -[0m
+[2025-06-06 16:58:46.194 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 1.012 ms - -[0m
+[2025-06-06 16:58:46.197 PM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.856 ms - -[0m
+[2025-06-06 16:58:46.204 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.071 ms - -[0m
+[2025-06-06 16:58:46.206 PM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.061 ms - -[0m
+[2025-06-06 16:58:46.208 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.922 ms - -[0m
+[2025-06-06 16:58:46.210 PM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.709 ms - -[0m
+[2025-06-06 16:58:46.389 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.163 ms - -[0m
+[2025-06-06 16:58:46.390 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.059 ms - -[0m
+[2025-06-06 16:58:46.391 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.402 ms - -[0m
+[2025-06-06 16:58:46.392 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.332 ms - -[0m
+[2025-06-06 16:58:46.424 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.065 ms - -[0m
+[2025-06-06 16:58:46.426 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 0.715 ms - -[0m
+[2025-06-06 16:58:46.428 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 0.746 ms - -[0m
+[2025-06-06 16:58:46.434 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.065 ms - -[0m
+[2025-06-06 16:58:46.435 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.118 ms - -[0m
+[2025-06-06 16:58:46.437 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.707 ms - -[0m
+[2025-06-06 16:58:46.439 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.590 ms - -[0m
+[2025-06-06 17:46:46.568 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.178 ms - -[0m
+[2025-06-06 17:46:46.569 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.082 ms - -[0m
+[2025-06-06 17:46:46.572 PM] info: 	Token刷新成功
+[2025-06-06 17:46:46.572 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.661 ms - 257[0m
+[2025-06-06 17:46:46.573 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.070 ms - -[0m
+[2025-06-06 17:46:46.575 PM] info: 	Token刷新成功
+[2025-06-06 17:46:46.576 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.372 ms - 257[0m
+[2025-06-06 17:46:46.577 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.063 ms - -[0m
+[2025-06-06 17:46:46.578 PM] info: 	Token刷新成功
+[2025-06-06 17:46:46.578 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.050 ms - 257[0m
+[2025-06-06 17:46:46.579 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.051 ms - -[0m
+[2025-06-06 17:46:46.581 PM] info: 	Token刷新成功
+[2025-06-06 17:46:46.582 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.398 ms - 257[0m
+[2025-06-06 17:46:46.583 PM] info: 	Token刷新成功
+[2025-06-06 17:46:46.583 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.907 ms - 257[0m
+[2025-06-06 18:03:16.867 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.130 ms - -[0m
+[2025-06-06 18:03:16.868 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.078 ms - -[0m
+[2025-06-06 18:03:16.868 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.062 ms - -[0m
+[2025-06-06 18:03:16.870 PM] info: 	Token刷新成功
+[2025-06-06 18:03:16.870 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.285 ms - 257[0m
+[2025-06-06 18:03:16.871 PM] info: 	Token刷新成功
+[2025-06-06 18:03:16.872 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.987 ms - 257[0m
+[2025-06-06 18:03:16.874 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.100 ms - -[0m
+[2025-06-06 18:03:16.876 PM] info: 	Token刷新成功
+[2025-06-06 18:03:16.876 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.108 ms - 257[0m
+[2025-06-06 18:03:16.876 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.081 ms - -[0m
+[2025-06-06 18:03:16.878 PM] info: 	Token刷新成功
+[2025-06-06 18:03:16.879 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.589 ms - 257[0m
+[2025-06-06 18:03:16.881 PM] info: 	Token刷新成功
+[2025-06-06 18:03:16.882 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.690 ms - 257[0m
+[2025-06-06 18:34:57.253 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.072 ms - -[0m
+[2025-06-06 18:34:57.254 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.061 ms - -[0m
+[2025-06-06 18:34:57.254 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.048 ms - -[0m
+[2025-06-06 18:34:57.256 PM] info: 	Token刷新成功
+[2025-06-06 18:34:57.256 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.838 ms - 257[0m
+[2025-06-06 18:34:57.257 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.051 ms - -[0m
+[2025-06-06 18:34:57.258 PM] info: 	Token刷新成功
+[2025-06-06 18:34:57.259 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.215 ms - 257[0m
+[2025-06-06 18:34:57.260 PM] info: 	Token刷新成功
+[2025-06-06 18:34:57.261 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.127 ms - 257[0m
+[2025-06-06 18:34:57.261 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.152 ms - -[0m
+[2025-06-06 18:34:57.263 PM] info: 	Token刷新成功
+[2025-06-06 18:34:57.264 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.143 ms - 257[0m
+[2025-06-06 18:34:57.266 PM] info: 	Token刷新成功
+[2025-06-06 18:34:57.267 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.212 ms - 257[0m
+[2025-06-06 18:50:29.696 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.286 ms - -[0m
+[2025-06-06 18:50:29.699 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.155 ms - -[0m
+[2025-06-06 18:50:29.703 PM] info: 	Token刷新成功
+[2025-06-06 18:50:29.704 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.197 ms - 257[0m
+[2025-06-06 18:50:29.706 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.291 ms - -[0m
+[2025-06-06 18:50:29.709 PM] info: 	Token刷新成功
+[2025-06-06 18:50:29.710 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.859 ms - 257[0m
+[2025-06-06 18:50:29.711 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.075 ms - -[0m
+[2025-06-06 18:50:29.712 PM] info: 	Token刷新成功
+[2025-06-06 18:50:29.712 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.957 ms - 257[0m
+[2025-06-06 18:50:29.714 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.055 ms - -[0m
+[2025-06-06 18:50:29.714 PM] info: 	Token刷新成功
+[2025-06-06 18:50:29.715 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.663 ms - 257[0m
+[2025-06-06 18:50:29.716 PM] info: 	Token刷新成功
+[2025-06-06 18:50:29.716 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.550 ms - 257[0m
+[2025-06-06 18:54:03.769 PM] warn: 	管理员登录失败：密码错误
+[2025-06-06 18:54:03.770 PM] info: 	[0mPOST /api/admin/login [33m401[0m 70.823 ms - 24[0m
+[2025-06-06 18:54:11.991 PM] info: 	管理员登录成功
+[2025-06-06 18:54:11.992 PM] info: 	[0mPOST /api/admin/login [32m200[0m 79.996 ms - 601[0m
+[2025-06-06 18:54:12.018 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.844 ms - -[0m
+[2025-06-06 18:54:12.021 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.962 ms - -[0m
+[2025-06-07 17:13:19.184 PM] info: 	数据库优化完成
+[2025-06-07 17:13:19.190 PM] info: 	数据库VACUUM完成
+[2025-06-08 01:51:53.348 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-08 01:51:53.351 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-08 01:51:53.352 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-08 01:51:53.480 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-08 01:51:53.480 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-08 01:51:53.480 AM] info: 	- JWT认证系统
+[2025-06-08 01:51:53.480 AM] info: 	- 输入验证和XSS防护
+[2025-06-08 01:51:53.480 AM] info: 	- SQL注入防护
+[2025-06-08 01:51:53.480 AM] info: 	- 速率限制
+[2025-06-08 01:51:53.481 AM] info: 	- 安全响应头
+[2025-06-08 01:51:53.481 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-08 01:51:53.481 AM] info: 	- 数据库查询性能监控
+[2025-06-08 01:51:53.487 AM] info: 	SQLite WAL模式已启用
+[2025-06-08 01:51:58.779 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.292 ms - -[0m
+[2025-06-08 01:51:58.791 AM] info: 	Token刷新成功
+[2025-06-08 01:51:58.793 AM] info: 	[0mPOST /api/auth/refresh [32m200[0m 12.703 ms - 257[0m
+[2025-06-08 01:51:58.794 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.103 ms - -[0m
+[2025-06-08 01:51:58.795 AM] info: 	Token刷新成功
+[2025-06-08 01:51:58.796 AM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.132 ms - 257[0m
+[2025-06-08 01:52:03.946 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.165 ms - -[0m
+[2025-06-08 01:52:03.947 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.083 ms - -[0m
+[2025-06-08 01:52:03.950 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.059 ms - -[0m
+[2025-06-08 01:52:03.953 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.091 ms - -[0m
+[2025-06-08 01:52:03.956 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.069 ms - -[0m
+[2025-06-08 01:52:03.956 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.084 ms - -[0m
+[2025-06-08 01:52:03.957 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 8.849 ms - -[0m
+[2025-06-08 01:52:03.958 AM] info: 	[0mGET /api/providers [36m304[0m 3.115 ms - -[0m
+[2025-06-08 01:52:03.959 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 6.873 ms - -[0m
+[2025-06-08 01:52:03.962 AM] info: 	[0mGET /api/providers [36m304[0m 1.207 ms - -[0m
+[2025-06-08 01:52:03.963 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.017 ms - -[0m
+[2025-06-08 01:52:03.963 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.061 ms - -[0m
+[2025-06-08 01:52:11.211 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.593 ms - -[0m
+[2025-06-08 01:52:11.213 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.072 ms - -[0m
+[2025-06-08 01:52:11.214 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.064 ms - -[0m
+[2025-06-08 01:52:11.217 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.073 ms - -[0m
+[2025-06-08 01:52:11.218 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.069 ms - -[0m
+[2025-06-08 01:52:11.219 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.149 ms - -[0m
+[2025-06-08 01:52:11.219 AM] info: 	[0mGET /api/providers [36m304[0m 1.899 ms - -[0m
+[2025-06-08 01:52:11.220 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.067 ms - -[0m
+[2025-06-08 01:52:11.222 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 6.275 ms - -[0m
+[2025-06-08 01:52:11.223 AM] info: 	[0mGET /api/providers [36m304[0m 1.000 ms - -[0m
+[2025-06-08 01:52:11.224 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.694 ms - -[0m
+[2025-06-08 01:52:11.225 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.132 ms - -[0m
+[2025-06-08 01:52:26.394 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.109 ms - -[0m
+[2025-06-08 01:52:26.396 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.600 ms - -[0m
+[2025-06-08 01:52:26.398 AM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.670 ms - -[0m
+[2025-06-08 01:52:26.399 AM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.431 ms - -[0m
+[2025-06-08 01:52:26.429 AM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.086 ms - -[0m
+[2025-06-08 01:52:26.430 AM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.056 ms - -[0m
+[2025-06-08 01:52:26.432 AM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 1.575 ms - -[0m
+[2025-06-08 01:52:26.434 AM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.054 ms - -[0m
+[2025-06-08 01:52:26.434 AM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 1.219 ms - -[0m
+[2025-06-08 01:52:26.435 AM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.871 ms - -[0m
+[2025-06-08 01:52:26.437 AM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.580 ms - -[0m
+[2025-06-08 01:52:37.867 AM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.131 ms - -[0m
+[2025-06-08 01:52:37.871 AM] info: 	[0mGET /api/orders/RX250606-001/quotes [36m304[0m 1.123 ms - -[0m
+[2025-06-08 19:01:24.002 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-08 19:01:24.004 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-08 19:01:24.005 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-08 19:01:24.156 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-08 19:01:24.156 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-08 19:01:24.156 PM] info: 	- JWT认证系统
+[2025-06-08 19:01:24.156 PM] info: 	- 输入验证和XSS防护
+[2025-06-08 19:01:24.156 PM] info: 	- SQL注入防护
+[2025-06-08 19:01:24.156 PM] info: 	- 速率限制
+[2025-06-08 19:01:24.157 PM] info: 	- 安全响应头
+[2025-06-08 19:01:24.157 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-08 19:01:24.157 PM] info: 	- 数据库查询性能监控
+[2025-06-08 19:01:24.163 PM] info: 	SQLite WAL模式已启用
+[2025-06-08 19:01:28.595 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.346 ms - -[0m
+[2025-06-08 19:01:28.603 PM] info: 	Token刷新成功
+[2025-06-08 19:01:28.604 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 8.472 ms - 257[0m
+[2025-06-08 19:01:28.605 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.080 ms - -[0m
+[2025-06-08 19:01:28.606 PM] info: 	Token刷新成功
+[2025-06-08 19:01:28.606 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.897 ms - 257[0m
+[2025-06-08 19:01:32.205 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.183 ms - -[0m
+[2025-06-08 19:01:32.207 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.084 ms - -[0m
+[2025-06-08 19:01:32.208 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.077 ms - -[0m
+[2025-06-08 19:01:32.213 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.093 ms - -[0m
+[2025-06-08 19:01:32.216 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.085 ms - -[0m
+[2025-06-08 19:01:32.217 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.126 ms - -[0m
+[2025-06-08 19:01:32.218 PM] info: 	[0mGET /api/providers [36m304[0m 3.975 ms - -[0m
+[2025-06-08 19:01:32.219 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 9.822 ms - -[0m
+[2025-06-08 19:01:32.220 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 8.354 ms - -[0m
+[2025-06-08 19:01:32.222 PM] info: 	[0mGET /api/providers [36m304[0m 2.041 ms - -[0m
+[2025-06-08 19:01:32.224 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.871 ms - -[0m
+[2025-06-08 19:01:32.224 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.627 ms - -[0m
+[2025-06-08 19:01:42.743 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.419 ms - -[0m
+[2025-06-08 19:01:42.744 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.150 ms - -[0m
+[2025-06-08 19:01:42.764 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 3.706 ms - -[0m
+[2025-06-08 19:01:42.793 PM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.036 ms - -[0m
+[2025-06-08 19:01:42.793 PM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 2.928 ms - -[0m
+[2025-06-08 19:01:42.798 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 0.785 ms - -[0m
+[2025-06-08 19:01:42.800 PM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 1.020 ms - -[0m
+[2025-06-08 19:01:42.802 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.044 ms - -[0m
+[2025-06-08 19:01:42.803 PM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.072 ms - -[0m
+[2025-06-08 19:01:42.808 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.615 ms - -[0m
+[2025-06-08 19:01:42.809 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.553 ms - -[0m
+[2025-06-08 19:01:49.275 PM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.144 ms - -[0m
+[2025-06-08 19:01:49.280 PM] info: 	[0mGET /api/orders/RX250606-001/quotes [36m304[0m 1.178 ms - -[0m
