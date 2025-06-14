@@ -6,6 +6,41 @@ const logger = require('../config/logger');
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
+const crypto = require('crypto');
+
+// 配置multer用于文件上传
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '../uploads/restore');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    cb(null, `restore-${timestamp}-${file.originalname}`);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 500 * 1024 * 1024 // 500MB
+  },
+  fileFilter: function (req, file, cb) {
+    const allowedTypes = ['.tar.gz', '.zip'];
+    const fileExtension = path.extname(file.originalname).toLowerCase();
+    const isValidType = allowedTypes.some(type => file.originalname.toLowerCase().endsWith(type));
+
+    if (isValidType) {
+      cb(null, true);
+    } else {
+      cb(new Error('只支持 .tar.gz 和 .zip 格式的备份文件'));
+    }
+  }
+});
 
 // 获取备份配置
 router.get('/config', (req, res) => {
@@ -92,9 +127,9 @@ router.put('/config', [
     updateValues.push(qiniu_bucket);
   }
 
-  updateFields.push('qiniu_zone = ?', 'backup_frequency = ?', 'auto_backup_enabled = ?', 
+  updateFields.push('qiniu_zone = ?', 'backup_frequency = ?', 'auto_backup_enabled = ?',
                    'retention_days = ?', 'notification_enabled = ?', 'updated_at = ?');
-  updateValues.push(qiniu_zone, backup_frequency, auto_backup_enabled ? 1 : 0, 
+  updateValues.push(qiniu_zone, backup_frequency, auto_backup_enabled ? 1 : 0,
                    retention_days, notification_enabled ? 1 : 0, new Date().toISOString());
 
   if (wechat_webhook_url !== undefined) {
@@ -120,7 +155,7 @@ router.put('/config', [
           wechat_webhook_url, notification_enabled, created_at, updated_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      
+
       db.run(insertSql, [
         qiniu_access_key || '', qiniu_secret_key || '', qiniu_bucket || '', qiniu_zone,
         backup_frequency, auto_backup_enabled ? 1 : 0, retention_days,
@@ -130,7 +165,7 @@ router.put('/config', [
           logger.error('创建备份配置失败:', err.message);
           return res.status(500).json({ error: '创建备份配置失败' });
         }
-        
+
         logger.info('备份配置创建成功');
         res.json({ message: '备份配置保存成功' });
       });
@@ -187,8 +222,8 @@ router.post('/test-connection', (req, res) => {
         res.json({ success: true, message: '七牛云连接测试成功' });
       } else {
         logger.error('七牛云连接测试失败:', errorOutput);
-        res.status(400).json({ 
-          success: false, 
+        res.status(400).json({
+          success: false,
           error: '七牛云连接测试失败',
           details: errorOutput || output
         });
@@ -215,6 +250,9 @@ router.post('/execute', (req, res) => {
         }
       }
     );
+
+    // 立即返回响应，备份在后台执行
+    res.json({ message: '备份任务已启动，请稍后查看结果' });
 
     // 执行备份脚本
     const backupScript = path.join(__dirname, '../scripts/qiniu-backup.js');
@@ -244,7 +282,7 @@ router.post('/execute', (req, res) => {
     child.on('close', (code) => {
       const status = code === 0 ? 'success' : 'failed';
       const backupSize = extractBackupSize(output);
-      
+
       // 更新备份结果
       db.run(
         'UPDATE backup_config SET last_backup_status = ?, last_backup_size = ? WHERE id = 1',
@@ -252,29 +290,32 @@ router.post('/execute', (req, res) => {
         (err) => {
           if (err) {
             logger.error('更新备份结果失败:', err.message);
+          } else {
+            logger.info(`备份任务完成，状态: ${status}, 大小: ${backupSize || '未知'}`);
           }
         }
       );
 
       if (code === 0) {
         logger.info('手动备份执行成功');
-        res.json({ 
-          success: true, 
-          message: '备份执行成功',
-          size: backupSize
-        });
       } else {
-        logger.error('手动备份执行失败:', errorOutput);
-        res.status(500).json({ 
-          success: false, 
-          error: '备份执行失败',
-          details: errorOutput || output
-        });
+        logger.error('手动备份执行失败:', errorOutput || output);
       }
     });
 
-    // 立即返回响应，备份在后台执行
-    res.json({ message: '备份任务已启动，请稍后查看结果' });
+    child.on('error', (error) => {
+      logger.error('备份脚本启动失败:', error.message);
+      // 更新状态为失败
+      db.run(
+        'UPDATE backup_config SET last_backup_status = ? WHERE id = 1',
+        ['failed'],
+        (err) => {
+          if (err) {
+            logger.error('更新备份失败状态失败:', err.message);
+          }
+        }
+      );
+    });
   });
 });
 
@@ -298,6 +339,159 @@ router.get('/history', (req, res) => {
 
     res.json(history);
   });
+});
+
+// 下载最新备份
+router.get('/download', (req, res) => {
+  db.get('SELECT * FROM backup_config WHERE id = 1', (err, row) => {
+    if (err || !row || !row.qiniu_access_key || !row.qiniu_secret_key || !row.qiniu_bucket) {
+      return res.status(400).json({ error: '请先配置七牛云参数' });
+    }
+
+    // 执行下载脚本
+    const downloadScript = path.join(__dirname, '../scripts/download-backup.js');
+    const child = spawn('node', [downloadScript], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: {
+        ...process.env,
+        QINIU_ACCESS_KEY: row.qiniu_access_key,
+        QINIU_SECRET_KEY: row.qiniu_secret_key,
+        QINIU_BUCKET: row.qiniu_bucket,
+        QINIU_ZONE: row.qiniu_zone
+      }
+    });
+
+    let output = '';
+    let errorOutput = '';
+
+    child.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    child.stderr.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        // 从输出中提取下载的文件路径
+        const filePathMatch = output.match(/下载文件路径[：:]\s*([^\n\r]+)/);
+        if (filePathMatch) {
+          const filePath = filePathMatch[1].trim();
+          if (fs.existsSync(filePath)) {
+            res.download(filePath, (err) => {
+              if (err) {
+                logger.error('文件下载失败:', err.message);
+              }
+              // 下载完成后删除临时文件
+              try {
+                fs.unlinkSync(filePath);
+              } catch (e) {
+                logger.warn('清理临时文件失败:', e.message);
+              }
+            });
+            return;
+          }
+        }
+        res.status(500).json({ error: '下载文件不存在' });
+      } else {
+        logger.error('备份下载失败:', errorOutput);
+        res.status(500).json({
+          error: '备份下载失败',
+          details: errorOutput || output
+        });
+      }
+    });
+  });
+});
+
+// 上传并恢复备份文件
+router.post('/restore', upload.single('backupFile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: '请选择备份文件' });
+  }
+
+  let options;
+  try {
+    options = JSON.parse(req.body.options || '{}');
+  } catch (e) {
+    return res.status(400).json({ error: '恢复选项格式错误' });
+  }
+
+  const backupFilePath = req.file.path;
+  logger.info(`开始恢复操作，文件: ${req.file.filename}`);
+
+  // 返回警告信息，建议使用安全恢复脚本
+  res.json({
+    message: '⚠️ 为避免服务中断，建议使用安全恢复脚本执行恢复操作',
+    warning: '直接恢复可能导致服务不稳定',
+    recommendation: `请使用命令: node safe-restore.js "${backupFilePath}"`,
+    backupFile: backupFilePath
+  });
+
+  // 不在后台执行恢复，避免服务冲突
+  logger.warn('恢复请求已接收，但建议使用安全恢复脚本');
+});
+
+// 验证备份文件
+router.post('/verify', upload.single('backupFile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: '请选择备份文件' });
+  }
+
+  const backupFilePath = req.file.path;
+
+  try {
+    // 验证文件格式和完整性
+    const verifyScript = path.join(__dirname, '../scripts/verify-backup.js');
+    const child = spawn('node', [verifyScript, backupFilePath], {
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+
+    let output = '';
+    let errorOutput = '';
+
+    child.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    child.stderr.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    child.on('close', (code) => {
+      // 清理上传的文件
+      try {
+        fs.unlinkSync(backupFilePath);
+      } catch (e) {
+        logger.warn('清理验证文件失败:', e.message);
+      }
+
+      if (code === 0) {
+        try {
+          const result = JSON.parse(output);
+          res.json(result);
+        } catch (e) {
+          res.json({ valid: true, message: '备份文件验证通过' });
+        }
+      } else {
+        res.status(400).json({
+          valid: false,
+          error: '备份文件验证失败',
+          details: errorOutput || output
+        });
+      }
+    });
+  } catch (error) {
+    // 清理上传的文件
+    try {
+      fs.unlinkSync(backupFilePath);
+    } catch (e) {
+      logger.warn('清理验证文件失败:', e.message);
+    }
+
+    res.status(500).json({ error: '验证过程出错' });
+  }
 });
 
 // 辅助函数：从输出中提取备份大小

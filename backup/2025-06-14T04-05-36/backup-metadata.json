@@ -1,0 +1,25 @@
+{
+  "version": "2.0",
+  "timestamp": "2025-06-14T04-05-36",
+  "created_at": "2025-06-14T04:05:36.840Z",
+  "system_info": {
+    "app_name": "wlbj-logistics",
+    "app_version": "2.0.0",
+    "node_version": "v23.11.0",
+    "platform": "darwin"
+  },
+  "backup_info": {
+    "database_size": 53,
+    "config_size": 1144,
+    "log_size": 33008,
+    "total_size": 34205,
+    "components": [
+      "database",
+      "configs",
+      "logs"
+    ]
+  },
+  "checksum": "87bb13746cf7e36a68f038b81524e91df4ff25690008fac23588ca5b088fa972",
+  "package_size": 35893,
+  "package_name": "wlbj-backup-2025-06-14T04-05-36.tar.gz"
+}

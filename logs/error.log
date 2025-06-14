@@ -343,3 +343,81 @@ Error: listen EADDRINUSE: address already in use :::3000
     at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
     at node:internal/main/run_main_module:33:47
+[2025-06-14 11:17:27.664 AM] error: 	手动备份执行失败:
+[2025-06-14 11:22:22.720 AM] error: 	手动备份执行失败:
+[2025-06-14 11:53:23.455 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:23.456 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:23.456 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:23.456 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:23.456 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:23.468 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:23.470 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:25.945 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:25.945 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:25.945 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:25.945 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:25.946 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:25.948 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:25.948 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:25.951 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:25.951 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:25.951 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:39.695 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:39.696 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:39.697 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:39.700 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:39.701 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:39.706 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:39.707 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:39.707 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:39.707 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:39.707 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:48.205 AM] error: 	备份下载失败:
+[2025-06-14 11:54:21.788 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:21.788 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:21.788 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:54:21.788 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:21.788 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:21.799 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:54:21.801 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:21.801 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:21.802 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:21.805 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:25.194 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:25.194 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:25.194 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:25.194 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:25.194 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:55:35.961 AM] error: 	uncaughtException: Cannot read properties of undefined (reading 'total')
+TypeError: Cannot read properties of undefined (reading 'total')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:397:25
+    at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+[2025-06-14 11:58:24.891 AM] error: 	uncaughtException: Cannot read properties of undefined (reading 'total')
+TypeError: Cannot read properties of undefined (reading 'total')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:397:25
+    at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+[2025-06-14 12:07:34.336 PM] error: 	uncaughtException: Cannot read properties of undefined (reading 'total')
+TypeError: Cannot read properties of undefined (reading 'total')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:397:25
+    at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+[2025-06-14 12:08:26.233 PM] error: 	uncaughtException: Cannot read properties of undefined (reading 'total')
+TypeError: Cannot read properties of undefined (reading 'total')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:397:25
+    at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+[2025-06-14 12:17:30.396 PM] error: 	uncaughtException: Cannot read properties of undefined (reading 'total')
+TypeError: Cannot read properties of undefined (reading 'total')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:397:25
+    at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)

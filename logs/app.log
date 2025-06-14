@@ -2545,3 +2545,584 @@
 [2025-06-08 19:01:42.809 PM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.553 ms - -[0m
 [2025-06-08 19:01:49.275 PM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.144 ms - -[0m
 [2025-06-08 19:01:49.280 PM] info: 	[0mGET /api/orders/RX250606-001/quotes [36m304[0m 1.178 ms - -[0m
+[2025-06-14 10:57:32.123 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 10:57:32.125 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 10:57:32.125 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 10:57:32.248 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 10:57:32.248 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 10:57:32.248 AM] info: 	- JWT认证系统
+[2025-06-14 10:57:32.248 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 10:57:32.248 AM] info: 	- SQL注入防护
+[2025-06-14 10:57:32.248 AM] info: 	- 速率限制
+[2025-06-14 10:57:32.249 AM] info: 	- 安全响应头
+[2025-06-14 10:57:32.249 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 10:57:32.249 AM] info: 	- 数据库查询性能监控
+[2025-06-14 10:57:32.255 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 10:57:37.755 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.886 ms - -[0m
+[2025-06-14 10:57:37.767 AM] warn: 	Token刷新失败
+[2025-06-14 10:57:37.768 AM] info: 	[0mPOST /api/auth/refresh [33m403[0m 11.088 ms - 46[0m
+[2025-06-14 10:57:37.770 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.054 ms - -[0m
+[2025-06-14 10:57:37.774 AM] warn: 	Token刷新失败
+[2025-06-14 10:57:37.776 AM] info: 	[0mPOST /api/auth/refresh [33m403[0m 1.977 ms - 46[0m
+[2025-06-14 10:57:48.001 AM] info: 	管理员登录成功
+[2025-06-14 10:57:48.002 AM] info: 	[0mPOST /api/admin/login [32m200[0m 85.373 ms - 601[0m
+[2025-06-14 10:57:48.029 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.401 ms - -[0m
+[2025-06-14 10:57:48.031 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.710 ms - -[0m
+[2025-06-14 10:57:49.921 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.305 ms - -[0m
+[2025-06-14 10:57:49.930 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.348 ms - -[0m
+[2025-06-14 10:58:02.766 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.480 ms - -[0m
+[2025-06-14 10:58:02.774 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.915 ms - -[0m
+[2025-06-14 10:58:20.866 AM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.207 ms - -[0m
+[2025-06-14 10:58:20.872 AM] warn: 	用户登录失败：用户不存在或已禁用
+[2025-06-14 10:58:20.873 AM] info: 	[0mPOST /api/auth/login [33m401[0m 3.286 ms - 43[0m
+[2025-06-14 10:58:24.736 AM] info: 	用户登录成功
+[2025-06-14 10:58:24.736 AM] info: 	[0mPOST /api/auth/login [32m200[0m 84.610 ms - 653[0m
+[2025-06-14 10:58:24.811 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.154 ms - -[0m
+[2025-06-14 10:58:24.813 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.361 ms - -[0m
+[2025-06-14 10:58:24.816 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.084 ms - -[0m
+[2025-06-14 10:58:24.817 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.076 ms - -[0m
+[2025-06-14 10:58:24.819 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.039 ms - -[0m
+[2025-06-14 10:58:24.820 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.053 ms - -[0m
+[2025-06-14 10:58:24.820 AM] info: 	[0mGET /api/providers [36m304[0m 1.058 ms - -[0m
+[2025-06-14 10:58:24.822 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.029 ms - -[0m
+[2025-06-14 10:58:24.823 AM] info: 	[0mGET /api/providers [36m304[0m 1.268 ms - -[0m
+[2025-06-14 10:58:24.824 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.273 ms - -[0m
+[2025-06-14 10:58:24.825 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.357 ms - -[0m
+[2025-06-14 10:58:24.826 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.437 ms - -[0m
+[2025-06-14 10:58:32.175 AM] info: 	[0mOPTIONS /api/orders/RX250606-001/quotes [32m200[0m 0.146 ms - -[0m
+[2025-06-14 10:58:32.181 AM] info: 	[0mGET /api/orders/RX250606-001/quotes [36m304[0m 2.119 ms - -[0m
+[2025-06-14 10:58:41.508 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.179 ms - -[0m
+[2025-06-14 10:58:41.509 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=test-logistics [32m200[0m 0.080 ms - -[0m
+[2025-06-14 10:58:41.510 AM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.699 ms - -[0m
+[2025-06-14 10:58:41.511 AM] info: 	[0mGET /api/providers/details?accessKey=test-logistics [36m304[0m 0.400 ms - -[0m
+[2025-06-14 10:58:41.537 AM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.060 ms - -[0m
+[2025-06-14 10:58:41.537 AM] info: 	[0mOPTIONS /api/providers/test-logistics/available-orders [32m200[0m 0.061 ms - -[0m
+[2025-06-14 10:58:41.540 AM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 1.909 ms - -[0m
+[2025-06-14 10:58:41.541 AM] info: 	[0mOPTIONS /api/providers/test-logistics/quote-history [32m200[0m 0.044 ms - -[0m
+[2025-06-14 10:58:41.542 AM] info: 	[0mGET /api/providers/test-logistics/available-orders [36m304[0m 1.058 ms - -[0m
+[2025-06-14 10:58:41.543 AM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 1.023 ms - -[0m
+[2025-06-14 10:58:41.544 AM] info: 	[0mGET /api/providers/test-logistics/quote-history [36m304[0m 0.534 ms - -[0m
+[2025-06-14 11:02:54.950 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.084 ms - -[0m
+[2025-06-14 11:02:54.951 AM] info: 	[0mOPTIONS /api/providers/details?accessKey=new-test-key [32m200[0m 0.074 ms - -[0m
+[2025-06-14 11:02:54.952 AM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.631 ms - -[0m
+[2025-06-14 11:02:54.953 AM] info: 	[0mGET /api/providers/details?accessKey=new-test-key [36m304[0m 0.245 ms - -[0m
+[2025-06-14 11:02:54.987 AM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.085 ms - -[0m
+[2025-06-14 11:02:54.988 AM] info: 	[0mOPTIONS /api/providers/new-test-key/available-orders [32m200[0m 0.061 ms - -[0m
+[2025-06-14 11:02:54.989 AM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.668 ms - -[0m
+[2025-06-14 11:02:54.990 AM] info: 	[0mGET /api/providers/new-test-key/available-orders [36m304[0m 0.527 ms - -[0m
+[2025-06-14 11:02:54.990 AM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.041 ms - -[0m
+[2025-06-14 11:02:54.991 AM] info: 	[0mOPTIONS /api/providers/new-test-key/quote-history [32m200[0m 0.042 ms - -[0m
+[2025-06-14 11:02:54.992 AM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.650 ms - -[0m
+[2025-06-14 11:02:54.993 AM] info: 	[0mGET /api/providers/new-test-key/quote-history [36m304[0m 0.550 ms - -[0m
+[2025-06-14 11:06:10.245 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.600 ms - -[0m
+[2025-06-14 11:06:10.250 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.087 ms - -[0m
+[2025-06-14 11:06:10.664 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 4.454 ms - -[0m
+[2025-06-14 11:06:10.664 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.929 ms - -[0m
+[2025-06-14 11:06:10.671 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.422 ms - -[0m
+[2025-06-14 11:06:10.672 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.119 ms - -[0m
+[2025-06-14 11:06:11.393 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.037 ms - -[0m
+[2025-06-14 11:06:11.393 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.954 ms - -[0m
+[2025-06-14 11:06:11.397 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.867 ms - -[0m
+[2025-06-14 11:06:11.397 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.250 ms - -[0m
+[2025-06-14 11:10:55.621 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.122 ms - -[0m
+[2025-06-14 11:10:55.621 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.051 ms - -[0m
+[2025-06-14 11:10:55.622 AM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.046 ms - -[0m
+[2025-06-14 11:10:55.622 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.039 ms - -[0m
+[2025-06-14 11:10:55.623 AM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.054 ms - -[0m
+[2025-06-14 11:10:55.625 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.050 ms - -[0m
+[2025-06-14 11:10:55.626 AM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.057 ms - -[0m
+[2025-06-14 11:10:55.628 AM] info: 	Token刷新成功
+[2025-06-14 11:10:55.628 AM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.697 ms - 257[0m
+[2025-06-14 11:10:55.629 AM] info: 	[0mGET /api/providers [36m304[0m 3.772 ms - -[0m
+[2025-06-14 11:10:55.630 AM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.055 ms - -[0m
+[2025-06-14 11:10:55.630 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 7.351 ms - -[0m
+[2025-06-14 11:10:55.631 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.564 ms - -[0m
+[2025-06-14 11:10:55.632 AM] info: 	Token刷新成功
+[2025-06-14 11:10:55.633 AM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.856 ms - 257[0m
+[2025-06-14 11:10:55.634 AM] info: 	[0mGET /api/providers [36m304[0m 2.984 ms - -[0m
+[2025-06-14 11:10:55.635 AM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.837 ms - -[0m
+[2025-06-14 11:10:55.635 AM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.351 ms - -[0m
+[2025-06-14 11:17:09.950 AM] info: 	管理员登录成功
+[2025-06-14 11:17:09.951 AM] info: 	[0mPOST /api/admin/login [32m200[0m 81.862 ms - 601[0m
+[2025-06-14 11:17:09.975 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.956 ms - -[0m
+[2025-06-14 11:17:09.977 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.787 ms - -[0m
+[2025-06-14 11:17:13.716 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.536 ms - -[0m
+[2025-06-14 11:17:13.717 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.208 ms - -[0m
+[2025-06-14 11:17:13.721 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.128 ms - -[0m
+[2025-06-14 11:17:13.724 AM] info: 	[0mGET /api/backup/config [36m304[0m 3.393 ms - -[0m
+[2025-06-14 11:17:24.833 AM] info: 	[0mPOST /api/backup/test-connection [32m200[0m 1658.788 ms - 56[0m
+[2025-06-14 11:17:27.414 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 3.964 ms - 59[0m
+[2025-06-14 11:17:27.664 AM] error: 	手动备份执行失败:
+[2025-06-14 11:21:56.889 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 11:21:56.891 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 11:21:56.892 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 11:21:57.018 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 11:21:57.018 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 11:21:57.018 AM] info: 	- JWT认证系统
+[2025-06-14 11:21:57.018 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 11:21:57.018 AM] info: 	- SQL注入防护
+[2025-06-14 11:21:57.018 AM] info: 	- 速率限制
+[2025-06-14 11:21:57.018 AM] info: 	- 安全响应头
+[2025-06-14 11:21:57.018 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 11:21:57.018 AM] info: 	- 数据库查询性能监控
+[2025-06-14 11:21:57.020 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 11:22:21.372 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 2.506 ms - 59[0m
+[2025-06-14 11:22:22.720 AM] error: 	手动备份执行失败:
+[2025-06-14 11:22:22.721 AM] info: 	备份任务完成，状态: failed, 大小: 29.57 KB
+[2025-06-14 11:23:29.033 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 0.674 ms - 59[0m
+[2025-06-14 11:23:30.512 AM] info: 	手动备份执行成功
+[2025-06-14 11:23:30.513 AM] info: 	备份任务完成，状态: success, 大小: 29.66 KB
+[2025-06-14 11:24:33.401 AM] info: 	[0mGET /api/admin/stats [36m304[0m 5.910 ms - -[0m
+[2025-06-14 11:24:33.404 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.953 ms - -[0m
+[2025-06-14 11:25:19.968 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.386 ms - -[0m
+[2025-06-14 11:25:19.971 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.018 ms - -[0m
+[2025-06-14 11:25:21.894 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.872 ms - 74[0m
+[2025-06-14 11:25:21.895 AM] info: 	[0mGET /api/backup/config [32m200[0m 2.955 ms - 463[0m
+[2025-06-14 11:25:21.903 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.871 ms - -[0m
+[2025-06-14 11:25:21.905 AM] info: 	[0mGET /api/backup/config [36m304[0m 3.097 ms - -[0m
+[2025-06-14 11:25:35.659 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 1.143 ms - 59[0m
+[2025-06-14 11:25:37.210 AM] info: 	手动备份执行成功
+[2025-06-14 11:25:37.211 AM] info: 	备份任务完成，状态: success, 大小: 29.79 KB
+[2025-06-14 11:25:40.207 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.543 ms - 74[0m
+[2025-06-14 11:25:40.208 AM] info: 	[0mGET /api/backup/config [32m200[0m 2.677 ms - 463[0m
+[2025-06-14 11:25:45.266 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.488 ms - -[0m
+[2025-06-14 11:25:45.269 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.965 ms - -[0m
+[2025-06-14 11:25:46.723 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.629 ms - -[0m
+[2025-06-14 11:25:46.724 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.394 ms - -[0m
+[2025-06-14 11:25:46.725 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.178 ms - -[0m
+[2025-06-14 11:25:46.726 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.150 ms - -[0m
+[2025-06-14 11:26:04.260 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.493 ms - -[0m
+[2025-06-14 11:26:04.262 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.806 ms - -[0m
+[2025-06-14 11:26:06.625 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.573 ms - -[0m
+[2025-06-14 11:26:06.626 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.351 ms - -[0m
+[2025-06-14 11:26:06.630 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.878 ms - -[0m
+[2025-06-14 11:26:06.631 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.349 ms - -[0m
+[2025-06-14 11:26:20.304 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 0.789 ms - 59[0m
+[2025-06-14 11:26:21.749 AM] info: 	手动备份执行成功
+[2025-06-14 11:26:21.750 AM] info: 	备份任务完成，状态: success, 大小: 29.97 KB
+[2025-06-14 11:26:24.588 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.463 ms - 74[0m
+[2025-06-14 11:26:24.589 AM] info: 	[0mGET /api/backup/config [32m200[0m 2.382 ms - 463[0m
+[2025-06-14 11:26:25.525 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.985 ms - -[0m
+[2025-06-14 11:26:25.529 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.294 ms - -[0m
+[2025-06-14 11:26:28.256 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.210 ms - -[0m
+[2025-06-14 11:26:28.257 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.547 ms - -[0m
+[2025-06-14 11:26:28.264 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.563 ms - -[0m
+[2025-06-14 11:26:28.265 AM] info: 	[0mGET /api/backup/config [36m304[0m 3.222 ms - -[0m
+[2025-06-14 11:28:10.126 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.523 ms - -[0m
+[2025-06-14 11:28:10.127 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.088 ms - -[0m
+[2025-06-14 11:28:10.132 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.048 ms - -[0m
+[2025-06-14 11:28:10.133 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.625 ms - -[0m
+[2025-06-14 11:36:12.062 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.938 ms - -[0m
+[2025-06-14 11:36:12.063 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.390 ms - -[0m
+[2025-06-14 11:36:12.064 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.138 ms - -[0m
+[2025-06-14 11:36:12.064 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.118 ms - -[0m
+[2025-06-14 11:36:29.059 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.176 ms - -[0m
+[2025-06-14 11:36:29.060 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.756 ms - -[0m
+[2025-06-14 11:36:29.061 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.130 ms - -[0m
+[2025-06-14 11:36:29.062 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.119 ms - -[0m
+[2025-06-14 11:36:29.062 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.105 ms - -[0m
+[2025-06-14 11:36:29.063 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.088 ms - -[0m
+[2025-06-14 11:36:29.064 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.348 ms - -[0m
+[2025-06-14 11:36:29.065 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.125 ms - -[0m
+[2025-06-14 11:37:02.065 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.723 ms - -[0m
+[2025-06-14 11:37:02.065 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.776 ms - -[0m
+[2025-06-14 11:37:02.068 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.332 ms - -[0m
+[2025-06-14 11:37:02.069 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.272 ms - -[0m
+[2025-06-14 11:37:15.060 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.717 ms - -[0m
+[2025-06-14 11:37:15.060 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.564 ms - -[0m
+[2025-06-14 11:37:15.061 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.150 ms - -[0m
+[2025-06-14 11:37:15.062 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.168 ms - -[0m
+[2025-06-14 11:37:31.067 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.130 ms - -[0m
+[2025-06-14 11:37:31.068 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.425 ms - -[0m
+[2025-06-14 11:37:31.072 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.103 ms - -[0m
+[2025-06-14 11:37:31.073 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.353 ms - -[0m
+[2025-06-14 11:37:58.063 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.459 ms - -[0m
+[2025-06-14 11:37:58.064 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.836 ms - -[0m
+[2025-06-14 11:37:58.068 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.974 ms - -[0m
+[2025-06-14 11:37:58.070 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.396 ms - -[0m
+[2025-06-14 11:41:41.755 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 0.387 ms - 59[0m
+[2025-06-14 11:41:42.533 AM] info: 	手动备份执行成功
+[2025-06-14 11:41:42.534 AM] info: 	备份任务完成，状态: success, 大小: 31.96 KB
+[2025-06-14 11:44:19.686 AM] info: 	管理员登录成功
+[2025-06-14 11:44:19.686 AM] info: 	[0mPOST /api/admin/login [32m200[0m 93.001 ms - 601[0m
+[2025-06-14 11:44:19.709 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.945 ms - -[0m
+[2025-06-14 11:44:19.712 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.934 ms - -[0m
+[2025-06-14 11:44:21.866 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.494 ms - 74[0m
+[2025-06-14 11:44:21.867 AM] info: 	[0mGET /api/backup/config [32m200[0m 1.952 ms - 463[0m
+[2025-06-14 11:44:21.874 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.159 ms - -[0m
+[2025-06-14 11:44:21.875 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.369 ms - -[0m
+[2025-06-14 11:44:23.084 AM] info: 	[0mGET /api/admin/stats [36m304[0m 3.954 ms - -[0m
+[2025-06-14 11:44:23.086 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 3.090 ms - -[0m
+[2025-06-14 11:44:23.094 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.674 ms - -[0m
+[2025-06-14 11:44:23.095 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.291 ms - -[0m
+[2025-06-14 11:44:23.633 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.851 ms - -[0m
+[2025-06-14 11:44:23.637 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.092 ms - -[0m
+[2025-06-14 11:44:39.194 AM] info: 	管理员创建用户成功
+[2025-06-14 11:44:39.194 AM] info: 	[0mPOST /api/users/create [32m201[0m 87.558 ms - 192[0m
+[2025-06-14 11:44:39.224 AM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 0.525 ms - 748[0m
+[2025-06-14 11:44:47.214 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.238 ms - -[0m
+[2025-06-14 11:44:47.214 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.513 ms - -[0m
+[2025-06-14 11:44:47.218 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.340 ms - -[0m
+[2025-06-14 11:44:47.219 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.255 ms - -[0m
+[2025-06-14 11:45:00.244 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 1.029 ms - 59[0m
+[2025-06-14 11:45:00.953 AM] info: 	手动备份执行成功
+[2025-06-14 11:45:00.953 AM] info: 	备份任务完成，状态: success, 大小: 32.24 KB
+[2025-06-14 11:45:04.516 AM] info: 	[0mGET /api/admin/stats [32m200[0m 1.366 ms - 133[0m
+[2025-06-14 11:45:04.519 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.772 ms - -[0m
+[2025-06-14 11:45:05.977 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.411 ms - 74[0m
+[2025-06-14 11:45:05.978 AM] info: 	[0mGET /api/backup/config [32m200[0m 1.925 ms - 463[0m
+[2025-06-14 11:45:05.987 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.067 ms - -[0m
+[2025-06-14 11:45:05.989 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.043 ms - -[0m
+[2025-06-14 11:45:11.643 AM] info: 	[0mGET /api/backup/download [36m302[0m 1.908 ms - 63[0m
+[2025-06-14 11:45:11.649 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.732 ms - 63[0m
+[2025-06-14 11:45:11.654 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.305 ms - 63[0m
+[2025-06-14 11:45:11.658 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.335 ms - 63[0m
+[2025-06-14 11:45:11.661 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.435 ms - 63[0m
+[2025-06-14 11:45:11.665 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.490 ms - 63[0m
+[2025-06-14 11:45:11.668 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.294 ms - 63[0m
+[2025-06-14 11:45:11.673 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.398 ms - 63[0m
+[2025-06-14 11:45:11.677 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.463 ms - 63[0m
+[2025-06-14 11:45:11.680 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.348 ms - 63[0m
+[2025-06-14 11:45:11.683 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.358 ms - 63[0m
+[2025-06-14 11:45:11.686 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.270 ms - 63[0m
+[2025-06-14 11:45:11.689 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.164 ms - 63[0m
+[2025-06-14 11:45:11.692 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.257 ms - 63[0m
+[2025-06-14 11:45:11.694 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.156 ms - 63[0m
+[2025-06-14 11:45:11.697 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.144 ms - 63[0m
+[2025-06-14 11:45:11.699 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.152 ms - 63[0m
+[2025-06-14 11:45:11.701 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.133 ms - 63[0m
+[2025-06-14 11:45:11.704 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.169 ms - 63[0m
+[2025-06-14 11:45:11.706 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.146 ms - 63[0m
+[2025-06-14 11:45:11.709 AM] info: 	[0mGET /api/backup/download [36m302[0m 0.151 ms - 63[0m
+[2025-06-14 11:46:06.865 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.377 ms - -[0m
+[2025-06-14 11:46:06.866 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 4.965 ms - -[0m
+[2025-06-14 11:46:06.878 AM] info: 	[0mGET /api/admin/stats [36m304[0m 3.097 ms - -[0m
+[2025-06-14 11:46:06.879 AM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.699 ms - -[0m
+[2025-06-14 11:46:07.679 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.468 ms - -[0m
+[2025-06-14 11:46:07.685 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.537 ms - -[0m
+[2025-06-14 11:46:11.261 AM] info: 	用户删除成功
+[2025-06-14 11:46:11.262 AM] info: 	[0mDELETE /api/users/942ea7d9-d321-4df4-bd38-d548a51a9343 [32m200[0m 3.916 ms - 32[0m
+[2025-06-14 11:46:11.272 AM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 1.780 ms - 578[0m
+[2025-06-14 11:46:13.478 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.434 ms - -[0m
+[2025-06-14 11:46:13.479 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.286 ms - -[0m
+[2025-06-14 11:46:13.486 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.057 ms - -[0m
+[2025-06-14 11:46:13.487 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.969 ms - -[0m
+[2025-06-14 11:50:15.432 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 0.608 ms - 59[0m
+[2025-06-14 11:50:16.180 AM] info: 	手动备份执行成功
+[2025-06-14 11:50:16.180 AM] info: 	备份任务完成，状态: success, 大小: 32.77 KB
+[2025-06-14 11:51:04.456 AM] info: 	[0mGET /api/admin/stats [32m200[0m 2.021 ms - 133[0m
+[2025-06-14 11:51:04.460 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.874 ms - -[0m
+[2025-06-14 11:51:40.928 AM] info: 	[0mPOST /api/backup/verify [33m404[0m 0.682 ms - 157[0m
+[2025-06-14 11:51:42.938 AM] info: 	[0mPOST /api/backup/restore [33m404[0m 1.350 ms - 158[0m
+[2025-06-14 11:52:11.118 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 11:52:11.120 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 11:52:11.120 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 11:52:11.247 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 11:52:11.247 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 11:52:11.247 AM] info: 	- JWT认证系统
+[2025-06-14 11:52:11.247 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 11:52:11.247 AM] info: 	- SQL注入防护
+[2025-06-14 11:52:11.247 AM] info: 	- 速率限制
+[2025-06-14 11:52:11.247 AM] info: 	- 安全响应头
+[2025-06-14 11:52:11.247 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 11:52:11.247 AM] info: 	- 数据库查询性能监控
+[2025-06-14 11:52:11.249 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 11:52:40.473 AM] info: 	[0mPOST /api/backup/verify [32m200[0m 35.249 ms - 997[0m
+[2025-06-14 11:52:42.483 AM] info: 	开始恢复操作，文件: restore-2025-06-14T03-52-42-481Z-wlbj-backup-2025-06-14T03-50-15.tar.gz
+[2025-06-14 11:52:42.489 AM] info: 	[0mPOST /api/backup/restore [32m200[0m 4.725 ms - 59[0m
+[2025-06-14 11:52:42.558 AM] info: 	数据恢复执行成功
+[2025-06-14 11:53:23.455 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:23.456 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:23.456 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:23.456 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:23.456 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:23.459 AM] info: 	[0mGET /api/admin/stats [32m200[0m 17.994 ms - 133[0m
+[2025-06-14 11:53:23.468 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:23.470 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:23.470 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:23.472 AM] info: 	[0mGET /api/admin/stats [36m304[0m 7.221 ms - -[0m
+[2025-06-14 11:53:25.945 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:25.945 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:25.945 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:25.945 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:25.946 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:25.946 AM] info: 	[0mGET /api/admin/stats [36m304[0m 16.146 ms - -[0m
+[2025-06-14 11:53:25.948 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:25.948 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:25.951 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:25.951 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:25.951 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:25.952 AM] info: 	[0mGET /api/admin/stats [36m304[0m 3.728 ms - -[0m
+[2025-06-14 11:53:29.377 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.690 ms - 74[0m
+[2025-06-14 11:53:29.378 AM] info: 	[0mGET /api/backup/config [32m200[0m 2.635 ms - 463[0m
+[2025-06-14 11:53:29.389 AM] info: 	[0mGET /api/backup/history [36m304[0m 2.824 ms - -[0m
+[2025-06-14 11:53:29.390 AM] info: 	[0mGET /api/backup/config [36m304[0m 2.441 ms - -[0m
+[2025-06-14 11:53:36.641 AM] info: 	[0mPOST /api/backup/execute [32m200[0m 1.517 ms - 59[0m
+[2025-06-14 11:53:37.385 AM] info: 	手动备份执行成功
+[2025-06-14 11:53:37.386 AM] info: 	备份任务完成，状态: success, 大小: 33.45 KB
+[2025-06-14 11:53:39.695 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:39.696 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:39.697 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:39.700 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:39.701 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:39.702 AM] info: 	[0mGET /api/admin/stats [36m304[0m 16.014 ms - -[0m
+[2025-06-14 11:53:39.706 AM] error: 	获取订单总数失败
+[2025-06-14 11:53:39.707 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:53:39.707 AM] error: 	获取报价统计失败
+[2025-06-14 11:53:39.707 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:53:39.707 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:53:39.708 AM] info: 	[0mGET /api/admin/stats [36m304[0m 2.599 ms - -[0m
+[2025-06-14 11:53:41.945 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.464 ms - -[0m
+[2025-06-14 11:53:41.952 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.832 ms - -[0m
+[2025-06-14 11:53:42.624 AM] info: 	[0mGET /api/backup/history [32m200[0m 1.288 ms - 74[0m
+[2025-06-14 11:53:42.625 AM] info: 	[0mGET /api/backup/config [32m200[0m 2.946 ms - 463[0m
+[2025-06-14 11:53:42.631 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.183 ms - -[0m
+[2025-06-14 11:53:42.632 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.840 ms - -[0m
+[2025-06-14 11:53:48.205 AM] error: 	备份下载失败:
+[2025-06-14 11:53:48.206 AM] info: 	[0mGET /api/backup/download [31m500[0m 888.068 ms - 146[0m
+[2025-06-14 11:53:51.620 AM] info: 	[0mPOST /api/backup/test-connection [32m200[0m 535.810 ms - 56[0m
+[2025-06-14 11:54:21.788 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:21.788 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:21.788 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:54:21.788 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:21.788 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:21.790 AM] info: 	[0mGET /api/admin/stats [36m304[0m 3.411 ms - -[0m
+[2025-06-14 11:54:21.799 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:54:21.801 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:21.801 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:21.802 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:21.805 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:21.807 AM] info: 	[0mGET /api/admin/stats [36m304[0m 12.434 ms - -[0m
+[2025-06-14 11:54:24.060 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.603 ms - -[0m
+[2025-06-14 11:54:24.061 AM] info: 	[0mGET /api/backup/config [36m304[0m 3.344 ms - -[0m
+[2025-06-14 11:54:24.066 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.877 ms - -[0m
+[2025-06-14 11:54:24.067 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.256 ms - -[0m
+[2025-06-14 11:54:25.194 AM] error: 	获取订单总数失败
+[2025-06-14 11:54:25.194 AM] error: 	获取报价统计失败
+[2025-06-14 11:54:25.194 AM] error: 	获取物流公司统计失败
+[2025-06-14 11:54:25.194 AM] error: 	获取已关闭订单数失败
+[2025-06-14 11:54:25.194 AM] error: 	获取活跃订单数失败
+[2025-06-14 11:54:25.195 AM] info: 	[0mGET /api/admin/stats [36m304[0m 4.634 ms - -[0m
+[2025-06-14 11:55:24.944 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 11:55:24.946 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 11:55:24.946 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 11:55:25.069 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 11:55:25.069 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 11:55:25.069 AM] info: 	- JWT认证系统
+[2025-06-14 11:55:25.069 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 11:55:25.069 AM] info: 	- SQL注入防护
+[2025-06-14 11:55:25.069 AM] info: 	- 速率限制
+[2025-06-14 11:55:25.070 AM] info: 	- 安全响应头
+[2025-06-14 11:55:25.070 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 11:55:25.070 AM] info: 	- 数据库查询性能监控
+[2025-06-14 11:55:25.072 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 11:55:33.021 AM] info: 	[0mGET /api/admin/stats [32m200[0m 6.710 ms - 133[0m
+[2025-06-14 11:55:33.026 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.277 ms - -[0m
+[2025-06-14 11:55:35.142 AM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 2.442 ms - 51[0m
+[2025-06-14 11:55:35.150 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.923 ms - -[0m
+[2025-06-14 11:56:45.462 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 11:56:45.464 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 11:56:45.464 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 11:56:45.589 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 11:56:45.589 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 11:56:45.589 AM] info: 	- JWT认证系统
+[2025-06-14 11:56:45.589 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 11:56:45.589 AM] info: 	- SQL注入防护
+[2025-06-14 11:56:45.589 AM] info: 	- 速率限制
+[2025-06-14 11:56:45.590 AM] info: 	- 安全响应头
+[2025-06-14 11:56:45.590 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 11:56:45.590 AM] info: 	- 数据库查询性能监控
+[2025-06-14 11:56:45.595 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 11:57:15.057 AM] info: 	[0mGET /api/backup/config [32m200[0m 1.961 ms - 375[0m
+[2025-06-14 11:57:54.367 AM] info: 	[0mGET /api/admin/stats [32m200[0m 2.861 ms - 133[0m
+[2025-06-14 11:57:54.369 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.684 ms - -[0m
+[2025-06-14 11:58:06.028 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.689 ms - -[0m
+[2025-06-14 11:58:06.034 AM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.413 ms - -[0m
+[2025-06-14 11:58:08.441 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.446 ms - -[0m
+[2025-06-14 11:58:08.445 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.914 ms - -[0m
+[2025-06-14 11:58:18.693 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.776 ms - -[0m
+[2025-06-14 11:58:18.697 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.963 ms - -[0m
+[2025-06-14 11:58:19.202 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.917 ms - -[0m
+[2025-06-14 11:58:19.204 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.641 ms - -[0m
+[2025-06-14 11:58:19.637 AM] info: 	[0mGET / [36m302[0m 0.675 ms - 44[0m
+[2025-06-14 11:58:19.640 AM] info: 	[0mGET /api/backup/config [32m200[0m 0.254 ms - 375[0m
+[2025-06-14 11:58:19.646 AM] info: 	[0mGET /api/backup/history [32m200[0m 4.432 ms - 2[0m
+[2025-06-14 11:58:19.647 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.837 ms - -[0m
+[2025-06-14 11:58:19.649 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.620 ms - -[0m
+[2025-06-14 11:58:20.159 AM] info: 	[0mGET /api/admin/stats [36m304[0m 0.885 ms - -[0m
+[2025-06-14 11:58:20.162 AM] info: 	[0mGET /api/admin/stats [36m304[0m 1.486 ms - -[0m
+[2025-06-14 11:58:20.833 AM] info: 	[0mGET /api/backup/config [32m200[0m 1.125 ms - 375[0m
+[2025-06-14 11:58:20.835 AM] info: 	[0mGET /api/backup/history [32m200[0m 1.619 ms - 2[0m
+[2025-06-14 11:58:20.836 AM] info: 	[0mGET /api/backup/config [36m304[0m 0.205 ms - -[0m
+[2025-06-14 11:58:20.837 AM] info: 	[0mGET /api/backup/history [36m304[0m 0.106 ms - -[0m
+[2025-06-14 11:58:22.021 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.369 ms - -[0m
+[2025-06-14 11:58:22.023 AM] info: 	[0mGET /api/backup/config [36m304[0m 3.099 ms - -[0m
+[2025-06-14 11:58:22.030 AM] info: 	[0mGET /api/backup/history [36m304[0m 1.180 ms - -[0m
+[2025-06-14 11:58:22.031 AM] info: 	[0mGET /api/backup/config [36m304[0m 1.843 ms - -[0m
+[2025-06-14 11:58:44.232 AM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 11:58:44.234 AM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 11:58:44.234 AM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 11:58:44.358 AM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 11:58:44.358 AM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 11:58:44.358 AM] info: 	- JWT认证系统
+[2025-06-14 11:58:44.358 AM] info: 	- 输入验证和XSS防护
+[2025-06-14 11:58:44.358 AM] info: 	- SQL注入防护
+[2025-06-14 11:58:44.358 AM] info: 	- 速率限制
+[2025-06-14 11:58:44.358 AM] info: 	- 安全响应头
+[2025-06-14 11:58:44.359 AM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 11:58:44.359 AM] info: 	- 数据库查询性能监控
+[2025-06-14 11:58:44.362 AM] info: 	SQLite WAL模式已启用
+[2025-06-14 11:58:46.468 AM] info: 	管理员创建用户成功
+[2025-06-14 11:58:46.469 AM] info: 	[0mPOST /api/users/create [32m201[0m 91.638 ms - 196[0m
+[2025-06-14 11:58:46.499 AM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 0.929 ms - 224[0m
+[2025-06-14 11:59:14.702 AM] info: 	[0mGET / [36m302[0m 0.633 ms - 44[0m
+[2025-06-14 11:59:14.705 AM] info: 	[0mGET /api/backup/config [32m200[0m 0.376 ms - 375[0m
+[2025-06-14 11:59:14.706 AM] info: 	[0mGET /api/backup/history [32m200[0m 0.277 ms - 2[0m
+[2025-06-14 11:59:22.640 AM] info: 	[0mPOST /api/backup/verify [32m200[0m 33.330 ms - 997[0m
+[2025-06-14 11:59:24.650 AM] info: 	开始恢复操作，文件: restore-2025-06-14T03-59-24-647Z-wlbj-backup-2025-06-14T03-50-15.tar.gz
+[2025-06-14 11:59:24.653 AM] info: 	[0mPOST /api/backup/restore [32m200[0m 4.785 ms - 59[0m
+[2025-06-14 11:59:24.719 AM] info: 	数据恢复执行成功
+[2025-06-14 12:03:15.329 PM] info: 	管理员登录成功
+[2025-06-14 12:03:15.330 PM] info: 	[0mPOST /api/admin/login [32m200[0m 83.130 ms - 601[0m
+[2025-06-14 12:03:15.351 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.847 ms - 133[0m
+[2025-06-14 12:03:15.354 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.886 ms - -[0m
+[2025-06-14 12:03:17.021 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.682 ms - -[0m
+[2025-06-14 12:03:17.028 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 1.934 ms - 227[0m
+[2025-06-14 12:03:32.767 PM] info: 	[0mPOST /api/users/create [33m400[0m 4.462 ms - 30[0m
+[2025-06-14 12:03:36.913 PM] info: 	管理员创建用户成功
+[2025-06-14 12:03:36.913 PM] info: 	[0mPOST /api/users/create [32m201[0m 84.142 ms - 197[0m
+[2025-06-14 12:03:36.945 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 0.788 ms - 399[0m
+[2025-06-14 12:03:43.136 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.804 ms - -[0m
+[2025-06-14 12:03:43.137 PM] info: 	[0mGET /api/backup/config [36m304[0m 3.744 ms - -[0m
+[2025-06-14 12:03:43.140 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.573 ms - -[0m
+[2025-06-14 12:03:43.142 PM] info: 	[0mGET /api/backup/config [36m304[0m 0.527 ms - -[0m
+[2025-06-14 12:05:30.103 PM] info: 	备份配置更新成功
+[2025-06-14 12:05:30.104 PM] info: 	[0mPUT /api/backup/config [32m200[0m 5.769 ms - 38[0m
+[2025-06-14 12:05:30.113 PM] info: 	[0mGET /api/backup/config [32m200[0m 0.884 ms - 428[0m
+[2025-06-14 12:05:34.378 PM] info: 	[0mPOST /api/backup/test-connection [32m200[0m 734.350 ms - 56[0m
+[2025-06-14 12:05:36.736 PM] info: 	[0mPOST /api/backup/execute [32m200[0m 5.789 ms - 59[0m
+[2025-06-14 12:05:37.729 PM] info: 	手动备份执行成功
+[2025-06-14 12:05:37.730 PM] info: 	备份任务完成，状态: success, 大小: 35.15 KB
+[2025-06-14 12:05:40.809 PM] info: 	[0mGET /api/admin/stats [32m200[0m 3.405 ms - 133[0m
+[2025-06-14 12:05:40.827 PM] info: 	[0mGET /api/admin/stats [36m304[0m 9.084 ms - -[0m
+[2025-06-14 12:05:43.383 PM] info: 	[0mGET /api/backup/history [32m200[0m 0.624 ms - 74[0m
+[2025-06-14 12:05:43.385 PM] info: 	[0mGET /api/backup/config [32m200[0m 2.606 ms - 461[0m
+[2025-06-14 12:05:43.391 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.442 ms - -[0m
+[2025-06-14 12:05:43.391 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.332 ms - -[0m
+[2025-06-14 12:05:48.133 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.489 ms - -[0m
+[2025-06-14 12:05:48.140 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.349 ms - -[0m
+[2025-06-14 12:05:51.532 PM] info: 	用户删除成功
+[2025-06-14 12:05:51.533 PM] info: 	[0mDELETE /api/users/b9f49049-d0da-494b-a054-a69dd0de5245 [32m200[0m 4.445 ms - 32[0m
+[2025-06-14 12:05:51.543 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 1.912 ms - 224[0m
+[2025-06-14 12:06:33.268 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.441 ms - -[0m
+[2025-06-14 12:06:33.268 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.958 ms - -[0m
+[2025-06-14 12:06:33.273 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.759 ms - -[0m
+[2025-06-14 12:06:33.274 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.187 ms - -[0m
+[2025-06-14 12:07:18.951 PM] info: 	开始恢复操作，文件: restore-2025-06-14T04-07-18-949Z-wlbj-backup-2025-06-14T04-05-36.tar.gz
+[2025-06-14 12:07:18.955 PM] info: 	[0mPOST /api/backup/restore [32m200[0m 3.600 ms - 59[0m
+[2025-06-14 12:07:19.032 PM] info: 	数据恢复执行成功
+[2025-06-14 12:07:31.155 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.505 ms - -[0m
+[2025-06-14 12:07:31.156 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.024 ms - -[0m
+[2025-06-14 12:08:12.233 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 12:08:12.235 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 12:08:12.236 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 12:08:12.360 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 12:08:12.360 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 12:08:12.361 PM] info: 	- JWT认证系统
+[2025-06-14 12:08:12.361 PM] info: 	- 输入验证和XSS防护
+[2025-06-14 12:08:12.361 PM] info: 	- SQL注入防护
+[2025-06-14 12:08:12.361 PM] info: 	- 速率限制
+[2025-06-14 12:08:12.361 PM] info: 	- 安全响应头
+[2025-06-14 12:08:12.361 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 12:08:12.361 PM] info: 	- 数据库查询性能监控
+[2025-06-14 12:08:12.364 PM] info: 	SQLite WAL模式已启用
+[2025-06-14 12:08:23.910 PM] info: 	管理员登录成功
+[2025-06-14 12:08:23.912 PM] info: 	[0mPOST /api/admin/login [32m200[0m 77.932 ms - 601[0m
+[2025-06-14 12:08:23.939 PM] info: 	[0mGET /api/admin/stats [32m200[0m 2.318 ms - 133[0m
+[2025-06-14 12:08:23.942 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.802 ms - -[0m
+[2025-06-14 12:08:26.232 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.487 ms - -[0m
+[2025-06-14 12:10:14.123 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 12:10:14.125 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 12:10:14.125 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 12:10:14.252 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 12:10:14.252 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 12:10:14.252 PM] info: 	- JWT认证系统
+[2025-06-14 12:10:14.252 PM] info: 	- 输入验证和XSS防护
+[2025-06-14 12:10:14.252 PM] info: 	- SQL注入防护
+[2025-06-14 12:10:14.252 PM] info: 	- 速率限制
+[2025-06-14 12:10:14.253 PM] info: 	- 安全响应头
+[2025-06-14 12:10:14.253 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 12:10:14.253 PM] info: 	- 数据库查询性能监控
+[2025-06-14 12:10:14.257 PM] info: 	SQLite WAL模式已启用
+[2025-06-14 12:10:45.027 PM] info: 	[0mGET / [36m302[0m 0.786 ms - 44[0m
+[2025-06-14 12:10:45.032 PM] info: 	[0mGET /api/backup/config [32m200[0m 0.840 ms - 375[0m
+[2025-06-14 12:10:45.033 PM] info: 	[0mGET /api/backup/history [32m200[0m 0.271 ms - 2[0m
+[2025-06-14 12:13:01.255 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 12:13:01.257 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 12:13:01.258 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 12:13:01.392 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 12:13:01.392 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 12:13:01.392 PM] info: 	- JWT认证系统
+[2025-06-14 12:13:01.392 PM] info: 	- 输入验证和XSS防护
+[2025-06-14 12:13:01.392 PM] info: 	- SQL注入防护
+[2025-06-14 12:13:01.392 PM] info: 	- 速率限制
+[2025-06-14 12:13:01.392 PM] info: 	- 安全响应头
+[2025-06-14 12:13:01.392 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 12:13:01.392 PM] info: 	- 数据库查询性能监控
+[2025-06-14 12:13:01.394 PM] info: 	SQLite WAL模式已启用
+[2025-06-14 12:13:06.444 PM] info: 	[0mGET /api/backup/config [32m200[0m 1.708 ms - 375[0m
+[2025-06-14 12:14:16.404 PM] info: 	[0mGET / [36m302[0m 1.077 ms - 44[0m
+[2025-06-14 12:14:16.408 PM] info: 	[0mGET /api/backup/config [32m200[0m 0.310 ms - 375[0m
+[2025-06-14 12:14:16.409 PM] info: 	[0mGET /api/backup/history [32m200[0m 0.183 ms - 2[0m
+[2025-06-14 12:14:29.816 PM] info: 	[0mGET /api/admin/stats [32m200[0m 3.070 ms - 133[0m
+[2025-06-14 12:14:29.818 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.968 ms - -[0m
+[2025-06-14 12:15:58.082 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.012 ms - -[0m
+[2025-06-14 12:15:58.086 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.096 ms - -[0m
+[2025-06-14 12:16:39.698 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.063 ms - -[0m
+[2025-06-14 12:16:39.703 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.171 ms - -[0m
+[2025-06-14 12:16:41.147 PM] info: 	[0mGET /api/backup/history [32m200[0m 0.952 ms - 2[0m
+[2025-06-14 12:16:41.148 PM] info: 	[0mGET /api/backup/config [32m200[0m 5.582 ms - 375[0m
+[2025-06-14 12:16:41.151 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.739 ms - -[0m
+[2025-06-14 12:16:41.152 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.140 ms - -[0m
+[2025-06-14 12:16:57.001 PM] info: 	开始恢复操作，文件: restore-2025-06-14T04-16-56-998Z-wlbj-backup-2025-06-14T04-05-36.tar.gz
+[2025-06-14 12:16:57.002 PM] warn: 	恢复请求已接收，但建议使用安全恢复脚本
+[2025-06-14 12:16:57.002 PM] info: 	[0mPOST /api/backup/restore [32m200[0m 9.225 ms - 489[0m
+[2025-06-14 12:17:11.235 PM] info: 	开始恢复操作，文件: restore-2025-06-14T04-17-11-234Z-wlbj-backup-2025-06-14T04-05-36.tar.gz
+[2025-06-14 12:17:11.236 PM] warn: 	恢复请求已接收，但建议使用安全恢复脚本
+[2025-06-14 12:17:11.236 PM] info: 	[0mPOST /api/backup/restore [32m200[0m 3.337 ms - 489[0m
+[2025-06-14 12:17:21.144 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 2.054 ms - 51[0m
+[2025-06-14 12:17:21.150 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.550 ms - -[0m
+[2025-06-14 12:17:22.612 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.409 ms - -[0m
+[2025-06-14 12:17:22.615 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.367 ms - -[0m
+[2025-06-14 12:17:23.522 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.333 ms - -[0m
+[2025-06-14 12:17:23.525 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.947 ms - -[0m
+[2025-06-14 12:17:24.183 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.406 ms - -[0m
+[2025-06-14 12:17:24.186 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.358 ms - -[0m
+[2025-06-14 12:17:24.890 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.815 ms - -[0m
+[2025-06-14 12:17:24.892 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.818 ms - -[0m
+[2025-06-14 12:17:26.875 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.579 ms - -[0m
+[2025-06-14 12:17:26.876 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.440 ms - -[0m
+[2025-06-14 12:17:26.881 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.586 ms - -[0m
+[2025-06-14 12:17:26.881 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.179 ms - -[0m
+[2025-06-14 12:17:52.169 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-14 12:17:52.171 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-14 12:17:52.172 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-14 12:17:52.294 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-14 12:17:52.295 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-14 12:17:52.295 PM] info: 	- JWT认证系统
+[2025-06-14 12:17:52.295 PM] info: 	- 输入验证和XSS防护
+[2025-06-14 12:17:52.295 PM] info: 	- SQL注入防护
+[2025-06-14 12:17:52.295 PM] info: 	- 速率限制
+[2025-06-14 12:17:52.295 PM] info: 	- 安全响应头
+[2025-06-14 12:17:52.295 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-14 12:17:52.295 PM] info: 	- 数据库查询性能监控
+[2025-06-14 12:17:52.297 PM] info: 	SQLite WAL模式已启用
+[2025-06-14 12:17:57.345 PM] info: 	[0mGET /api/backup/config [32m200[0m 2.046 ms - 375[0m
+[2025-06-14 12:18:02.813 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 4.290 ms - -[0m
+[2025-06-14 12:18:02.818 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.113 ms - -[0m
+[2025-06-14 12:18:04.267 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.570 ms - 133[0m
+[2025-06-14 12:18:04.271 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.159 ms - -[0m
+[2025-06-14 12:18:05.452 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.132 ms - -[0m
+[2025-06-14 12:18:05.454 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.886 ms - -[0m

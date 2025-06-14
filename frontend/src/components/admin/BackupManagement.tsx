@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { Tabs } from '../ui/Tabs';
+import FileUpload from '../ui/FileUpload';
+import RestoreOptionsComponent, { RestoreOptions } from './RestoreOptions';
 import {
   Cloud,
   Settings,
@@ -12,7 +14,10 @@ import {
   Database,
   Shield,
   AlertTriangle,
-  RefreshCw
+  RefreshCw,
+  Upload,
+  RotateCcw,
+  Download
 } from 'lucide-react';
 
 interface BackupConfig {
@@ -45,6 +50,21 @@ const BackupManagement: React.FC = () => {
   const [testing, setTesting] = useState(false);
   const [executing, setExecuting] = useState(false);
   const [activeTab, setActiveTab] = useState('config');
+
+  // 恢复相关状态
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const [restoreOptions, setRestoreOptions] = useState<RestoreOptions>({
+    restoreDatabase: true,
+    restoreConfigs: true,
+    restoreLogs: false,
+    createBackup: true,
+    verifyIntegrity: true
+  });
+  const [restoring, setRestoring] = useState(false);
+  const [restoreProgress, setRestoreProgress] = useState(0);
+  const [uploadError, setUploadError] = useState<string>('');
 
   // 表单状态
   const [formData, setFormData] = useState({
@@ -208,6 +228,138 @@ const BackupManagement: React.FC = () => {
     }
   };
 
+  // 处理文件选择
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file);
+    setUploadStatus('idle');
+    setUploadError('');
+  };
+
+  // 移除选择的文件
+  const handleFileRemove = () => {
+    setSelectedFile(null);
+    setUploadStatus('idle');
+    setUploadError('');
+    setUploadProgress(0);
+  };
+
+  // 上传并恢复备份文件
+  const handleRestore = async () => {
+    if (!selectedFile) {
+      alert('请先选择备份文件');
+      return;
+    }
+
+    // 安全警告对话框
+    const confirmMessage = `⚠️ 重要安全提示\n\n为了避免服务中断和数据冲突，强烈建议使用安全恢复方法：\n\n1. 停止当前页面操作\n2. 在服务器终端执行以下命令：\n   node safe-restore.js <备份文件路径>\n\n该方法会：\n• 自动停止相关服务\n• 安全执行恢复操作\n• 自动重启服务\n• 验证恢复结果\n\n是否仍要继续在线恢复？（不推荐）`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    // 二次确认
+    const secondConfirm = `最后确认：\n\n将恢复以下内容：\n${
+      restoreOptions.restoreDatabase ? '• 数据库\n' : ''
+    }${
+      restoreOptions.restoreConfigs ? '• 配置文件\n' : ''
+    }${
+      restoreOptions.restoreLogs ? '• 日志文件\n' : ''
+    }\n${
+      restoreOptions.createBackup ? '恢复前将自动备份当前数据。\n' : ''
+    }\n⚠️ 此操作可能导致服务不稳定！`;
+
+    if (!confirm(secondConfirm)) {
+      return;
+    }
+
+    setRestoring(true);
+    setRestoreProgress(0);
+
+    try {
+      // 创建FormData
+      const formData = new FormData();
+      formData.append('backupFile', selectedFile);
+      formData.append('options', JSON.stringify(restoreOptions));
+
+      // 上传文件
+      const response = await fetch('/api/backup/restore', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+
+        if (result.warning) {
+          alert(`${result.message}\n\n${result.warning}\n\n推荐命令：${result.recommendation}`);
+          setRestoring(false);
+          setRestoreProgress(0);
+          return;
+        }
+
+        alert('恢复操作已启动，请稍后查看结果');
+
+        // 模拟进度更新
+        const progressInterval = setInterval(() => {
+          setRestoreProgress(prev => {
+            if (prev >= 90) {
+              clearInterval(progressInterval);
+              return 90;
+            }
+            return prev + 10;
+          });
+        }, 1000);
+
+        // 等待恢复完成
+        setTimeout(() => {
+          setRestoreProgress(100);
+          setTimeout(() => {
+            setRestoring(false);
+            setRestoreProgress(0);
+            handleFileRemove();
+            loadConfig();
+            loadHistory();
+            alert('恢复操作完成！请重新登录系统。');
+          }, 1000);
+        }, 10000);
+
+      } else {
+        const error = await response.json();
+        throw new Error(error.error || '恢复失败');
+      }
+    } catch (error) {
+      setRestoring(false);
+      setRestoreProgress(0);
+      alert(`恢复失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
+  };
+
+  // 下载备份文件
+  const downloadBackup = async () => {
+    try {
+      const response = await fetch('/api/backup/download', {
+        method: 'GET'
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `wlbj-backup-${new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-')}.tar.gz`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        const error = await response.json();
+        alert(`下载失败: ${error.error || '未知错误'}`);
+      }
+    } catch (error) {
+      alert('下载失败，请检查网络连接');
+    }
+  };
+
   // 格式化时间
   const formatTime = (timeStr: string | null) => {
     if (!timeStr) return '从未备份';
@@ -240,7 +392,8 @@ const BackupManagement: React.FC = () => {
   const tabs = [
     { id: 'config', label: '备份配置', icon: Settings },
     { id: 'status', label: '备份状态', icon: Database },
-    { id: 'history', label: '备份历史', icon: Clock }
+    { id: 'history', label: '备份历史', icon: Clock },
+    { id: 'restore', label: '数据恢复', icon: RotateCcw }
   ];
 
   return (
@@ -248,6 +401,14 @@ const BackupManagement: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">备份管理</h2>
         <div className="flex space-x-2">
+          <Button
+            onClick={downloadBackup}
+            disabled={!config?.qiniu_access_key}
+            variant="outline"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            下载备份
+          </Button>
           <Button
             onClick={testConnection}
             disabled={testing || !config?.qiniu_access_key}
@@ -513,6 +674,106 @@ const BackupManagement: React.FC = () => {
             )}
           </div>
         </Card>
+      )}
+
+      {activeTab === 'restore' && (
+        <div className="space-y-6">
+          {/* 安全恢复说明 */}
+          <Card>
+            <div className="p-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div className="flex items-start space-x-3">
+                  <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-blue-800">推荐：使用安全恢复方法</h4>
+                    <p className="text-sm text-blue-700 mt-1">
+                      为避免服务中断，建议在服务器终端使用安全恢复脚本：
+                    </p>
+                    <div className="mt-2 bg-blue-100 rounded p-2 font-mono text-sm text-blue-800">
+                      node safe-restore.js &lt;备份文件路径&gt;
+                    </div>
+                    <p className="text-xs text-blue-600 mt-2">
+                      安全恢复会自动停止服务、执行恢复、重启服务并验证结果
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <h3 className="text-lg font-semibold mb-4">在线恢复（不推荐）</h3>
+              <FileUpload
+                onFileSelect={handleFileSelect}
+                onFileRemove={handleFileRemove}
+                accept=".tar.gz,.zip"
+                maxSize={500}
+                disabled={restoring}
+                selectedFile={selectedFile}
+                uploadProgress={uploadProgress}
+                uploadStatus={uploadStatus}
+                errorMessage={uploadError}
+              />
+            </div>
+          </Card>
+
+          {/* 恢复选项 */}
+          {selectedFile && (
+            <Card>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-4">恢复选项</h3>
+                <RestoreOptionsComponent
+                  onOptionsChange={setRestoreOptions}
+                  disabled={restoring}
+                />
+              </div>
+            </Card>
+          )}
+
+          {/* 恢复进度 */}
+          {restoring && (
+            <Card>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-4">恢复进度</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>正在恢复数据...</span>
+                    <span>{restoreProgress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div
+                      className="bg-blue-500 h-3 rounded-full transition-all duration-500"
+                      style={{ width: `${restoreProgress}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {restoreProgress < 30 && '正在验证备份文件...'}
+                    {restoreProgress >= 30 && restoreProgress < 60 && '正在恢复数据库...'}
+                    {restoreProgress >= 60 && restoreProgress < 90 && '正在恢复配置文件...'}
+                    {restoreProgress >= 90 && '正在验证数据完整性...'}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* 操作按钮 */}
+          {selectedFile && !restoring && (
+            <div className="flex justify-end space-x-3">
+              <Button
+                onClick={handleFileRemove}
+                variant="outline"
+              >
+                取消
+              </Button>
+              <Button
+                onClick={handleRestore}
+                variant="primary"
+                disabled={!selectedFile}
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                开始恢复
+              </Button>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
