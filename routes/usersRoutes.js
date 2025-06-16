@@ -34,10 +34,48 @@ const updatePasswordValidation = [
   body('newPassword').isLength({ min: 4 }).trim()
 ];
 
+// 用户企业微信配置更新验证规则
+const updateWechatConfigValidation = [
+  body('wechat_webhook_url').optional().custom((value) => {
+    if (!value || value.trim() === '') {
+      return true; // 允许空值
+    }
+    // 检查是否是企业微信webhook URL格式
+    if (value.includes('qyapi.weixin.qq.com') && value.includes('webhook/send')) {
+      return true;
+    }
+    // 也允许其他有效的URL格式
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      throw new Error('企业微信webhook URL格式不正确');
+    }
+  }),
+  body('wechat_notification_enabled').optional().custom((value) => {
+    if (value === undefined || value === null) {
+      return true; // 允许空值
+    }
+    // 允许布尔值、字符串 'true'/'false'、数字 0/1
+    if (typeof value === 'boolean') {
+      return true;
+    }
+    if (typeof value === 'string' && (value === 'true' || value === 'false')) {
+      return true;
+    }
+    if (typeof value === 'number' && (value === 0 || value === 1)) {
+      return true;
+    }
+    throw new Error('通知启用状态必须是布尔值');
+  })
+];
+
 // 处理验证错误
 function handleValidationErrors(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('验证错误详情:', errors.array());
+    console.log('请求体:', req.body);
     return res.status(400).json({ errors: errors.array() });
   }
   return null;
@@ -204,7 +242,7 @@ router.get('/',
     const limit = parseInt(req.query.limit) || 20;
     const search = req.query.search || '';
 
-    let query = 'SELECT id, email, name, role, createdAt, updatedAt, isActive FROM users';
+    let query = 'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users';
     let params = [];
 
     if (search) {
@@ -233,7 +271,7 @@ router.get('/:id',
     const userId = req.params.id;
 
     db.get(
-      'SELECT id, email, name, role, createdAt, updatedAt, isActive FROM users WHERE id = ?',
+      'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
       [userId],
       (err, user) => {
         if (err) {
@@ -381,6 +419,98 @@ router.delete('/:id',
 
         logger.info('用户删除成功', { userId, adminId: req.user.id });
         res.json({ message: '用户删除成功' });
+      });
+    });
+  }
+);
+
+// 获取当前用户的企业微信配置
+router.get('/me/wechat-config',
+  authenticateToken,
+  (req, res) => {
+    const userId = req.user.id;
+
+    db.get(
+      'SELECT wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
+      [userId],
+      (err, user) => {
+        if (err) {
+          logger.error('获取用户企业微信配置失败', { error: err.message, userId });
+          return res.status(500).json({ error: '获取企业微信配置失败' });
+        }
+
+        if (!user) {
+          return res.status(404).json({ error: '用户不存在' });
+        }
+
+        res.json({
+          wechat_webhook_url: user.wechat_webhook_url || '',
+          wechat_notification_enabled: user.wechat_notification_enabled !== 0
+        });
+      }
+    );
+  }
+);
+
+// 更新当前用户的企业微信配置
+router.put('/me/wechat-config',
+  authenticateToken,
+  updateWechatConfigValidation,
+  (req, res) => {
+    const validationError = handleValidationErrors(req, res);
+    if (validationError) return;
+
+    const userId = req.user.id;
+    const { wechat_webhook_url, wechat_notification_enabled } = req.body;
+    const updatedAt = new Date().toISOString();
+
+    // 构建更新字段
+    const updates = [];
+    const params = [];
+
+    if (wechat_webhook_url !== undefined) {
+      updates.push('wechat_webhook_url = ?');
+      params.push(wechat_webhook_url || null);
+    }
+
+    if (wechat_notification_enabled !== undefined) {
+      updates.push('wechat_notification_enabled = ?');
+      // 正确转换各种类型的布尔值
+      let boolValue = false;
+      if (typeof wechat_notification_enabled === 'boolean') {
+        boolValue = wechat_notification_enabled;
+      } else if (typeof wechat_notification_enabled === 'string') {
+        boolValue = wechat_notification_enabled === 'true';
+      } else if (typeof wechat_notification_enabled === 'number') {
+        boolValue = wechat_notification_enabled === 1;
+      }
+      params.push(boolValue ? 1 : 0);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: '没有提供要更新的字段' });
+    }
+
+    updates.push('updatedAt = ?');
+    params.push(updatedAt, userId);
+
+    const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+
+    db.run(sql, params, function(err) {
+      if (err) {
+        logger.error('更新用户企业微信配置失败', { error: err.message, userId });
+        return res.status(500).json({ error: '更新企业微信配置失败' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: '用户不存在' });
+      }
+
+      logger.info('用户企业微信配置更新成功', { userId });
+      res.json({
+        message: '企业微信配置更新成功',
+        wechat_webhook_url: wechat_webhook_url || null,
+        wechat_notification_enabled: wechat_notification_enabled !== false
       });
     });
   }

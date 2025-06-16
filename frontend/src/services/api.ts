@@ -70,8 +70,18 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     }
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      let errorData: any = {};
+      try {
+        errorData = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse error response:', parseError);
+      }
+
+      const error = new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+      (error as any).response = response;
+      (error as any).status = response.status;
+      (error as any).errorData = errorData;
+      throw error;
     }
 
     return await response.json();
@@ -214,6 +224,21 @@ export const usersAPI = {
   // 删除用户（管理员专用）
   delete: (userId: string) => apiRequest<any>(`/users/${userId}`, {
     method: 'DELETE',
+  }),
+
+  // 获取当前用户的企业微信配置
+  getWechatConfig: () => apiRequest<{
+    wechat_webhook_url: string;
+    wechat_notification_enabled: boolean;
+  }>('/users/me/wechat-config'),
+
+  // 更新当前用户的企业微信配置
+  updateWechatConfig: (config: {
+    wechat_webhook_url?: string;
+    wechat_notification_enabled?: boolean;
+  }) => apiRequest<any>('/users/me/wechat-config', {
+    method: 'PUT',
+    body: JSON.stringify(config),
   }),
 };
 
@@ -564,7 +589,7 @@ export const aiAPI = {
           messages: [
             {
               role: 'system',
-              content: '你是一个物流信息提取专家。你需要从用户输入的文本中识别并提取以下信息：\n1. 发货仓库\n2. 货物信息(包括品名和数量)\n3. 收货信息(完整保留地址、联系人、电话、以及所有收货要求等)\n\n请以JSON格式返回结果，格式为{"warehouse": "提取的发货仓库", "goods": "提取的货物信息", "deliveryAddress": "提取的收货信息，包括完整地址、联系人、电话和所有收货要求，尽量保留原文"}'
+              content: '你是一个物流信息提取专家。你需要从用户输入的文本中识别并提取以下信息：\n1. 发货仓库\n2. 货物信息(包括品名和数量)\n3. 收货信息(完整保留地址、联系人、电话、以及所有收货要求等)\n\n请以JSON格式返回结果，格式为{"warehouse": "提取的发货仓库", "goods": "提取的货物信息", "deliveryAddress": "提取的收货信息，包括完整地址、联系人、电话和所有收货要求，尽量保留原文"}\n\n重要说明：\n- goods字段必须返回简洁的文本字符串，不要使用嵌套的JSON对象\n- 单种货物格式：直接写"品名 数量"，例如："牛肉 200箱"\n- 多种货物格式：用换行符分隔，例如："牛肉 200箱\\n香辣味 300箱"\n- 禁止返回类似{"name":"牛肉","quantity":"200箱"}的嵌套对象格式'
             },
             {
               role: 'user',
@@ -614,11 +639,14 @@ export const aiAPI = {
       // 处理提取到的数据
       const warehouse = jsonData.warehouse || '';
 
-      // 处理货物信息 - 如果是数组则转换为字符串
+      // 处理货物信息 - 优先使用字符串格式，兼容旧格式
       let goods = '';
       if (jsonData.goods) {
-        if (Array.isArray(jsonData.goods)) {
-          // 数组形式的货物信息
+        if (typeof jsonData.goods === 'string') {
+          // 字符串形式的货物信息（推荐格式）
+          goods = jsonData.goods;
+        } else if (Array.isArray(jsonData.goods)) {
+          // 数组形式的货物信息（兼容旧格式）
           goods = jsonData.goods.map((item: any) => {
             if (typeof item === 'object' && item.name && item.quantity) {
               return `${item.name} ${item.quantity}`;
@@ -627,11 +655,12 @@ export const aiAPI = {
             }
           }).join('\n');
         } else if (typeof jsonData.goods === 'object') {
-          // 对象形式的货物信息
-          goods = JSON.stringify(jsonData.goods, null, 2);
-        } else {
-          // 字符串形式的货物信息
-          goods = jsonData.goods;
+          // 对象形式的货物信息（兼容旧格式）
+          if (jsonData.goods.name && jsonData.goods.quantity) {
+            goods = `${jsonData.goods.name} ${jsonData.goods.quantity}`;
+          } else {
+            goods = JSON.stringify(jsonData.goods, null, 2);
+          }
         }
       }
 

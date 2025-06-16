@@ -11,10 +11,10 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: '物流公司名称是必填的' });
   }
 
-  // 验证企业微信webhook URL（如果提供）
-  if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
-    return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
-  }
+  // 企业微信webhook URL格式校验已关闭
+  // if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
+  //   return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
+  // }
 
   let accessKeyToUse = customAccessKey;
   if (customAccessKey) {
@@ -134,10 +134,10 @@ router.put('/:id/webhook', (req, res) => {
   const providerId = req.params.id;
   const { wechatWebhookUrl } = req.body;
 
-  // 验证webhook URL格式（如果提供）
-  if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
-    return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
-  }
+  // 企业微信webhook URL格式校验已关闭
+  // if (wechatWebhookUrl && !validateWechatWebhookUrl(wechatWebhookUrl)) {
+  //   return res.status(400).json({ error: '企业微信webhook URL格式不正确' });
+  // }
 
   db.run(
     'UPDATE providers SET wechat_webhook_url = ? WHERE id = ?',

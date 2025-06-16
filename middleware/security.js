@@ -27,7 +27,7 @@ function createRateLimiter(options = {}) {
 // API速率限制配置
 const apiLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: 100000 // 15分钟内最多100000次请求
 });
 
 // 登录速率限制（更严格）
@@ -40,7 +40,7 @@ const loginLimiter = createRateLimiter({
 // 创建订单速率限制
 const createOrderLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000, // 1小时
-  max: 20, // 每小时最多创建20个订单
+  max: 2000, // 每小时最多创建2000个订单
   message: '创建订单过于频繁，请稍后再试'
 });
 
@@ -54,10 +54,10 @@ const quoteLimiter = createRateLimiter({
 // XSS防护 - 清理HTML标签和危险字符
 function sanitizeInput(input) {
   if (typeof input !== 'string') return input;
-  
+
   // 移除HTML标签
   let cleaned = input.replace(/<[^>]*>/g, '');
-  
+
   // 转义特殊字符
   const escapeMap = {
     '&': '&amp;',
@@ -67,24 +67,44 @@ function sanitizeInput(input) {
     "'": '&#x27;',
     '/': '&#x2F;'
   };
-  
+
   cleaned = cleaned.replace(/[&<>"'\/]/g, (char) => escapeMap[char]);
-  
+
   return cleaned.trim();
 }
 
 // SQL注入防护 - 验证输入是否包含SQL关键字
 function containsSQLKeywords(input) {
   if (typeof input !== 'string') return false;
-  
+
   const sqlKeywords = [
     'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE',
     'ALTER', 'EXEC', 'EXECUTE', 'UNION', 'WHERE', 'ORDER BY',
     'GROUP BY', 'HAVING', '--', '/*', '*/', 'XP_', 'SP_'
   ];
-  
+
   const upperInput = input.toUpperCase();
   return sqlKeywords.some(keyword => upperInput.includes(keyword));
+}
+
+// 检查是否为URL字段（不需要HTML实体编码的字段）
+function isUrlField(key, value) {
+  // 企业微信webhook URL字段
+  if (key === 'wechat_webhook_url' || key === 'wechatWebhookUrl') {
+    return true;
+  }
+
+  // 其他URL字段可以在这里添加
+  if (key.toLowerCase().includes('url') || key.toLowerCase().includes('webhook')) {
+    return true;
+  }
+
+  // 检查值是否看起来像URL
+  if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+    return true;
+  }
+
+  return false;
 }
 
 // 输入清理中间件
@@ -93,29 +113,45 @@ function sanitizeMiddleware(req, res, next) {
   if (req.body && typeof req.body === 'object') {
     Object.keys(req.body).forEach(key => {
       if (typeof req.body[key] === 'string') {
-        req.body[key] = sanitizeInput(req.body[key]);
+        // 对于URL字段，跳过HTML实体编码
+        if (isUrlField(key, req.body[key])) {
+          // 只移除HTML标签，不进行字符转义
+          req.body[key] = req.body[key].replace(/<[^>]*>/g, '').trim();
+        } else {
+          req.body[key] = sanitizeInput(req.body[key]);
+        }
       }
     });
   }
-  
+
   // 清理query参数
   if (req.query && typeof req.query === 'object') {
     Object.keys(req.query).forEach(key => {
       if (typeof req.query[key] === 'string') {
-        req.query[key] = sanitizeInput(req.query[key]);
+        // 对于URL字段，跳过HTML实体编码
+        if (isUrlField(key, req.query[key])) {
+          req.query[key] = req.query[key].replace(/<[^>]*>/g, '').trim();
+        } else {
+          req.query[key] = sanitizeInput(req.query[key]);
+        }
       }
     });
   }
-  
+
   // 清理params
   if (req.params && typeof req.params === 'object') {
     Object.keys(req.params).forEach(key => {
       if (typeof req.params[key] === 'string') {
-        req.params[key] = sanitizeInput(req.params[key]);
+        // params通常不包含URL，但为了一致性也检查
+        if (isUrlField(key, req.params[key])) {
+          req.params[key] = req.params[key].replace(/<[^>]*>/g, '').trim();
+        } else {
+          req.params[key] = sanitizeInput(req.params[key]);
+        }
       }
     });
   }
-  
+
   next();
 }
 
@@ -130,7 +166,7 @@ const validationRules = {
     body('deliveryAddress').notEmpty().isLength({ max: 500 }).trim()
       .custom(value => !containsSQLKeywords(value)).withMessage('输入包含非法字符')
   ],
-  
+
   updateOrder: [
     param('id').isUUID().withMessage('无效的订单ID'),
     body('warehouse').optional().isLength({ max: 200 }).trim()
@@ -140,7 +176,7 @@ const validationRules = {
     body('deliveryAddress').optional().isLength({ max: 500 }).trim()
       .custom(value => !containsSQLKeywords(value)).withMessage('输入包含非法字符')
   ],
-  
+
   // 报价验证规则
   createQuote: [
     body('orderId').isUUID().withMessage('无效的订单ID'),
@@ -148,14 +184,15 @@ const validationRules = {
     body('estimatedDelivery').notEmpty().isLength({ max: 100 }).trim()
       .custom(value => !containsSQLKeywords(value)).withMessage('输入包含非法字符')
   ],
-  
+
   // 供应商验证规则
   createProvider: [
     body('name').notEmpty().isLength({ min: 2, max: 100 }).trim()
       .custom(value => !containsSQLKeywords(value)).withMessage('输入包含非法字符'),
-    body('wechat_webhook_url').optional().isURL().withMessage('无效的Webhook URL')
+    // 企业微信webhook URL格式校验已关闭
+    // body('wechat_webhook_url').optional().isURL().withMessage('无效的Webhook URL')
   ],
-  
+
   // 分页验证规则
   pagination: [
     query('page').optional().isInt({ min: 1 }).withMessage('页码必须大于0'),
@@ -163,12 +200,12 @@ const validationRules = {
     query('search').optional().isLength({ max: 100 }).trim()
       .custom(value => !containsSQLKeywords(value)).withMessage('搜索内容包含非法字符')
   ],
-  
+
   // ID参数验证
   idParam: [
     param('id').isUUID().withMessage('无效的ID格式')
   ],
-  
+
   // accessKey验证
   accessKey: [
     param('accessKey').isAlphanumeric().isLength({ min: 10, max: 50 }).withMessage('无效的访问密钥')
@@ -185,7 +222,7 @@ function handleValidation(req, res, next) {
       errors: errors.array(),
       ip: req.ip
     });
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: '输入验证失败',
       details: errors.array().map(err => ({
         field: err.param,
@@ -233,15 +270,15 @@ module.exports = {
   createOrderLimiter,
   quoteLimiter,
   createRateLimiter,
-  
+
   // 输入清理
   sanitizeMiddleware,
   sanitizeInput,
-  
+
   // 验证规则
   validationRules,
   validate,
-  
+
   // 安全头部
   securityHeaders
-}; 
+};

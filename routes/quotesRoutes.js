@@ -3,6 +3,46 @@ const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
 const { CacheManager } = require('../utils/cache');
+const { generateUserQuoteNotificationMessage, sendWechatNotification } = require('../utils/wechatNotification');
+
+// 向用户发送报价通知的异步函数
+async function sendUserQuoteNotification(order, quote) {
+  try {
+    // 获取订单所属用户的企业微信配置
+    db.get('SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?', [order.userId], async (err, user) => {
+      if (err) {
+        console.error('获取用户信息失败:', err);
+        return;
+      }
+
+      if (!user) {
+        console.log('未找到订单所属用户，跳过用户通知');
+        return;
+      }
+
+      if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
+        console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
+        return;
+      }
+
+      console.log(`开始向用户 ${user.email} 发送报价通知...`);
+
+      // 生成用户报价通知消息
+      const message = generateUserQuoteNotificationMessage(order, quote, user);
+
+      // 发送通知
+      const result = await sendWechatNotification(user.wechat_webhook_url, message);
+
+      if (result.success) {
+        console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
+      } else {
+        console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
+      }
+    });
+  } catch (error) {
+    console.error('发送用户报价通知时出错:', error);
+  }
+}
 
 // GET /api/quotes - 获取报价 (可按provider过滤, 修改为按 accessKey 过滤)
 router.get('/', (req, res) => {
@@ -146,6 +186,18 @@ router.post('/', (req, res) => {
 
                 // 清除相关缓存
                 CacheManager.invalidateQuoteRelatedCache(newQuote.orderId);
+
+                // 报价创建成功后，获取订单信息并发送用户通知
+                db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+                  if (err) {
+                    console.error('获取订单信息失败:', err);
+                  } else if (order) {
+                    // 发送用户报价通知
+                    sendUserQuoteNotification(order, newQuote);
+                  } else {
+                    console.log('未找到对应订单，跳过用户通知');
+                  }
+                });
 
                 res.status(201).json(newQuote);
               }

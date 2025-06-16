@@ -26,9 +26,17 @@ function validateWechatWebhookUrl(webhookUrl) {
     return false;
   }
 
-  // 企业微信群机器人webhook URL格式验证
-  const wechatWebhookPattern = /^https:\/\/qyapi\.weixin\.qq\.com\/cgi-bin\/webhook\/send\?key=[a-zA-Z0-9-_]+$/;
-  return wechatWebhookPattern.test(webhookUrl);
+  // 企业微信群机器人webhook URL格式验证已关闭，只检查基本URL格式
+  // const wechatWebhookPattern = /^https:\/\/qyapi\.weixin\.qq\.com\/cgi-bin\/webhook\/send\?key=[a-zA-Z0-9-_]+$/;
+  // return wechatWebhookPattern.test(webhookUrl);
+
+  // 简单检查是否为有效URL格式
+  try {
+    new URL(webhookUrl);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 /**
@@ -178,9 +186,55 @@ async function notifyAllProvidersNewOrder(order, providers) {
   return results;
 }
 
+/**
+ * 生成用户报价通知消息内容
+ * @param {Object} order - 订单信息
+ * @param {Object} quote - 报价信息
+ * @param {Object} user - 用户信息
+ * @returns {Object} 企业微信消息格式
+ */
+function generateUserQuoteNotificationMessage(order, quote, user) {
+  const currentTime = new Date().toLocaleString('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  // 截取货物信息，避免消息过长
+  const maxLength = 80;
+  const goodsInfo = order.goods.length > maxLength
+    ? order.goods.substring(0, maxLength) + '...'
+    : order.goods;
+
+  const content = `💰 **新报价通知**
+
+**订单编号**: ${order.id}
+**货物信息**: ${goodsInfo}
+**物流公司**: ${quote.provider}
+**报价金额**: ¥${quote.price}
+**预计送达**: ${quote.estimatedDelivery}
+**报价时间**: ${currentTime}
+
+🔔 **请登录系统查看详细报价信息**
+
+---
+*物流报价系统自动通知*`;
+
+  return {
+    msgtype: "markdown",
+    markdown: {
+      content: content
+    }
+  };
+}
+
 module.exports = {
   validateWechatWebhookUrl,
   generateOrderNotificationMessage,
+  generateUserQuoteNotificationMessage,
   sendWechatNotification,
   notifyProviderNewOrder,
   notifyAllProvidersNewOrder

@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
-const { notifyAllProvidersNewOrder } = require('../utils/wechatNotification');
+const {
+  notifyAllProvidersNewOrder,
+  generateUserQuoteNotificationMessage,
+  sendWechatNotification
+} = require('../utils/wechatNotification');
 const {
   ROLES,
   PERMISSIONS,
@@ -10,6 +14,7 @@ const {
   requirePermission,
   requireRole
 } = require('../utils/auth');
+const { CacheManager } = require('../utils/cache');
 
 // 生成订单号：RX + yymmdd + "-" + 3位流水号
 function generateOrderId() {
@@ -20,24 +25,51 @@ function generateOrderId() {
   const dateStr = year + month + day;
 
   return new Promise((resolve, reject) => {
-    // 查询今天已有的订单数量来生成流水号
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+    // 使用事务确保原子性
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION');
 
-    db.get(
-      'SELECT COUNT(*) as count FROM orders WHERE createdAt >= ? AND createdAt < ?',
-      [todayStart, todayEnd],
-      (err, row) => {
-        if (err) {
-          reject(err);
-          return;
+      // 查找今天最大的序列号
+      const todayPrefix = `RX${dateStr}-`;
+
+      db.get(
+        'SELECT SUBSTR(id, ?) as seq FROM orders WHERE id LIKE ? ORDER BY CAST(SUBSTR(id, ?) AS INTEGER) DESC LIMIT 1',
+        [todayPrefix.length + 1, `${todayPrefix}%`, todayPrefix.length + 1],
+        (err, row) => {
+          if (err) {
+            db.run('ROLLBACK');
+            reject(err);
+            return;
+          }
+
+          let sequenceNumber = 1;
+          if (row && row.seq) {
+            sequenceNumber = parseInt(row.seq, 10) + 1;
+          }
+
+          const orderId = `${todayPrefix}${sequenceNumber.toString().padStart(3, '0')}`;
+
+          // 立即插入一个占位记录来防止并发冲突
+          db.run(
+            'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt, userId, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [orderId, 'PLACEHOLDER', 'PLACEHOLDER', 'PLACEHOLDER', new Date().toISOString(), 'PLACEHOLDER', 'placeholder'],
+            function(insertErr) {
+              if (insertErr) {
+                db.run('ROLLBACK');
+                // 如果插入失败（可能是并发冲突），重试
+                setTimeout(() => {
+                  generateOrderId().then(resolve).catch(reject);
+                }, Math.random() * 100); // 随机延迟避免竞争
+                return;
+              }
+
+              db.run('COMMIT');
+              resolve(orderId);
+            }
+          );
         }
-
-        const sequenceNumber = (row.count + 1).toString().padStart(3, '0'); // 3位流水号，从001开始
-        const orderId = `RX${dateStr}-${sequenceNumber}`;
-        resolve(orderId);
-      }
-    );
+      );
+    });
   });
 }
 
@@ -75,6 +107,45 @@ async function sendWechatNotifications(order) {
     });
   } catch (error) {
     console.error('发送企业微信通知时出错:', error);
+  }
+}
+
+// 向用户发送报价通知的异步函数
+async function sendUserQuoteNotification(order, quote) {
+  try {
+    // 获取订单所属用户的企业微信配置
+    db.get('SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?', [order.userId], async (err, user) => {
+      if (err) {
+        console.error('获取用户信息失败:', err);
+        return;
+      }
+
+      if (!user) {
+        console.log('未找到订单所属用户，跳过用户通知');
+        return;
+      }
+
+      if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
+        console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
+        return;
+      }
+
+      console.log(`开始向用户 ${user.email} 发送报价通知...`);
+
+      // 生成用户报价通知消息
+      const message = generateUserQuoteNotificationMessage(order, quote, user);
+
+      // 发送通知
+      const result = await sendWechatNotification(user.wechat_webhook_url, message);
+
+      if (result.success) {
+        console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
+      } else {
+        console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
+      }
+    });
+  } catch (error) {
+    console.error('发送用户报价通知时出错:', error);
   }
 }
 
@@ -295,19 +366,34 @@ router.post('/',
       userId: req.user.id // 添加用户ID
     };
 
+    // 更新占位记录为实际订单数据
     db.run(
-      'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt, userId) VALUES (?, ?, ?, ?, ?, ?)',
-      [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt, newOrder.userId],
+      'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, createdAt = ?, userId = ?, status = ? WHERE id = ?',
+      [newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt, newOrder.userId, 'active', newOrder.id],
       function(err) {
         if (err) {
           console.error(err);
+          // 如果更新失败，删除占位记录
+          db.run('DELETE FROM orders WHERE id = ?', [newOrder.id]);
           return res.status(500).json({ error: '创建订单失败' });
         }
+
+        // 清除相关缓存
+        CacheManager.invalidateOrderRelatedCache(newOrder.userId);
 
         // 订单创建成功后，发送企业微信通知
         sendWechatNotifications(newOrder);
 
-        res.status(201).json(newOrder);
+        res.status(201).json({
+          order: {
+            id: newOrder.id,
+            warehouse: newOrder.warehouse,
+            goods: newOrder.goods,
+            deliveryAddress: newOrder.deliveryAddress,
+            createdAt: newOrder.createdAt,
+            status: 'active'
+          }
+        });
       }
     );
   } catch (error) {
@@ -551,6 +637,17 @@ router.post('/:id/quotes', (req, res) => {
           console.error(err);
           return res.status(500).json({ error: '创建报价失败' });
         }
+
+        // 报价创建成功后，获取订单信息并发送用户通知
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+          if (err) {
+            console.error('获取订单信息失败:', err);
+          } else if (order) {
+            // 发送用户报价通知
+            sendUserQuoteNotification(order, quote);
+          }
+        });
+
         res.status(201).json(quote);
       }
     );

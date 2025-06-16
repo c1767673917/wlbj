@@ -217,10 +217,13 @@ function initializeDB() {
     // 数据库迁移：为现有orders表添加用户ID字段
     migrateOrdersTableForUsers();
 
+    // 数据库迁移：为现有users表添加企业微信配置字段
+    migrateUsersTableForWechat();
+
     // 在所有迁移完成后创建性能优化索引
     setTimeout(() => {
       createPerformanceIndexes();
-    }, 1000);
+    }, 2000);
 
     // 初始化管理员配置
     initializeAdminConfig();
@@ -477,6 +480,44 @@ function migrateOrdersTableForUsers() {
       });
     } else {
       console.log('orders表已包含userId字段');
+    }
+  });
+}
+
+// 数据库迁移：为现有users表添加企业微信配置字段
+function migrateUsersTableForWechat() {
+  db.all("PRAGMA table_info(users)", (err, columns) => {
+    if (err) {
+      console.error('获取users表列信息失败:', err.message);
+      return;
+    }
+
+    const columnNames = columns.map(col => col.name);
+
+    // 添加wechat_webhook_url字段
+    if (!columnNames.includes('wechat_webhook_url')) {
+      db.run('ALTER TABLE users ADD COLUMN wechat_webhook_url TEXT', (err) => {
+        if (err) {
+          console.error('添加wechat_webhook_url字段失败:', err.message);
+        } else {
+          console.log('成功为users表添加wechat_webhook_url字段');
+        }
+      });
+    } else {
+      console.log('users表已包含wechat_webhook_url字段');
+    }
+
+    // 添加wechat_notification_enabled字段
+    if (!columnNames.includes('wechat_notification_enabled')) {
+      db.run('ALTER TABLE users ADD COLUMN wechat_notification_enabled INTEGER DEFAULT 1', (err) => {
+        if (err) {
+          console.error('添加wechat_notification_enabled字段失败:', err.message);
+        } else {
+          console.log('成功为users表添加wechat_notification_enabled字段');
+        }
+      });
+    } else {
+      console.log('users表已包含wechat_notification_enabled字段');
     }
   });
 }

@@ -421,3 +421,159 @@ TypeError: Cannot read properties of undefined (reading 'total')
     at Statement.wrappedCallback (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/db/database.js:78:5)
     at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
     at Statement.replacement (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/sqlite3/lib/trace.js:25:27)
+[2025-06-16 15:11:54.082 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 15:13:01.006 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 15:30:53.570 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 15:32:36.677 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 15:32:48.787 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 16:26:21.766 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 16:26:30.192 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47
+[2025-06-16 16:36:53.127 PM] error: 	uncaughtException: Cannot find module '../utils/cacheManager'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+Error: Cannot find module '../utils/cacheManager'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1405:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1061:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1066:22)
+    at Function._load (node:internal/modules/cjs/loader:1215:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js:5:22)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+[2025-06-16 16:37:02.794 PM] error: 	uncaughtException: Cannot find module '../utils/cacheManager'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+Error: Cannot find module '../utils/cacheManager'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1405:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1061:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1066:22)
+    at Function._load (node:internal/modules/cjs/loader:1215:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/routes/quotesRoutes.js:5:22)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+[2025-06-16 16:37:42.179 PM] error: 	uncaughtException: listen EADDRINUSE: address already in use :::3000
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1939:16)
+    at listenInCluster (node:net:1996:12)
+    at Server.listen (node:net:2101:7)
+    at Function.listen (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js:353:5)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
+    at node:internal/main/run_main_module:33:47

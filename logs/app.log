@@ -3126,3 +3126,1709 @@
 [2025-06-14 12:18:04.271 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.159 ms - -[0m
 [2025-06-14 12:18:05.452 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.132 ms - -[0m
 [2025-06-14 12:18:05.454 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.886 ms - -[0m
+[2025-06-16 12:57:15.670 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 12:57:15.672 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 12:57:15.673 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 12:57:15.802 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 12:57:15.803 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 12:57:15.803 PM] info: 	- JWT认证系统
+[2025-06-16 12:57:15.803 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 12:57:15.803 PM] info: 	- SQL注入防护
+[2025-06-16 12:57:15.803 PM] info: 	- 速率限制
+[2025-06-16 12:57:15.803 PM] info: 	- 安全响应头
+[2025-06-16 12:57:15.803 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 12:57:15.803 PM] info: 	- 数据库查询性能监控
+[2025-06-16 12:57:15.807 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 12:57:33.471 PM] info: 	管理员登录成功
+[2025-06-16 12:57:33.473 PM] info: 	[0mPOST /api/admin/login [32m200[0m 84.688 ms - 601[0m
+[2025-06-16 12:57:33.500 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.765 ms - -[0m
+[2025-06-16 12:57:33.502 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.756 ms - -[0m
+[2025-06-16 12:57:38.743 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.211 ms - -[0m
+[2025-06-16 12:57:38.750 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.631 ms - -[0m
+[2025-06-16 12:57:42.007 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.279 ms - -[0m
+[2025-06-16 12:57:42.015 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.176 ms - -[0m
+[2025-06-16 12:57:48.004 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.608 ms - -[0m
+[2025-06-16 12:57:48.014 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.043 ms - -[0m
+[2025-06-16 12:57:53.456 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.493 ms - -[0m
+[2025-06-16 12:57:53.465 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 3.194 ms - -[0m
+[2025-06-16 12:58:07.039 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.715 ms - -[0m
+[2025-06-16 12:58:07.045 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.365 ms - -[0m
+[2025-06-16 12:58:18.370 PM] info: 	管理员创建用户成功
+[2025-06-16 12:58:18.371 PM] info: 	[0mPOST /api/users/create [32m201[0m 88.038 ms - 192[0m
+[2025-06-16 12:58:18.405 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 0.566 ms - 220[0m
+[2025-06-16 12:58:41.621 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.219 ms - -[0m
+[2025-06-16 12:58:41.705 PM] info: 	用户登录成功
+[2025-06-16 12:58:41.706 PM] info: 	[0mPOST /api/auth/login [32m200[0m 81.768 ms - 664[0m
+[2025-06-16 12:58:41.726 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.353 ms - -[0m
+[2025-06-16 12:58:41.728 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.054 ms - -[0m
+[2025-06-16 12:58:41.730 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.038 ms - -[0m
+[2025-06-16 12:58:41.731 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.030 ms - -[0m
+[2025-06-16 12:58:41.732 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.030 ms - -[0m
+[2025-06-16 12:58:41.733 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.423 ms - -[0m
+[2025-06-16 12:58:41.733 PM] info: 	[0mGET /api/providers [32m200[0m 1.286 ms - 2[0m
+[2025-06-16 12:58:41.734 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.030 ms - -[0m
+[2025-06-16 12:58:41.735 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 3.791 ms - 92[0m
+[2025-06-16 12:58:41.736 PM] info: 	[0mGET /api/providers [36m304[0m 0.467 ms - -[0m
+[2025-06-16 12:58:41.736 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.657 ms - -[0m
+[2025-06-16 12:58:41.737 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.226 ms - -[0m
+[2025-06-16 12:59:06.516 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.122 ms - -[0m
+[2025-06-16 12:59:06.521 PM] info: 	[0mPOST /api/orders [32m201[0m 2.948 ms - 173[0m
+[2025-06-16 12:59:09.529 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.168 ms - -[0m
+[2025-06-16 12:59:09.533 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.274 ms - -[0m
+[2025-06-16 12:59:09.535 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.093 ms - -[0m
+[2025-06-16 12:59:09.538 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 3.267 ms - 252[0m
+[2025-06-16 12:59:09.540 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.278 ms - -[0m
+[2025-06-16 12:59:09.542 PM] info: 	[0mGET /api/providers [36m304[0m 3.409 ms - -[0m
+[2025-06-16 12:59:09.552 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.140 ms - -[0m
+[2025-06-16 12:59:09.555 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 1.430 ms - 21[0m
+[2025-06-16 12:59:25.390 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.080 ms - -[0m
+[2025-06-16 12:59:25.394 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.420 ms - -[0m
+[2025-06-16 12:59:25.395 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.062 ms - -[0m
+[2025-06-16 12:59:25.395 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.054 ms - -[0m
+[2025-06-16 12:59:25.396 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.060 ms - -[0m
+[2025-06-16 12:59:25.398 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.089 ms - -[0m
+[2025-06-16 12:59:25.400 PM] info: 	[0mGET /api/providers [36m304[0m 1.320 ms - -[0m
+[2025-06-16 12:59:25.401 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.901 ms - -[0m
+[2025-06-16 12:59:25.402 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.610 ms - -[0m
+[2025-06-16 12:59:25.402 PM] info: 	[0mGET /api/providers [36m304[0m 1.125 ms - -[0m
+[2025-06-16 12:59:25.403 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.725 ms - -[0m
+[2025-06-16 12:59:25.404 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.120 ms - -[0m
+[2025-06-16 12:59:25.405 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.067 ms - -[0m
+[2025-06-16 12:59:25.406 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.065 ms - -[0m
+[2025-06-16 12:59:25.408 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.533 ms - -[0m
+[2025-06-16 12:59:25.409 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.290 ms - -[0m
+[2025-06-16 12:59:25.409 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.265 ms - -[0m
+[2025-06-16 12:59:35.265 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.130 ms - -[0m
+[2025-06-16 12:59:35.270 PM] info: 	[0mPOST /api/providers [33m400[0m 1.259 ms - 50[0m
+[2025-06-16 12:59:44.565 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.139 ms - -[0m
+[2025-06-16 12:59:44.569 PM] info: 	[0mPOST /api/providers [32m201[0m 2.961 ms - 172[0m
+[2025-06-16 12:59:44.577 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.154 ms - -[0m
+[2025-06-16 12:59:44.579 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.227 ms - -[0m
+[2025-06-16 12:59:44.583 PM] info: 	[0mGET /api/providers [32m200[0m 2.916 ms - 176[0m
+[2025-06-16 12:59:44.584 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.240 ms - -[0m
+[2025-06-16 12:59:44.585 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.264 ms - -[0m
+[2025-06-16 13:00:00.143 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.072 ms - -[0m
+[2025-06-16 13:00:00.145 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.104 ms - -[0m
+[2025-06-16 13:00:00.146 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.630 ms - 174[0m
+[2025-06-16 13:00:00.148 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.424 ms - -[0m
+[2025-06-16 13:00:00.176 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.060 ms - -[0m
+[2025-06-16 13:00:00.176 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.044 ms - -[0m
+[2025-06-16 13:00:00.178 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 1.270 ms - 271[0m
+[2025-06-16 13:00:00.179 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.057 ms - -[0m
+[2025-06-16 13:00:00.180 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.807 ms - -[0m
+[2025-06-16 13:00:00.182 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 2.252 ms - 111[0m
+[2025-06-16 13:00:00.183 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.453 ms - -[0m
+[2025-06-16 13:00:09.149 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.128 ms - -[0m
+[2025-06-16 13:00:09.153 PM] info: 	[0mPOST /api/quotes [32m201[0m 2.817 ms - 172[0m
+[2025-06-16 13:00:09.159 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.207 ms - -[0m
+[2025-06-16 13:00:09.163 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 1.035 ms - 111[0m
+[2025-06-16 13:00:09.167 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.073 ms - -[0m
+[2025-06-16 13:00:09.168 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.603 ms - 384[0m
+[2025-06-16 13:00:12.830 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.082 ms - -[0m
+[2025-06-16 13:00:12.830 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.056 ms - -[0m
+[2025-06-16 13:00:12.832 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.046 ms - -[0m
+[2025-06-16 13:00:12.833 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.062 ms - -[0m
+[2025-06-16 13:00:12.835 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.062 ms - -[0m
+[2025-06-16 13:00:12.835 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.035 ms - -[0m
+[2025-06-16 13:00:12.836 PM] info: 	[0mGET /api/providers [36m304[0m 2.125 ms - -[0m
+[2025-06-16 13:00:12.836 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.051 ms - -[0m
+[2025-06-16 13:00:12.838 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.500 ms - -[0m
+[2025-06-16 13:00:12.841 PM] info: 	[0mGET /api/providers [36m304[0m 2.549 ms - -[0m
+[2025-06-16 13:00:12.842 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.933 ms - -[0m
+[2025-06-16 13:00:12.842 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.459 ms - -[0m
+[2025-06-16 13:00:12.858 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.081 ms - -[0m
+[2025-06-16 13:00:12.859 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.044 ms - -[0m
+[2025-06-16 13:00:12.861 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.817 ms - 48[0m
+[2025-06-16 13:00:12.861 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.109 ms - -[0m
+[2025-06-16 13:00:15.982 PM] info: 	[0mOPTIONS /api/orders/RX250616-001/quotes [32m200[0m 0.135 ms - -[0m
+[2025-06-16 13:00:15.985 PM] info: 	[0mGET /api/orders/RX250616-001/quotes [32m200[0m 1.017 ms - 174[0m
+[2025-06-16 13:00:23.383 PM] warn: 	速率限制触发
+[2025-06-16 13:00:54.030 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.544 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.545 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.546 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.546 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.547 PM] warn: 	速率限制触发
+[2025-06-16 13:01:00.547 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.744 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.745 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.745 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.745 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.745 PM] warn: 	速率限制触发
+[2025-06-16 13:01:01.746 PM] warn: 	速率限制触发
+[2025-06-16 13:01:27.474 PM] warn: 	速率限制触发
+[2025-06-16 13:01:27.476 PM] warn: 	速率限制触发
+[2025-06-16 13:01:27.480 PM] warn: 	速率限制触发
+[2025-06-16 13:01:27.482 PM] warn: 	速率限制触发
+[2025-06-16 13:01:28.837 PM] warn: 	速率限制触发
+[2025-06-16 13:01:28.843 PM] warn: 	速率限制触发
+[2025-06-16 13:01:31.436 PM] warn: 	速率限制触发
+[2025-06-16 13:01:31.437 PM] warn: 	速率限制触发
+[2025-06-16 13:01:31.443 PM] warn: 	速率限制触发
+[2025-06-16 13:01:31.445 PM] warn: 	速率限制触发
+[2025-06-16 13:01:41.586 PM] warn: 	速率限制触发
+[2025-06-16 13:01:41.592 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.073 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.076 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.080 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.081 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.669 PM] warn: 	速率限制触发
+[2025-06-16 13:02:09.674 PM] warn: 	速率限制触发
+[2025-06-16 13:02:17.370 PM] warn: 	速率限制触发
+[2025-06-16 13:02:17.371 PM] warn: 	速率限制触发
+[2025-06-16 13:02:17.378 PM] warn: 	速率限制触发
+[2025-06-16 13:02:17.381 PM] warn: 	速率限制触发
+[2025-06-16 13:02:20.578 PM] warn: 	速率限制触发
+[2025-06-16 13:02:20.579 PM] warn: 	速率限制触发
+[2025-06-16 13:02:21.804 PM] warn: 	速率限制触发
+[2025-06-16 13:02:21.806 PM] warn: 	速率限制触发
+[2025-06-16 13:02:21.813 PM] warn: 	速率限制触发
+[2025-06-16 13:02:21.815 PM] warn: 	速率限制触发
+[2025-06-16 13:02:31.986 PM] warn: 	速率限制触发
+[2025-06-16 13:02:31.992 PM] warn: 	速率限制触发
+[2025-06-16 13:02:32.836 PM] warn: 	速率限制触发
+[2025-06-16 13:02:32.837 PM] warn: 	速率限制触发
+[2025-06-16 13:02:32.844 PM] warn: 	速率限制触发
+[2025-06-16 13:02:32.846 PM] warn: 	速率限制触发
+[2025-06-16 13:02:33.219 PM] warn: 	速率限制触发
+[2025-06-16 13:02:33.226 PM] warn: 	速率限制触发
+[2025-06-16 13:02:34.785 PM] warn: 	速率限制触发
+[2025-06-16 13:02:34.791 PM] warn: 	速率限制触发
+[2025-06-16 13:02:54.837 PM] warn: 	速率限制触发
+[2025-06-16 13:02:54.839 PM] warn: 	速率限制触发
+[2025-06-16 13:02:54.846 PM] warn: 	速率限制触发
+[2025-06-16 13:02:54.848 PM] warn: 	速率限制触发
+[2025-06-16 13:02:55.569 PM] warn: 	速率限制触发
+[2025-06-16 13:02:55.574 PM] warn: 	速率限制触发
+[2025-06-16 13:03:01.869 PM] warn: 	速率限制触发
+[2025-06-16 13:03:01.875 PM] warn: 	速率限制触发
+[2025-06-16 13:03:58.718 PM] warn: 	速率限制触发
+[2025-06-16 13:03:58.724 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.219 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.220 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.223 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.225 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.719 PM] warn: 	速率限制触发
+[2025-06-16 13:04:13.727 PM] warn: 	速率限制触发
+[2025-06-16 13:04:14.734 PM] warn: 	速率限制触发
+[2025-06-16 13:04:14.736 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.429 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.430 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.430 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.431 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.432 PM] warn: 	速率限制触发
+[2025-06-16 13:04:17.432 PM] warn: 	速率限制触发
+[2025-06-16 13:04:24.035 PM] warn: 	速率限制触发
+[2025-06-16 13:04:24.041 PM] warn: 	速率限制触发
+[2025-06-16 13:04:49.626 PM] warn: 	速率限制触发
+[2025-06-16 13:04:49.628 PM] warn: 	速率限制触发
+[2025-06-16 13:05:03.186 PM] warn: 	速率限制触发
+[2025-06-16 13:05:03.186 PM] warn: 	速率限制触发
+[2025-06-16 13:05:03.191 PM] warn: 	速率限制触发
+[2025-06-16 13:05:03.191 PM] warn: 	速率限制触发
+[2025-06-16 13:05:04.103 PM] warn: 	速率限制触发
+[2025-06-16 13:05:04.108 PM] warn: 	速率限制触发
+[2025-06-16 13:05:11.520 PM] warn: 	速率限制触发
+[2025-06-16 13:05:11.523 PM] warn: 	速率限制触发
+[2025-06-16 13:05:11.528 PM] warn: 	速率限制触发
+[2025-06-16 13:05:11.530 PM] warn: 	速率限制触发
+[2025-06-16 13:05:12.521 PM] warn: 	速率限制触发
+[2025-06-16 13:05:12.523 PM] warn: 	速率限制触发
+[2025-06-16 13:05:12.531 PM] warn: 	速率限制触发
+[2025-06-16 13:05:12.533 PM] warn: 	速率限制触发
+[2025-06-16 13:05:18.785 PM] warn: 	速率限制触发
+[2025-06-16 13:05:18.791 PM] warn: 	速率限制触发
+[2025-06-16 13:05:20.654 PM] warn: 	速率限制触发
+[2025-06-16 13:05:20.657 PM] warn: 	速率限制触发
+[2025-06-16 13:05:20.662 PM] warn: 	速率限制触发
+[2025-06-16 13:05:20.664 PM] warn: 	速率限制触发
+[2025-06-16 13:05:25.571 PM] warn: 	速率限制触发
+[2025-06-16 13:05:25.572 PM] warn: 	速率限制触发
+[2025-06-16 13:05:25.579 PM] warn: 	速率限制触发
+[2025-06-16 13:05:25.580 PM] warn: 	速率限制触发
+[2025-06-16 13:05:26.769 PM] warn: 	速率限制触发
+[2025-06-16 13:05:26.775 PM] warn: 	速率限制触发
+[2025-06-16 13:06:20.825 PM] warn: 	速率限制触发
+[2025-06-16 13:06:20.828 PM] warn: 	速率限制触发
+[2025-06-16 13:09:17.941 PM] warn: 	速率限制触发
+[2025-06-16 13:11:02.913 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 13:11:02.916 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 13:11:02.916 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 13:11:03.055 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 13:11:03.055 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 13:11:03.055 PM] info: 	- JWT认证系统
+[2025-06-16 13:11:03.055 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 13:11:03.055 PM] info: 	- SQL注入防护
+[2025-06-16 13:11:03.055 PM] info: 	- 速率限制
+[2025-06-16 13:11:03.055 PM] info: 	- 安全响应头
+[2025-06-16 13:11:03.055 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 13:11:03.055 PM] info: 	- 数据库查询性能监控
+[2025-06-16 13:11:03.057 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 13:11:07.541 PM] info: 	[0mOPTIONS /api/auth/login/provider [32m200[0m 0.424 ms - -[0m
+[2025-06-16 13:11:07.554 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.090 ms - -[0m
+[2025-06-16 13:11:07.555 PM] info: 	[0mOPTIONS /api/auth/login/provider [32m200[0m 0.066 ms - -[0m
+[2025-06-16 13:11:07.560 PM] info: 	供应商登录成功
+[2025-06-16 13:11:07.561 PM] info: 	[0mPOST /api/auth/login/provider [32m200[0m 19.206 ms - 766[0m
+[2025-06-16 13:11:07.563 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.031 ms - -[0m
+[2025-06-16 13:11:07.563 PM] info: 	供应商登录成功
+[2025-06-16 13:11:07.563 PM] info: 	[0mPOST /api/auth/login/provider [32m200[0m 7.775 ms - 766[0m
+[2025-06-16 13:11:07.564 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.896 ms - -[0m
+[2025-06-16 13:11:07.566 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.805 ms - -[0m
+[2025-06-16 13:11:07.584 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.381 ms - -[0m
+[2025-06-16 13:11:07.586 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.078 ms - -[0m
+[2025-06-16 13:11:07.587 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.735 ms - -[0m
+[2025-06-16 13:11:07.588 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.413 ms - -[0m
+[2025-06-16 13:11:07.598 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.040 ms - -[0m
+[2025-06-16 13:11:07.599 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.056 ms - -[0m
+[2025-06-16 13:11:07.600 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.627 ms - -[0m
+[2025-06-16 13:11:07.601 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.425 ms - -[0m
+[2025-06-16 13:11:15.455 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.491 ms - 133[0m
+[2025-06-16 13:11:15.457 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.474 ms - -[0m
+[2025-06-16 13:11:19.329 PM] info: 	[0mGET /api/backup/history [32m200[0m 0.907 ms - 2[0m
+[2025-06-16 13:11:19.330 PM] info: 	[0mGET /api/backup/config [32m200[0m 3.366 ms - 375[0m
+[2025-06-16 13:11:19.343 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.806 ms - -[0m
+[2025-06-16 13:11:19.345 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.317 ms - -[0m
+[2025-06-16 13:11:19.931 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.426 ms - -[0m
+[2025-06-16 13:11:19.934 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [32m200[0m 5.718 ms - 364[0m
+[2025-06-16 13:11:19.944 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.186 ms - -[0m
+[2025-06-16 13:11:19.944 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 1.854 ms - -[0m
+[2025-06-16 13:11:21.110 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 2.157 ms - 220[0m
+[2025-06-16 13:11:21.116 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.621 ms - -[0m
+[2025-06-16 13:11:47.582 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.122 ms - -[0m
+[2025-06-16 13:11:47.588 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.166 ms - -[0m
+[2025-06-16 13:11:47.590 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.502 ms - -[0m
+[2025-06-16 13:11:47.597 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 2.994 ms - -[0m
+[2025-06-16 13:11:47.631 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.126 ms - -[0m
+[2025-06-16 13:11:47.632 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.314 ms - -[0m
+[2025-06-16 13:11:47.636 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.485 ms - -[0m
+[2025-06-16 13:11:47.638 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.050 ms - -[0m
+[2025-06-16 13:11:47.640 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.157 ms - -[0m
+[2025-06-16 13:11:47.642 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.324 ms - -[0m
+[2025-06-16 13:11:47.645 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.496 ms - -[0m
+[2025-06-16 13:11:47.649 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.554 ms - -[0m
+[2025-06-16 13:11:47.922 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.968 ms - -[0m
+[2025-06-16 13:11:47.931 PM] info: 	[0mGET /api/admin/stats [36m304[0m 4.783 ms - -[0m
+[2025-06-16 13:24:44.750 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.205 ms - -[0m
+[2025-06-16 13:24:44.752 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.685 ms - -[0m
+[2025-06-16 13:24:44.756 PM] info: 	Token刷新成功
+[2025-06-16 13:24:44.756 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 3.186 ms - 229[0m
+[2025-06-16 13:24:44.758 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.095 ms - -[0m
+[2025-06-16 13:24:44.761 PM] info: 	Token刷新成功
+[2025-06-16 13:24:44.762 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.759 ms - 229[0m
+[2025-06-16 13:24:44.764 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.087 ms - -[0m
+[2025-06-16 13:24:44.765 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 7.340 ms - -[0m
+[2025-06-16 13:24:44.766 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.374 ms - -[0m
+[2025-06-16 13:24:44.777 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.080 ms - -[0m
+[2025-06-16 13:24:44.777 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.070 ms - -[0m
+[2025-06-16 13:24:44.779 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.928 ms - -[0m
+[2025-06-16 13:24:44.780 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.041 ms - -[0m
+[2025-06-16 13:24:44.780 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.866 ms - -[0m
+[2025-06-16 13:24:44.781 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.733 ms - -[0m
+[2025-06-16 13:24:44.782 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.220 ms - -[0m
+[2025-06-16 13:25:11.263 PM] info: 	管理员登录成功
+[2025-06-16 13:25:11.263 PM] info: 	[0mPOST /api/admin/login [32m200[0m 87.551 ms - 601[0m
+[2025-06-16 13:25:11.286 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.032 ms - -[0m
+[2025-06-16 13:25:11.288 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.674 ms - -[0m
+[2025-06-16 13:25:19.441 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.039 ms - -[0m
+[2025-06-16 13:25:19.445 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.097 ms - -[0m
+[2025-06-16 13:25:20.047 PM] info: 	[0mGET /api/admin/stats [36m304[0m 5.081 ms - -[0m
+[2025-06-16 13:25:20.048 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 3.091 ms - -[0m
+[2025-06-16 13:25:20.056 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.240 ms - -[0m
+[2025-06-16 13:25:20.056 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.002 ms - -[0m
+[2025-06-16 13:25:20.557 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.112 ms - -[0m
+[2025-06-16 13:25:20.562 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 0.924 ms - -[0m
+[2025-06-16 13:25:22.912 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.478 ms - -[0m
+[2025-06-16 13:25:22.913 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.335 ms - -[0m
+[2025-06-16 13:25:22.918 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.894 ms - -[0m
+[2025-06-16 13:25:22.919 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.407 ms - -[0m
+[2025-06-16 13:25:23.628 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.946 ms - -[0m
+[2025-06-16 13:25:23.631 PM] info: 	[0mGET /api/admin/stats [36m304[0m 4.037 ms - -[0m
+[2025-06-16 13:25:23.635 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.256 ms - -[0m
+[2025-06-16 13:25:23.636 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.972 ms - -[0m
+[2025-06-16 13:25:24.242 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.450 ms - -[0m
+[2025-06-16 13:25:24.249 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.590 ms - -[0m
+[2025-06-16 13:25:24.660 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.756 ms - -[0m
+[2025-06-16 13:25:24.662 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.619 ms - -[0m
+[2025-06-16 13:25:24.670 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 3.081 ms - -[0m
+[2025-06-16 13:25:24.671 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.015 ms - -[0m
+[2025-06-16 13:25:25.177 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.180 ms - -[0m
+[2025-06-16 13:25:25.179 PM] info: 	[0mGET /api/backup/history [36m304[0m 2.238 ms - -[0m
+[2025-06-16 13:25:25.185 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.534 ms - -[0m
+[2025-06-16 13:25:25.186 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.298 ms - -[0m
+[2025-06-16 13:25:26.389 PM] info: 	[0mGET /api/backup/config [36m304[0m 0.657 ms - -[0m
+[2025-06-16 13:25:26.389 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.889 ms - -[0m
+[2025-06-16 13:25:26.393 PM] info: 	[0mGET /api/backup/config [36m304[0m 0.784 ms - -[0m
+[2025-06-16 13:25:26.394 PM] info: 	[0mGET /api/backup/history [36m304[0m 2.196 ms - -[0m
+[2025-06-16 13:25:32.925 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.442 ms - -[0m
+[2025-06-16 13:25:32.932 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.356 ms - -[0m
+[2025-06-16 13:26:08.397 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.416 ms - -[0m
+[2025-06-16 13:26:08.398 PM] info: 	[0mGET /api/backup/config [36m304[0m 4.385 ms - -[0m
+[2025-06-16 13:26:08.403 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.325 ms - -[0m
+[2025-06-16 13:26:08.407 PM] info: 	[0mGET /api/backup/config [36m304[0m 3.908 ms - -[0m
+[2025-06-16 13:26:09.930 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 4.410 ms - -[0m
+[2025-06-16 13:26:09.931 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.427 ms - -[0m
+[2025-06-16 13:26:09.940 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 4.755 ms - -[0m
+[2025-06-16 13:26:09.941 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.486 ms - -[0m
+[2025-06-16 13:26:11.027 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.089 ms - -[0m
+[2025-06-16 13:26:11.033 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.568 ms - -[0m
+[2025-06-16 13:26:20.850 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.805 ms - -[0m
+[2025-06-16 13:26:20.853 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.008 ms - -[0m
+[2025-06-16 13:26:22.530 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.764 ms - -[0m
+[2025-06-16 13:26:22.532 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.863 ms - -[0m
+[2025-06-16 13:26:42.978 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 3.385 ms - -[0m
+[2025-06-16 13:26:42.980 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.418 ms - -[0m
+[2025-06-16 13:26:42.986 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.160 ms - -[0m
+[2025-06-16 13:26:42.987 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 1.869 ms - -[0m
+[2025-06-16 13:26:43.527 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.581 ms - -[0m
+[2025-06-16 13:26:43.528 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.677 ms - -[0m
+[2025-06-16 13:26:43.536 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.400 ms - -[0m
+[2025-06-16 13:26:43.536 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.566 ms - -[0m
+[2025-06-16 13:26:50.908 PM] info: 	[0mGET /api/admin/stats [36m304[0m 11.602 ms - -[0m
+[2025-06-16 13:26:50.939 PM] info: 	[0mGET /api/admin/stats [36m304[0m 1.794 ms - -[0m
+[2025-06-16 13:26:51.250 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.076 ms - -[0m
+[2025-06-16 13:26:51.254 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.057 ms - -[0m
+[2025-06-16 13:26:51.254 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.423 ms - -[0m
+[2025-06-16 13:26:51.255 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.345 ms - -[0m
+[2025-06-16 13:26:51.288 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.074 ms - -[0m
+[2025-06-16 13:26:51.289 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.054 ms - -[0m
+[2025-06-16 13:26:51.291 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.791 ms - -[0m
+[2025-06-16 13:26:51.292 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.612 ms - -[0m
+[2025-06-16 13:26:51.294 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.096 ms - -[0m
+[2025-06-16 13:26:51.294 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.061 ms - -[0m
+[2025-06-16 13:26:51.295 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.687 ms - -[0m
+[2025-06-16 13:26:51.297 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.605 ms - -[0m
+[2025-06-16 13:41:58.100 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.091 ms - -[0m
+[2025-06-16 13:41:58.100 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.057 ms - -[0m
+[2025-06-16 13:41:58.104 PM] info: 	Token刷新成功
+[2025-06-16 13:41:58.105 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.689 ms - 229[0m
+[2025-06-16 13:41:58.106 PM] info: 	Token刷新成功
+[2025-06-16 13:41:58.107 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.594 ms - 229[0m
+[2025-06-16 13:41:58.450 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.185 ms - -[0m
+[2025-06-16 13:41:58.451 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.074 ms - -[0m
+[2025-06-16 13:41:58.453 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.104 ms - -[0m
+[2025-06-16 13:41:58.454 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.355 ms - -[0m
+[2025-06-16 13:41:58.492 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.074 ms - -[0m
+[2025-06-16 13:41:58.494 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.008 ms - -[0m
+[2025-06-16 13:41:58.495 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.701 ms - -[0m
+[2025-06-16 13:41:58.510 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.105 ms - -[0m
+[2025-06-16 13:41:58.511 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.055 ms - -[0m
+[2025-06-16 13:41:58.513 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.244 ms - -[0m
+[2025-06-16 13:41:58.515 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.086 ms - -[0m
+[2025-06-16 15:05:11.889 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.176 ms - -[0m
+[2025-06-16 15:05:11.893 PM] info: 	Token刷新成功
+[2025-06-16 15:05:11.893 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.595 ms - 229[0m
+[2025-06-16 15:05:11.893 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.059 ms - -[0m
+[2025-06-16 15:05:11.897 PM] info: 	Token刷新成功
+[2025-06-16 15:05:11.897 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 3.062 ms - 229[0m
+[2025-06-16 15:05:38.698 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 1.454 ms - -[0m
+[2025-06-16 15:05:38.699 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.058 ms - -[0m
+[2025-06-16 15:05:38.701 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.535 ms - -[0m
+[2025-06-16 15:05:38.701 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.365 ms - -[0m
+[2025-06-16 15:05:38.725 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.111 ms - -[0m
+[2025-06-16 15:05:38.725 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.073 ms - -[0m
+[2025-06-16 15:05:38.727 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.940 ms - -[0m
+[2025-06-16 15:05:38.728 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.058 ms - -[0m
+[2025-06-16 15:05:38.732 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 4.827 ms - -[0m
+[2025-06-16 15:05:38.733 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 2.769 ms - -[0m
+[2025-06-16 15:05:38.735 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.516 ms - -[0m
+[2025-06-16 15:05:48.497 PM] info: 	管理员登录成功
+[2025-06-16 15:05:48.497 PM] info: 	[0mPOST /api/admin/login [32m200[0m 82.593 ms - 601[0m
+[2025-06-16 15:05:48.524 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.800 ms - -[0m
+[2025-06-16 15:05:48.526 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.568 ms - -[0m
+[2025-06-16 15:05:50.332 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.846 ms - -[0m
+[2025-06-16 15:05:50.338 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.522 ms - -[0m
+[2025-06-16 15:05:57.596 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.914 ms - -[0m
+[2025-06-16 15:05:57.604 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.577 ms - -[0m
+[2025-06-16 15:06:05.198 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.977 ms - -[0m
+[2025-06-16 15:06:05.204 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.458 ms - -[0m
+[2025-06-16 15:06:12.281 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.814 ms - -[0m
+[2025-06-16 15:06:12.288 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 2.181 ms - -[0m
+[2025-06-16 15:06:13.370 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.914 ms - -[0m
+[2025-06-16 15:06:13.373 PM] info: 	[0mGET /api/admin/stats [36m304[0m 0.853 ms - -[0m
+[2025-06-16 15:06:15.297 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.748 ms - -[0m
+[2025-06-16 15:06:15.304 PM] info: 	[0mGET /api/users?page=1&limit=20 [36m304[0m 1.891 ms - -[0m
+[2025-06-16 15:06:23.634 PM] info: 	[0mGET /api/admin/stats [36m304[0m 3.968 ms - -[0m
+[2025-06-16 15:06:23.636 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 2.492 ms - -[0m
+[2025-06-16 15:06:23.641 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.457 ms - -[0m
+[2025-06-16 15:06:23.642 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [36m304[0m 1.947 ms - -[0m
+[2025-06-16 15:06:31.766 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.367 ms - -[0m
+[2025-06-16 15:06:31.770 PM] info: 	[0mGET /api/backup/history [36m304[0m 3.889 ms - -[0m
+[2025-06-16 15:06:31.772 PM] info: 	[0mGET /api/backup/config [36m304[0m 0.828 ms - -[0m
+[2025-06-16 15:06:31.774 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.553 ms - -[0m
+[2025-06-16 15:06:39.048 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.116 ms - -[0m
+[2025-06-16 15:06:39.049 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.479 ms - -[0m
+[2025-06-16 15:06:39.057 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.525 ms - -[0m
+[2025-06-16 15:06:39.058 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.121 ms - -[0m
+[2025-06-16 15:06:43.715 PM] info: 	[0mGET /api/backup/history [36m304[0m 0.449 ms - -[0m
+[2025-06-16 15:06:43.716 PM] info: 	[0mGET /api/backup/config [36m304[0m 2.022 ms - -[0m
+[2025-06-16 15:06:43.723 PM] info: 	[0mGET /api/backup/history [36m304[0m 1.117 ms - -[0m
+[2025-06-16 15:06:43.724 PM] info: 	[0mGET /api/backup/config [36m304[0m 1.501 ms - -[0m
+[2025-06-16 15:07:18.840 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.672 ms - -[0m
+[2025-06-16 15:07:18.926 PM] info: 	用户登录成功
+[2025-06-16 15:07:18.926 PM] info: 	[0mPOST /api/auth/login [32m200[0m 84.681 ms - 664[0m
+[2025-06-16 15:07:18.947 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.059 ms - -[0m
+[2025-06-16 15:07:18.950 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.058 ms - -[0m
+[2025-06-16 15:07:18.951 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.039 ms - -[0m
+[2025-06-16 15:07:18.951 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.036 ms - -[0m
+[2025-06-16 15:07:18.954 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.025 ms - -[0m
+[2025-06-16 15:07:18.955 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.024 ms - -[0m
+[2025-06-16 15:07:18.955 PM] info: 	[0mGET /api/providers [32m200[0m 0.842 ms - 176[0m
+[2025-06-16 15:07:18.955 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 3.850 ms - 252[0m
+[2025-06-16 15:07:18.956 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 2.468 ms - 92[0m
+[2025-06-16 15:07:18.956 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 3.192 ms - 252[0m
+[2025-06-16 15:07:18.957 PM] info: 	[0mGET /api/providers [32m200[0m 0.240 ms - 176[0m
+[2025-06-16 15:07:18.957 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 0.843 ms - 92[0m
+[2025-06-16 15:07:18.972 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.046 ms - -[0m
+[2025-06-16 15:07:18.973 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.031 ms - -[0m
+[2025-06-16 15:07:18.974 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.884 ms - 48[0m
+[2025-06-16 15:07:18.974 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.668 ms - 48[0m
+[2025-06-16 15:07:22.576 PM] info: 	[0mOPTIONS /api/orders/RX250616-001/quotes [32m200[0m 0.228 ms - -[0m
+[2025-06-16 15:07:22.580 PM] info: 	[0mGET /api/orders/RX250616-001/quotes [32m200[0m 1.072 ms - 174[0m
+[2025-06-16 15:07:46.507 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.247 ms - -[0m
+[2025-06-16 15:07:46.510 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.087 ms - -[0m
+[2025-06-16 15:07:46.511 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.114 ms - -[0m
+[2025-06-16 15:07:46.512 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.050 ms - -[0m
+[2025-06-16 15:07:46.514 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.086 ms - -[0m
+[2025-06-16 15:07:46.516 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.261 ms - -[0m
+[2025-06-16 15:07:46.522 PM] info: 	[0mGET /api/providers [36m304[0m 4.524 ms - -[0m
+[2025-06-16 15:07:46.523 PM] info: 	[0mGET /api/providers [36m304[0m 1.646 ms - -[0m
+[2025-06-16 15:07:46.524 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.487 ms - -[0m
+[2025-06-16 15:07:46.524 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.098 ms - -[0m
+[2025-06-16 15:07:46.525 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 6.194 ms - -[0m
+[2025-06-16 15:07:46.526 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 16.977 ms - -[0m
+[2025-06-16 15:07:46.531 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.066 ms - -[0m
+[2025-06-16 15:07:46.531 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.050 ms - -[0m
+[2025-06-16 15:07:46.532 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.192 ms - -[0m
+[2025-06-16 15:07:46.532 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.153 ms - -[0m
+[2025-06-16 15:08:00.088 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.109 ms - -[0m
+[2025-06-16 15:08:00.090 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [33m400[0m 0.957 ms - 50[0m
+[2025-06-16 15:08:35.696 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.347 ms - -[0m
+[2025-06-16 15:08:35.783 PM] info: 	用户登录成功
+[2025-06-16 15:08:35.783 PM] info: 	[0mPOST /api/auth/login [32m200[0m 82.657 ms - 664[0m
+[2025-06-16 15:08:35.794 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.054 ms - -[0m
+[2025-06-16 15:08:35.795 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.024 ms - -[0m
+[2025-06-16 15:08:35.795 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.033 ms - -[0m
+[2025-06-16 15:08:35.796 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.106 ms - -[0m
+[2025-06-16 15:08:35.797 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.162 ms - -[0m
+[2025-06-16 15:08:35.797 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.026 ms - -[0m
+[2025-06-16 15:08:35.799 PM] info: 	[0mGET /api/providers [32m200[0m 0.241 ms - 176[0m
+[2025-06-16 15:08:35.800 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [32m200[0m 1.506 ms - 92[0m
+[2025-06-16 15:08:35.801 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 2.931 ms - 252[0m
+[2025-06-16 15:08:35.802 PM] info: 	[0mGET /api/providers [36m304[0m 1.624 ms - -[0m
+[2025-06-16 15:08:35.803 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.454 ms - -[0m
+[2025-06-16 15:08:35.803 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.687 ms - -[0m
+[2025-06-16 15:08:35.810 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.039 ms - -[0m
+[2025-06-16 15:08:35.811 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.022 ms - -[0m
+[2025-06-16 15:08:35.811 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.098 ms - 48[0m
+[2025-06-16 15:08:35.812 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.069 ms - -[0m
+[2025-06-16 15:08:35.812 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.054 ms - -[0m
+[2025-06-16 15:08:48.744 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.130 ms - -[0m
+[2025-06-16 15:08:48.745 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.149 ms - -[0m
+[2025-06-16 15:08:48.747 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.332 ms - -[0m
+[2025-06-16 15:08:48.748 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.339 ms - -[0m
+[2025-06-16 15:08:51.360 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.394 ms - -[0m
+[2025-06-16 15:08:51.363 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.680 ms - -[0m
+[2025-06-16 15:09:06.608 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.136 ms - -[0m
+[2025-06-16 15:09:06.612 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [33m400[0m 1.519 ms - 50[0m
+[2025-06-16 15:11:53.950 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:12:32.769 PM] info: 	[0mPOST /api/providers [33m400[0m 1.009 ms - 50[0m
+[2025-06-16 15:13:00.876 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:13:24.784 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:13:24.786 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:13:24.787 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:13:24.914 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:13:24.914 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:13:24.914 PM] info: 	- JWT认证系统
+[2025-06-16 15:13:24.914 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:13:24.914 PM] info: 	- SQL注入防护
+[2025-06-16 15:13:24.914 PM] info: 	- 速率限制
+[2025-06-16 15:13:24.914 PM] info: 	- 安全响应头
+[2025-06-16 15:13:24.915 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:13:24.915 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:13:24.916 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:13:42.003 PM] info: 	[0mPOST /api/providers [32m201[0m 7.825 ms - 227[0m
+[2025-06-16 15:14:10.372 PM] info: 	[0mGET /api/providers [32m200[0m 1.091 ms - 406[0m
+[2025-06-16 15:14:31.638 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.272 ms - -[0m
+[2025-06-16 15:14:31.644 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.079 ms - -[0m
+[2025-06-16 15:14:31.645 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.122 ms - -[0m
+[2025-06-16 15:14:31.649 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.132 ms - -[0m
+[2025-06-16 15:14:31.650 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 10.441 ms - -[0m
+[2025-06-16 15:14:31.651 PM] info: 	[0mGET /api/providers [32m200[0m 4.460 ms - 406[0m
+[2025-06-16 15:14:31.653 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.045 ms - -[0m
+[2025-06-16 15:14:31.654 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.042 ms - -[0m
+[2025-06-16 15:14:31.654 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.295 ms - -[0m
+[2025-06-16 15:14:31.655 PM] info: 	[0mGET /api/providers [36m304[0m 0.544 ms - -[0m
+[2025-06-16 15:14:31.656 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.438 ms - -[0m
+[2025-06-16 15:14:31.656 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.375 ms - -[0m
+[2025-06-16 15:14:31.666 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.042 ms - -[0m
+[2025-06-16 15:14:31.667 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.031 ms - -[0m
+[2025-06-16 15:14:31.668 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.781 ms - -[0m
+[2025-06-16 15:14:31.669 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.296 ms - -[0m
+[2025-06-16 15:14:46.554 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.195 ms - -[0m
+[2025-06-16 15:14:46.560 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 4.065 ms - 185[0m
+[2025-06-16 15:14:46.567 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.182 ms - -[0m
+[2025-06-16 15:14:46.570 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.132 ms - -[0m
+[2025-06-16 15:14:46.572 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.067 ms - -[0m
+[2025-06-16 15:14:46.575 PM] info: 	[0mGET /api/providers [32m200[0m 0.692 ms - 518[0m
+[2025-06-16 15:14:46.575 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.837 ms - -[0m
+[2025-06-16 15:14:46.576 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.977 ms - -[0m
+[2025-06-16 15:15:15.151 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.157 ms - -[0m
+[2025-06-16 15:15:15.160 PM] info: 	Token刷新成功
+[2025-06-16 15:15:15.160 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 7.139 ms - 229[0m
+[2025-06-16 15:20:57.129 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:20:57.131 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:20:57.132 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:20:57.287 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:20:57.287 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:20:57.287 PM] info: 	- JWT认证系统
+[2025-06-16 15:20:57.287 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:20:57.287 PM] info: 	- SQL注入防护
+[2025-06-16 15:20:57.287 PM] info: 	- 速率限制
+[2025-06-16 15:20:57.287 PM] info: 	- 安全响应头
+[2025-06-16 15:20:57.287 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:20:57.287 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:20:57.292 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:21:11.851 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 1.041 ms - -[0m
+[2025-06-16 15:21:11.936 PM] info: 	用户登录成功
+[2025-06-16 15:21:11.937 PM] info: 	[0mPOST /api/auth/login [32m200[0m 83.796 ms - 664[0m
+[2025-06-16 15:21:11.951 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.054 ms - -[0m
+[2025-06-16 15:21:11.952 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.028 ms - -[0m
+[2025-06-16 15:21:11.952 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.026 ms - -[0m
+[2025-06-16 15:21:11.953 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:21:11.954 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:21:11.954 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.021 ms - -[0m
+[2025-06-16 15:21:11.958 PM] info: 	[0mGET /api/providers [36m304[0m 0.809 ms - -[0m
+[2025-06-16 15:21:11.959 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.834 ms - -[0m
+[2025-06-16 15:21:11.959 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.372 ms - -[0m
+[2025-06-16 15:21:11.960 PM] info: 	[0mGET /api/providers [36m304[0m 0.825 ms - -[0m
+[2025-06-16 15:21:11.961 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.008 ms - -[0m
+[2025-06-16 15:21:11.961 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.078 ms - -[0m
+[2025-06-16 15:21:11.972 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 15:21:11.972 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.032 ms - -[0m
+[2025-06-16 15:21:11.972 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.034 ms - -[0m
+[2025-06-16 15:21:11.973 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.536 ms - -[0m
+[2025-06-16 15:21:11.974 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.251 ms - -[0m
+[2025-06-16 15:21:11.974 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.087 ms - -[0m
+[2025-06-16 15:22:01.068 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.174 ms - -[0m
+[2025-06-16 15:22:01.078 PM] info: 	[0mPOST /api/orders [32m201[0m 6.687 ms - 201[0m
+[2025-06-16 15:22:04.087 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.176 ms - -[0m
+[2025-06-16 15:22:04.093 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.124 ms - -[0m
+[2025-06-16 15:22:04.095 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.094 ms - -[0m
+[2025-06-16 15:22:04.099 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.114 ms - -[0m
+[2025-06-16 15:22:04.101 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 11.313 ms - 441[0m
+[2025-06-16 15:22:04.104 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-001 [32m200[0m 0.133 ms - -[0m
+[2025-06-16 15:22:04.106 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.365 ms - -[0m
+[2025-06-16 15:22:04.108 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-001 [36m304[0m 0.260 ms - -[0m
+[2025-06-16 15:22:04.109 PM] info: 	[0mGET /api/providers [36m304[0m 8.383 ms - -[0m
+[2025-06-16 15:22:04.110 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 13.069 ms - -[0m
+[2025-06-16 15:22:04.115 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.106 ms - -[0m
+[2025-06-16 15:22:04.116 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.698 ms - 68[0m
+[2025-06-16 15:22:12.182 PM] info: 	[0mOPTIONS /api/providers/6a9747cf-861a-4058-aecb-a33edb8059ab [32m200[0m 0.170 ms - -[0m
+[2025-06-16 15:22:12.187 PM] info: 	[0mDELETE /api/providers/6a9747cf-861a-4058-aecb-a33edb8059ab [32m200[0m 1.946 ms - 38[0m
+[2025-06-16 15:22:12.194 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.158 ms - -[0m
+[2025-06-16 15:22:12.196 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.139 ms - -[0m
+[2025-06-16 15:22:12.199 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.095 ms - -[0m
+[2025-06-16 15:22:12.202 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.322 ms - -[0m
+[2025-06-16 15:22:12.202 PM] info: 	[0mGET /api/providers [32m200[0m 1.083 ms - 288[0m
+[2025-06-16 15:22:12.203 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.471 ms - -[0m
+[2025-06-16 15:22:19.400 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.246 ms - -[0m
+[2025-06-16 15:22:19.403 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.620 ms - 185[0m
+[2025-06-16 15:22:19.409 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.144 ms - -[0m
+[2025-06-16 15:22:19.410 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.100 ms - -[0m
+[2025-06-16 15:22:19.415 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.075 ms - -[0m
+[2025-06-16 15:22:19.419 PM] info: 	[0mGET /api/providers [36m304[0m 2.421 ms - -[0m
+[2025-06-16 15:22:19.420 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 9.005 ms - -[0m
+[2025-06-16 15:22:19.422 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.683 ms - -[0m
+[2025-06-16 15:22:31.881 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.140 ms - -[0m
+[2025-06-16 15:22:31.884 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.024 ms - 205[0m
+[2025-06-16 15:22:31.887 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.089 ms - -[0m
+[2025-06-16 15:22:31.889 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.256 ms - -[0m
+[2025-06-16 15:22:31.891 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.105 ms - -[0m
+[2025-06-16 15:22:31.895 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.576 ms - -[0m
+[2025-06-16 15:22:31.895 PM] info: 	[0mGET /api/providers [32m200[0m 1.288 ms - 308[0m
+[2025-06-16 15:22:31.896 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.833 ms - -[0m
+[2025-06-16 15:22:34.655 PM] info: 	[0mGET /api/providers [36m304[0m 0.690 ms - -[0m
+[2025-06-16 15:22:34.658 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.175 ms - -[0m
+[2025-06-16 15:22:34.659 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.955 ms - -[0m
+[2025-06-16 15:22:34.661 PM] info: 	[0mGET /api/providers [36m304[0m 4.654 ms - -[0m
+[2025-06-16 15:22:34.663 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.463 ms - -[0m
+[2025-06-16 15:22:34.665 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.778 ms - -[0m
+[2025-06-16 15:22:34.706 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.088 ms - -[0m
+[2025-06-16 15:22:34.707 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 15:22:34.708 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.440 ms - -[0m
+[2025-06-16 15:22:34.709 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.444 ms - -[0m
+[2025-06-16 15:22:43.063 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.169 ms - -[0m
+[2025-06-16 15:22:43.067 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.666 ms - 185[0m
+[2025-06-16 15:22:43.071 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.128 ms - -[0m
+[2025-06-16 15:22:43.073 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.108 ms - -[0m
+[2025-06-16 15:22:43.077 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.073 ms - -[0m
+[2025-06-16 15:22:43.079 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.390 ms - -[0m
+[2025-06-16 15:22:43.080 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.573 ms - -[0m
+[2025-06-16 15:22:43.080 PM] info: 	[0mGET /api/providers [32m200[0m 1.670 ms - 288[0m
+[2025-06-16 15:23:38.021 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.442 ms - -[0m
+[2025-06-16 15:23:38.028 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 3.085 ms - 205[0m
+[2025-06-16 15:23:38.035 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.147 ms - -[0m
+[2025-06-16 15:23:38.036 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.074 ms - -[0m
+[2025-06-16 15:23:38.036 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.055 ms - -[0m
+[2025-06-16 15:23:38.044 PM] info: 	[0mGET /api/providers [32m200[0m 1.475 ms - 308[0m
+[2025-06-16 15:23:38.044 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.433 ms - -[0m
+[2025-06-16 15:23:38.045 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.174 ms - -[0m
+[2025-06-16 15:23:40.134 PM] info: 	[0mGET /api/providers [36m304[0m 0.458 ms - -[0m
+[2025-06-16 15:23:40.135 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.638 ms - -[0m
+[2025-06-16 15:23:40.135 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.912 ms - -[0m
+[2025-06-16 15:23:40.136 PM] info: 	[0mGET /api/providers [36m304[0m 0.380 ms - -[0m
+[2025-06-16 15:23:40.142 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.763 ms - -[0m
+[2025-06-16 15:23:40.142 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.662 ms - -[0m
+[2025-06-16 15:23:40.178 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.062 ms - -[0m
+[2025-06-16 15:23:40.179 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.044 ms - -[0m
+[2025-06-16 15:23:40.180 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 1.045 ms - -[0m
+[2025-06-16 15:23:40.181 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.494 ms - -[0m
+[2025-06-16 15:25:25.149 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.179 ms - -[0m
+[2025-06-16 15:25:25.153 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.120 ms - -[0m
+[2025-06-16 15:25:25.159 PM] info: 	Token刷新成功
+[2025-06-16 15:25:25.160 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 5.290 ms - 229[0m
+[2025-06-16 15:25:25.165 PM] info: 	Token刷新成功
+[2025-06-16 15:25:25.167 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 4.625 ms - 229[0m
+[2025-06-16 15:26:24.154 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.045 ms - -[0m
+[2025-06-16 15:26:24.154 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.026 ms - -[0m
+[2025-06-16 15:26:24.154 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.020 ms - -[0m
+[2025-06-16 15:26:24.154 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.015 ms - -[0m
+[2025-06-16 15:26:24.156 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.579 ms - -[0m
+[2025-06-16 15:26:24.157 PM] info: 	[0mGET /api/providers [36m304[0m 0.211 ms - -[0m
+[2025-06-16 15:26:24.157 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.026 ms - -[0m
+[2025-06-16 15:26:24.157 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 0.646 ms - -[0m
+[2025-06-16 15:26:24.164 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.914 ms - -[0m
+[2025-06-16 15:26:24.168 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.808 ms - -[0m
+[2025-06-16 15:27:07.151 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.063 ms - -[0m
+[2025-06-16 15:27:07.151 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.028 ms - -[0m
+[2025-06-16 15:27:07.152 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.023 ms - -[0m
+[2025-06-16 15:27:07.152 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.020 ms - -[0m
+[2025-06-16 15:27:07.154 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.403 ms - -[0m
+[2025-06-16 15:27:07.156 PM] info: 	[0mGET /api/providers [36m304[0m 0.452 ms - -[0m
+[2025-06-16 15:27:07.156 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.245 ms - -[0m
+[2025-06-16 15:27:07.156 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.038 ms - -[0m
+[2025-06-16 15:27:07.163 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.328 ms - -[0m
+[2025-06-16 15:27:07.164 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.323 ms - -[0m
+[2025-06-16 15:27:33.150 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.068 ms - -[0m
+[2025-06-16 15:27:33.151 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.032 ms - -[0m
+[2025-06-16 15:27:33.151 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.025 ms - -[0m
+[2025-06-16 15:27:33.151 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.022 ms - -[0m
+[2025-06-16 15:27:33.153 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.328 ms - -[0m
+[2025-06-16 15:27:33.154 PM] info: 	[0mGET /api/providers [36m304[0m 0.312 ms - -[0m
+[2025-06-16 15:27:33.154 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.157 ms - -[0m
+[2025-06-16 15:27:33.155 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 0.929 ms - -[0m
+[2025-06-16 15:27:33.160 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.268 ms - -[0m
+[2025-06-16 15:27:33.162 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.612 ms - -[0m
+[2025-06-16 15:30:17.329 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:30:48.047 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.158 ms - -[0m
+[2025-06-16 15:30:48.049 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.224 ms - -[0m
+[2025-06-16 15:30:48.054 PM] info: 	[0mGET /api/users/me/wechat-config [36m302[0m 2.964 ms - 70[0m
+[2025-06-16 15:30:48.057 PM] info: 	[0mGET /api/users/me/wechat-config [36m302[0m 0.877 ms - 70[0m
+[2025-06-16 15:30:53.424 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:31:25.147 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.149 ms - -[0m
+[2025-06-16 15:31:25.150 PM] info: 	Token刷新成功
+[2025-06-16 15:31:25.150 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.095 ms - 261[0m
+[2025-06-16 15:31:49.862 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:32:36.542 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:32:48.661 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:33:13.086 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:33:13.088 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:33:13.089 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:33:13.217 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:33:13.217 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:33:13.217 PM] info: 	- JWT认证系统
+[2025-06-16 15:33:13.217 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:33:13.217 PM] info: 	- SQL注入防护
+[2025-06-16 15:33:13.217 PM] info: 	- 速率限制
+[2025-06-16 15:33:13.218 PM] info: 	- 安全响应头
+[2025-06-16 15:33:13.218 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:33:13.218 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:33:13.220 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:34:39.544 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.845 ms - -[0m
+[2025-06-16 15:34:39.550 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.039 ms - -[0m
+[2025-06-16 15:34:39.552 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.032 ms - -[0m
+[2025-06-16 15:34:39.553 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.060 ms - -[0m
+[2025-06-16 15:34:39.555 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 8.569 ms - -[0m
+[2025-06-16 15:34:39.556 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.029 ms - -[0m
+[2025-06-16 15:34:39.556 PM] info: 	[0mGET /api/providers [36m304[0m 2.444 ms - -[0m
+[2025-06-16 15:34:39.558 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.028 ms - -[0m
+[2025-06-16 15:34:39.559 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 6.333 ms - -[0m
+[2025-06-16 15:34:39.561 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.880 ms - -[0m
+[2025-06-16 15:34:39.561 PM] info: 	[0mGET /api/providers [36m304[0m 1.162 ms - -[0m
+[2025-06-16 15:34:39.562 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.530 ms - -[0m
+[2025-06-16 15:34:39.565 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.055 ms - -[0m
+[2025-06-16 15:34:39.566 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.031 ms - -[0m
+[2025-06-16 15:34:39.567 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 1.218 ms - -[0m
+[2025-06-16 15:34:39.567 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.314 ms - -[0m
+[2025-06-16 15:34:39.568 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.276 ms - -[0m
+[2025-06-16 15:34:43.994 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.142 ms - -[0m
+[2025-06-16 15:34:43.995 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.113 ms - -[0m
+[2025-06-16 15:34:44.000 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 2.447 ms - 60[0m
+[2025-06-16 15:34:44.004 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.363 ms - -[0m
+[2025-06-16 15:34:49.622 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.138 ms - -[0m
+[2025-06-16 15:34:49.640 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 15.366 ms - 185[0m
+[2025-06-16 15:34:49.644 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.101 ms - -[0m
+[2025-06-16 15:34:49.645 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.066 ms - -[0m
+[2025-06-16 15:34:49.647 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.068 ms - -[0m
+[2025-06-16 15:34:49.649 PM] info: 	[0mGET /api/providers [32m200[0m 0.628 ms - 288[0m
+[2025-06-16 15:34:49.649 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.218 ms - -[0m
+[2025-06-16 15:34:49.649 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.952 ms - -[0m
+[2025-06-16 15:34:52.191 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.995 ms - -[0m
+[2025-06-16 15:34:52.191 PM] info: 	[0mGET /api/providers [36m304[0m 0.815 ms - -[0m
+[2025-06-16 15:34:52.192 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.332 ms - -[0m
+[2025-06-16 15:34:52.194 PM] info: 	[0mGET /api/providers [36m304[0m 0.879 ms - -[0m
+[2025-06-16 15:34:52.195 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.230 ms - -[0m
+[2025-06-16 15:34:52.195 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.871 ms - -[0m
+[2025-06-16 15:34:52.196 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.062 ms - -[0m
+[2025-06-16 15:34:52.197 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.064 ms - -[0m
+[2025-06-16 15:34:52.198 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.415 ms - -[0m
+[2025-06-16 15:34:52.199 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.431 ms - -[0m
+[2025-06-16 15:34:52.200 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.370 ms - -[0m
+[2025-06-16 15:34:54.039 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.090 ms - -[0m
+[2025-06-16 15:34:54.040 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.066 ms - -[0m
+[2025-06-16 15:34:54.042 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.629 ms - -[0m
+[2025-06-16 15:34:54.043 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.580 ms - -[0m
+[2025-06-16 15:35:00.524 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.157 ms - -[0m
+[2025-06-16 15:35:00.534 PM] info: 	[0mPUT /api/users/me/wechat-config [33m400[0m 6.993 ms - 247[0m
+[2025-06-16 15:37:22.180 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:37:22.182 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:37:22.183 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:37:22.309 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:37:22.309 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:37:22.309 PM] info: 	- JWT认证系统
+[2025-06-16 15:37:22.309 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:37:22.309 PM] info: 	- SQL注入防护
+[2025-06-16 15:37:22.309 PM] info: 	- 速率限制
+[2025-06-16 15:37:22.310 PM] info: 	- 安全响应头
+[2025-06-16 15:37:22.310 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:37:22.310 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:37:22.314 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:37:24.215 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:37:50.212 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:37:50.214 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:37:50.215 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:37:50.340 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:37:50.340 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:37:50.340 PM] info: 	- JWT认证系统
+[2025-06-16 15:37:50.340 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:37:50.340 PM] info: 	- SQL注入防护
+[2025-06-16 15:37:50.340 PM] info: 	- 速率限制
+[2025-06-16 15:37:50.340 PM] info: 	- 安全响应头
+[2025-06-16 15:37:50.341 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:37:50.341 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:37:50.342 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:38:26.986 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 1.019 ms - -[0m
+[2025-06-16 15:38:26.993 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.045 ms - -[0m
+[2025-06-16 15:38:26.994 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.037 ms - -[0m
+[2025-06-16 15:38:26.996 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.034 ms - -[0m
+[2025-06-16 15:38:26.998 PM] info: 	[0mGET /api/providers [36m304[0m 2.381 ms - -[0m
+[2025-06-16 15:38:26.998 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:38:26.999 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 10.001 ms - -[0m
+[2025-06-16 15:38:27.000 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.031 ms - -[0m
+[2025-06-16 15:38:27.001 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.240 ms - -[0m
+[2025-06-16 15:38:27.003 PM] info: 	[0mGET /api/providers [36m304[0m 0.548 ms - -[0m
+[2025-06-16 15:38:27.004 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.541 ms - -[0m
+[2025-06-16 15:38:27.004 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.234 ms - -[0m
+[2025-06-16 15:38:27.012 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.099 ms - -[0m
+[2025-06-16 15:38:27.013 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.059 ms - -[0m
+[2025-06-16 15:38:27.014 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.636 ms - -[0m
+[2025-06-16 15:38:27.015 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.307 ms - -[0m
+[2025-06-16 15:38:27.016 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.240 ms - -[0m
+[2025-06-16 15:38:30.036 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.089 ms - -[0m
+[2025-06-16 15:38:30.037 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.069 ms - -[0m
+[2025-06-16 15:38:30.039 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.435 ms - -[0m
+[2025-06-16 15:38:30.042 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.454 ms - -[0m
+[2025-06-16 15:38:50.457 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.273 ms - -[0m
+[2025-06-16 15:38:50.477 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 17.310 ms - 185[0m
+[2025-06-16 15:38:50.483 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.082 ms - -[0m
+[2025-06-16 15:38:50.484 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.091 ms - -[0m
+[2025-06-16 15:38:50.486 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.058 ms - -[0m
+[2025-06-16 15:38:50.486 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.499 ms - -[0m
+[2025-06-16 15:38:50.490 PM] info: 	[0mGET /api/providers [36m304[0m 0.848 ms - -[0m
+[2025-06-16 15:38:50.491 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.789 ms - -[0m
+[2025-06-16 15:38:55.905 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.125 ms - -[0m
+[2025-06-16 15:38:55.909 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.918 ms - 73[0m
+[2025-06-16 15:38:55.917 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.607 ms - -[0m
+[2025-06-16 15:38:55.924 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.100 ms - -[0m
+[2025-06-16 15:38:55.925 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.104 ms - -[0m
+[2025-06-16 15:38:55.926 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.631 ms - -[0m
+[2025-06-16 15:38:55.928 PM] info: 	[0mGET /api/providers [32m200[0m 0.415 ms - 176[0m
+[2025-06-16 15:38:55.928 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.431 ms - -[0m
+[2025-06-16 15:38:59.473 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.867 ms - 185[0m
+[2025-06-16 15:38:59.483 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.690 ms - -[0m
+[2025-06-16 15:38:59.484 PM] info: 	[0mGET /api/providers [32m200[0m 1.759 ms - 288[0m
+[2025-06-16 15:38:59.486 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.435 ms - -[0m
+[2025-06-16 15:39:01.717 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.152 ms - -[0m
+[2025-06-16 15:39:01.719 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.046 ms - -[0m
+[2025-06-16 15:39:01.720 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.029 ms - -[0m
+[2025-06-16 15:39:01.721 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.022 ms - -[0m
+[2025-06-16 15:39:01.721 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.024 ms - -[0m
+[2025-06-16 15:39:01.722 PM] info: 	[0mGET /api/providers [36m304[0m 0.642 ms - -[0m
+[2025-06-16 15:39:01.722 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.022 ms - -[0m
+[2025-06-16 15:39:01.723 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.552 ms - -[0m
+[2025-06-16 15:39:01.723 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.751 ms - -[0m
+[2025-06-16 15:39:01.724 PM] info: 	[0mGET /api/providers [36m304[0m 0.617 ms - -[0m
+[2025-06-16 15:39:01.725 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 0.883 ms - -[0m
+[2025-06-16 15:39:01.725 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 0.841 ms - -[0m
+[2025-06-16 15:39:01.749 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.032 ms - -[0m
+[2025-06-16 15:39:01.749 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.026 ms - -[0m
+[2025-06-16 15:39:01.750 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.245 ms - -[0m
+[2025-06-16 15:39:01.751 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.190 ms - -[0m
+[2025-06-16 15:39:12.674 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.113 ms - -[0m
+[2025-06-16 15:39:12.677 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.181 ms - 185[0m
+[2025-06-16 15:39:12.683 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.075 ms - -[0m
+[2025-06-16 15:39:12.684 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.059 ms - -[0m
+[2025-06-16 15:39:12.685 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.056 ms - -[0m
+[2025-06-16 15:39:12.687 PM] info: 	[0mGET /api/providers [36m304[0m 0.460 ms - -[0m
+[2025-06-16 15:39:12.688 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.216 ms - -[0m
+[2025-06-16 15:39:12.688 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.873 ms - -[0m
+[2025-06-16 15:39:15.889 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.139 ms - -[0m
+[2025-06-16 15:39:15.895 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.109 ms - -[0m
+[2025-06-16 15:39:15.896 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 3.409 ms - -[0m
+[2025-06-16 15:39:15.899 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.481 ms - -[0m
+[2025-06-16 15:39:18.606 PM] info: 	[0mPUT /api/users/me/wechat-config [33m400[0m 4.723 ms - 247[0m
+[2025-06-16 15:39:29.537 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.115 ms - -[0m
+[2025-06-16 15:39:29.544 PM] info: 	[0mPOST /api/orders [32m201[0m 4.880 ms - 164[0m
+[2025-06-16 15:39:32.554 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.147 ms - -[0m
+[2025-06-16 15:39:32.558 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.126 ms - -[0m
+[2025-06-16 15:39:32.561 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.091 ms - -[0m
+[2025-06-16 15:39:32.566 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.082 ms - -[0m
+[2025-06-16 15:39:32.569 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [32m200[0m 0.085 ms - -[0m
+[2025-06-16 15:39:32.572 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 12.432 ms - 593[0m
+[2025-06-16 15:39:32.572 PM] info: 	[0mGET /api/providers [36m304[0m 5.015 ms - -[0m
+[2025-06-16 15:39:32.572 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 9.147 ms - -[0m
+[2025-06-16 15:39:32.573 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 2.389 ms - -[0m
+[2025-06-16 15:39:32.576 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-002%2CRX250616-001 [36m304[0m 0.448 ms - -[0m
+[2025-06-16 15:39:32.580 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.065 ms - -[0m
+[2025-06-16 15:39:32.583 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 1.359 ms - 88[0m
+[2025-06-16 15:39:39.706 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.132 ms - -[0m
+[2025-06-16 15:39:39.708 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.153 ms - -[0m
+[2025-06-16 15:39:39.712 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.805 ms - -[0m
+[2025-06-16 15:39:39.717 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.317 ms - -[0m
+[2025-06-16 15:41:02.445 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:41:02.447 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:41:02.448 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:41:02.576 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:41:02.576 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:41:02.576 PM] info: 	- JWT认证系统
+[2025-06-16 15:41:02.576 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:41:02.576 PM] info: 	- SQL注入防护
+[2025-06-16 15:41:02.576 PM] info: 	- 速率限制
+[2025-06-16 15:41:02.577 PM] info: 	- 安全响应头
+[2025-06-16 15:41:02.577 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:41:02.577 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:41:02.581 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:42:02.152 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.694 ms - -[0m
+[2025-06-16 15:42:02.169 PM] info: 	Token刷新成功
+[2025-06-16 15:42:02.170 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 16.831 ms - 261[0m
+[2025-06-16 15:43:14.191 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:43:14.191 PM] info: 	[0mPOST /api/users/login [33m401[0m 2.244 ms - 33[0m
+[2025-06-16 15:43:45.988 PM] info: 	[0mGET / [36m302[0m 4.130 ms - 51[0m
+[2025-06-16 15:44:31.641 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:46:10.334 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:46:10.334 PM] info: 	[0mPOST /api/users/login [33m401[0m 56.313 ms - 33[0m
+[2025-06-16 15:47:53.106 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.401 ms - -[0m
+[2025-06-16 15:47:53.115 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:47:53.117 PM] info: 	[0mPOST /api/auth/login [33m401[0m 7.385 ms - 43[0m
+[2025-06-16 15:47:57.152 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:47:57.153 PM] info: 	[0mPOST /api/auth/login [33m401[0m 4.869 ms - 43[0m
+[2025-06-16 15:48:24.437 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.204 ms - -[0m
+[2025-06-16 15:48:24.443 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:48:24.445 PM] info: 	[0mPOST /api/auth/login [33m401[0m 4.337 ms - 43[0m
+[2025-06-16 15:48:38.876 PM] info: 	管理员登录成功
+[2025-06-16 15:48:38.876 PM] info: 	[0mPOST /api/admin/login [32m200[0m 79.242 ms - 601[0m
+[2025-06-16 15:48:38.888 PM] info: 	[0mGET /api/admin/stats [32m200[0m 2.353 ms - 133[0m
+[2025-06-16 15:48:38.888 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.670 ms - 133[0m
+[2025-06-16 15:48:42.515 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 3.564 ms - 595[0m
+[2025-06-16 15:48:42.516 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 2.533 ms - 595[0m
+[2025-06-16 15:48:50.252 PM] info: 	用户密码重置成功
+[2025-06-16 15:48:50.252 PM] info: 	[0mPUT /api/users/8a9ebf27-d699-434c-849c-67226c97b313/password [32m200[0m 86.572 ms - 32[0m
+[2025-06-16 15:49:00.200 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.109 ms - -[0m
+[2025-06-16 15:49:00.284 PM] info: 	用户登录成功
+[2025-06-16 15:49:00.284 PM] info: 	[0mPOST /api/auth/login [32m200[0m 83.278 ms - 664[0m
+[2025-06-16 15:49:00.307 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.425 ms - -[0m
+[2025-06-16 15:49:00.309 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.054 ms - -[0m
+[2025-06-16 15:49:00.312 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.039 ms - -[0m
+[2025-06-16 15:49:00.313 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.031 ms - -[0m
+[2025-06-16 15:49:00.313 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.036 ms - -[0m
+[2025-06-16 15:49:00.314 PM] info: 	[0mGET /api/providers [32m200[0m 0.964 ms - 288[0m
+[2025-06-16 15:49:00.314 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:49:00.315 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 4.158 ms - 593[0m
+[2025-06-16 15:49:00.315 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.195 ms - -[0m
+[2025-06-16 15:49:00.317 PM] info: 	[0mGET /api/providers [36m304[0m 1.402 ms - -[0m
+[2025-06-16 15:49:00.318 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.855 ms - -[0m
+[2025-06-16 15:49:00.318 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.426 ms - -[0m
+[2025-06-16 15:49:00.319 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.033 ms - -[0m
+[2025-06-16 15:49:00.320 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.028 ms - -[0m
+[2025-06-16 15:49:00.321 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.677 ms - 88[0m
+[2025-06-16 15:49:00.322 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.295 ms - -[0m
+[2025-06-16 15:49:00.323 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.372 ms - -[0m
+[2025-06-16 15:49:12.613 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.168 ms - -[0m
+[2025-06-16 15:49:12.616 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.741 ms - 185[0m
+[2025-06-16 15:49:12.623 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.199 ms - -[0m
+[2025-06-16 15:49:12.625 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.100 ms - -[0m
+[2025-06-16 15:49:12.627 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.061 ms - -[0m
+[2025-06-16 15:49:12.632 PM] info: 	[0mGET /api/providers [36m304[0m 2.052 ms - -[0m
+[2025-06-16 15:49:12.633 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 6.921 ms - -[0m
+[2025-06-16 15:49:12.633 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.844 ms - -[0m
+[2025-06-16 15:49:18.345 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 16.291 ms - -[0m
+[2025-06-16 15:49:18.348 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.142 ms - -[0m
+[2025-06-16 15:49:18.349 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.157 ms - -[0m
+[2025-06-16 15:49:18.395 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.054 ms - -[0m
+[2025-06-16 15:49:18.396 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:49:18.397 PM] info: 	[0mGET /api/providers [36m304[0m 11.588 ms - -[0m
+[2025-06-16 15:49:18.397 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 50.819 ms - -[0m
+[2025-06-16 15:49:18.398 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.056 ms - -[0m
+[2025-06-16 15:49:18.399 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 49.460 ms - -[0m
+[2025-06-16 15:49:18.400 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.938 ms - -[0m
+[2025-06-16 15:49:18.401 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.395 ms - -[0m
+[2025-06-16 15:49:18.403 PM] info: 	[0mGET /api/providers [36m304[0m 0.418 ms - -[0m
+[2025-06-16 15:49:18.405 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.034 ms - -[0m
+[2025-06-16 15:49:18.405 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:49:18.407 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.564 ms - -[0m
+[2025-06-16 15:49:18.409 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.879 ms - -[0m
+[2025-06-16 15:49:18.410 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.275 ms - -[0m
+[2025-06-16 15:49:20.132 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.128 ms - -[0m
+[2025-06-16 15:49:20.134 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.093 ms - -[0m
+[2025-06-16 15:49:20.139 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 2.956 ms - 149[0m
+[2025-06-16 15:49:20.143 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.204 ms - -[0m
+[2025-06-16 15:49:27.363 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.117 ms - -[0m
+[2025-06-16 15:49:27.369 PM] info: 	[0mPUT /api/users/me/wechat-config [33m400[0m 2.634 ms - 133[0m
+[2025-06-16 15:49:40.024 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.104 ms - -[0m
+[2025-06-16 15:49:40.026 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.145 ms - -[0m
+[2025-06-16 15:49:40.027 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.056 ms - -[0m
+[2025-06-16 15:49:40.027 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.049 ms - -[0m
+[2025-06-16 15:49:40.029 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.049 ms - -[0m
+[2025-06-16 15:49:40.031 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.069 ms - -[0m
+[2025-06-16 15:49:40.031 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.436 ms - -[0m
+[2025-06-16 15:49:40.032 PM] info: 	[0mGET /api/providers [36m304[0m 1.536 ms - -[0m
+[2025-06-16 15:49:40.033 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.411 ms - -[0m
+[2025-06-16 15:49:40.034 PM] info: 	[0mGET /api/providers [36m304[0m 1.203 ms - -[0m
+[2025-06-16 15:49:40.034 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.216 ms - -[0m
+[2025-06-16 15:49:40.035 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.855 ms - -[0m
+[2025-06-16 15:49:40.037 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.060 ms - -[0m
+[2025-06-16 15:49:40.037 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 15:49:40.039 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.607 ms - -[0m
+[2025-06-16 15:49:40.040 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.370 ms - -[0m
+[2025-06-16 15:49:40.041 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.574 ms - -[0m
+[2025-06-16 15:49:45.245 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.129 ms - -[0m
+[2025-06-16 15:49:45.249 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.592 ms - 73[0m
+[2025-06-16 15:49:45.256 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.132 ms - -[0m
+[2025-06-16 15:49:45.257 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.128 ms - -[0m
+[2025-06-16 15:49:45.258 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.060 ms - -[0m
+[2025-06-16 15:49:45.261 PM] info: 	[0mGET /api/providers [32m200[0m 0.694 ms - 176[0m
+[2025-06-16 15:49:45.263 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.834 ms - -[0m
+[2025-06-16 15:49:45.265 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.935 ms - -[0m
+[2025-06-16 15:49:48.697 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.126 ms - 185[0m
+[2025-06-16 15:49:48.706 PM] info: 	[0mGET /api/providers [32m200[0m 2.251 ms - 288[0m
+[2025-06-16 15:49:48.708 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.945 ms - -[0m
+[2025-06-16 15:49:48.709 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 5.307 ms - -[0m
+[2025-06-16 15:49:56.299 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.117 ms - -[0m
+[2025-06-16 15:49:56.304 PM] info: 	[0mPOST /api/orders [32m201[0m 3.340 ms - 171[0m
+[2025-06-16 15:49:59.314 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.180 ms - -[0m
+[2025-06-16 15:49:59.315 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.094 ms - -[0m
+[2025-06-16 15:49:59.316 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.084 ms - -[0m
+[2025-06-16 15:49:59.317 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.075 ms - -[0m
+[2025-06-16 15:49:59.322 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.100 ms - -[0m
+[2025-06-16 15:49:59.324 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.424 ms - -[0m
+[2025-06-16 15:49:59.325 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 6.982 ms - -[0m
+[2025-06-16 15:49:59.325 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 6.378 ms - 752[0m
+[2025-06-16 15:49:59.327 PM] info: 	[0mGET /api/providers [36m304[0m 3.490 ms - -[0m
+[2025-06-16 15:49:59.329 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.856 ms - -[0m
+[2025-06-16 15:49:59.341 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.105 ms - -[0m
+[2025-06-16 15:49:59.343 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.753 ms - 108[0m
+[2025-06-16 15:50:09.169 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.246 ms - -[0m
+[2025-06-16 15:50:09.171 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.066 ms - -[0m
+[2025-06-16 15:50:09.173 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.429 ms - -[0m
+[2025-06-16 15:50:09.193 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 1.957 ms - -[0m
+[2025-06-16 15:50:09.198 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.034 ms - -[0m
+[2025-06-16 15:50:09.203 PM] info: 	[0mGET /api/providers [36m304[0m 3.747 ms - -[0m
+[2025-06-16 15:50:09.205 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.049 ms - -[0m
+[2025-06-16 15:50:09.210 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 35.303 ms - -[0m
+[2025-06-16 15:50:09.212 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 16.581 ms - -[0m
+[2025-06-16 15:50:09.217 PM] info: 	[0mGET /api/providers [36m304[0m 7.671 ms - -[0m
+[2025-06-16 15:50:09.220 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.027 ms - -[0m
+[2025-06-16 15:50:09.222 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.026 ms - -[0m
+[2025-06-16 15:50:09.225 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 2.614 ms - -[0m
+[2025-06-16 15:50:09.229 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 15.684 ms - -[0m
+[2025-06-16 15:50:09.230 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 10.992 ms - -[0m
+[2025-06-16 15:50:09.232 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.878 ms - -[0m
+[2025-06-16 15:50:09.234 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.302 ms - -[0m
+[2025-06-16 15:50:15.530 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.119 ms - -[0m
+[2025-06-16 15:50:15.533 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.012 ms - 185[0m
+[2025-06-16 15:50:15.542 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.163 ms - -[0m
+[2025-06-16 15:50:15.545 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.671 ms - -[0m
+[2025-06-16 15:50:15.547 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.061 ms - -[0m
+[2025-06-16 15:50:15.549 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.500 ms - -[0m
+[2025-06-16 15:50:15.550 PM] info: 	[0mGET /api/providers [36m304[0m 1.066 ms - -[0m
+[2025-06-16 15:50:15.550 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.320 ms - -[0m
+[2025-06-16 15:50:23.177 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.084 ms - -[0m
+[2025-06-16 15:50:23.180 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 1.585 ms - 73[0m
+[2025-06-16 15:50:23.185 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.176 ms - -[0m
+[2025-06-16 15:50:23.187 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.094 ms - -[0m
+[2025-06-16 15:50:23.190 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.086 ms - -[0m
+[2025-06-16 15:50:23.197 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 8.933 ms - -[0m
+[2025-06-16 15:50:23.198 PM] info: 	[0mGET /api/providers [32m200[0m 1.861 ms - 176[0m
+[2025-06-16 15:50:23.198 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.490 ms - -[0m
+[2025-06-16 15:50:25.696 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.128 ms - 185[0m
+[2025-06-16 15:50:25.707 PM] info: 	[0mGET /api/providers [32m200[0m 0.768 ms - 288[0m
+[2025-06-16 15:50:25.708 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.710 ms - -[0m
+[2025-06-16 15:50:25.710 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.537 ms - -[0m
+[2025-06-16 15:53:18.772 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:54:39.827 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:54:39.829 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:54:39.829 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:54:39.955 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:54:39.955 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:54:39.955 PM] info: 	- JWT认证系统
+[2025-06-16 15:54:39.955 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:54:39.955 PM] info: 	- SQL注入防护
+[2025-06-16 15:54:39.955 PM] info: 	- 速率限制
+[2025-06-16 15:54:39.955 PM] info: 	- 安全响应头
+[2025-06-16 15:54:39.955 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:54:39.956 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:54:39.957 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:55:46.415 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 15:55:46.417 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 15:55:46.417 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 15:55:46.540 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 15:55:46.540 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 15:55:46.541 PM] info: 	- JWT认证系统
+[2025-06-16 15:55:46.541 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 15:55:46.541 PM] info: 	- SQL注入防护
+[2025-06-16 15:55:46.541 PM] info: 	- 速率限制
+[2025-06-16 15:55:46.541 PM] info: 	- 安全响应头
+[2025-06-16 15:55:46.541 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 15:55:46.541 PM] info: 	- 数据库查询性能监控
+[2025-06-16 15:55:46.543 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 15:57:06.699 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 15:57:06.702 PM] info: 	[0mPOST /api/auth/login [33m401[0m 62.348 ms - 43[0m
+[2025-06-16 15:59:25.136 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.155 ms - -[0m
+[2025-06-16 15:59:25.138 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.239 ms - -[0m
+[2025-06-16 15:59:25.145 PM] info: 	Token刷新成功
+[2025-06-16 15:59:25.147 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 5.916 ms - 261[0m
+[2025-06-16 15:59:25.150 PM] info: 	Token刷新成功
+[2025-06-16 15:59:25.150 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.488 ms - 261[0m
+[2025-06-16 16:02:01.156 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.107 ms - -[0m
+[2025-06-16 16:02:01.157 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.058 ms - -[0m
+[2025-06-16 16:02:01.161 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.215 ms - -[0m
+[2025-06-16 16:02:01.169 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.095 ms - -[0m
+[2025-06-16 16:02:01.171 PM] info: 	[0mGET /api/providers [32m200[0m 7.505 ms - 263[0m
+[2025-06-16 16:02:01.172 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.072 ms - -[0m
+[2025-06-16 16:02:01.173 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 14.335 ms - -[0m
+[2025-06-16 16:02:01.174 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.101 ms - -[0m
+[2025-06-16 16:02:01.175 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 10.878 ms - -[0m
+[2025-06-16 16:02:01.177 PM] info: 	[0mGET /api/providers [36m304[0m 0.755 ms - -[0m
+[2025-06-16 16:02:01.177 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.650 ms - -[0m
+[2025-06-16 16:02:01.178 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.372 ms - -[0m
+[2025-06-16 16:02:01.192 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.048 ms - -[0m
+[2025-06-16 16:02:01.193 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.110 ms - -[0m
+[2025-06-16 16:02:01.194 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.803 ms - -[0m
+[2025-06-16 16:02:01.195 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.306 ms - -[0m
+[2025-06-16 16:02:07.030 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.195 ms - -[0m
+[2025-06-16 16:02:07.031 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.073 ms - -[0m
+[2025-06-16 16:02:07.032 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.145 ms - -[0m
+[2025-06-16 16:02:07.033 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.124 ms - -[0m
+[2025-06-16 16:02:07.034 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.098 ms - -[0m
+[2025-06-16 16:02:07.034 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.057 ms - -[0m
+[2025-06-16 16:02:07.039 PM] info: 	[0mGET /api/providers [36m304[0m 0.453 ms - -[0m
+[2025-06-16 16:02:07.040 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.028 ms - -[0m
+[2025-06-16 16:02:07.041 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.530 ms - -[0m
+[2025-06-16 16:02:07.082 PM] info: 	[0mGET /api/providers [36m304[0m 42.253 ms - -[0m
+[2025-06-16 16:02:07.083 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.039 ms - -[0m
+[2025-06-16 16:02:07.083 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.038 ms - -[0m
+[2025-06-16 16:02:07.084 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 42.922 ms - -[0m
+[2025-06-16 16:02:07.084 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.722 ms - -[0m
+[2025-06-16 16:02:07.085 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 42.390 ms - -[0m
+[2025-06-16 16:02:07.086 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.260 ms - -[0m
+[2025-06-16 16:02:07.096 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.283 ms - -[0m
+[2025-06-16 16:02:11.374 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.149 ms - -[0m
+[2025-06-16 16:02:11.376 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.084 ms - -[0m
+[2025-06-16 16:02:11.381 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.998 ms - -[0m
+[2025-06-16 16:02:11.384 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.223 ms - -[0m
+[2025-06-16 16:02:25.051 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.230 ms - -[0m
+[2025-06-16 16:02:25.051 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.058 ms - -[0m
+[2025-06-16 16:02:25.052 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.044 ms - -[0m
+[2025-06-16 16:02:25.053 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.087 ms - -[0m
+[2025-06-16 16:02:25.054 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.181 ms - -[0m
+[2025-06-16 16:02:25.054 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.057 ms - -[0m
+[2025-06-16 16:02:25.057 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.032 ms - -[0m
+[2025-06-16 16:02:25.057 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.068 ms - -[0m
+[2025-06-16 16:02:25.058 PM] info: 	[0mGET /api/providers [36m304[0m 1.278 ms - -[0m
+[2025-06-16 16:02:25.059 PM] info: 	[0mGET /api/providers [36m304[0m 0.370 ms - -[0m
+[2025-06-16 16:02:25.059 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.473 ms - -[0m
+[2025-06-16 16:02:25.060 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.493 ms - -[0m
+[2025-06-16 16:02:25.063 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.066 ms - -[0m
+[2025-06-16 16:02:25.064 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.047 ms - -[0m
+[2025-06-16 16:02:25.065 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.418 ms - -[0m
+[2025-06-16 16:02:25.066 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.489 ms - -[0m
+[2025-06-16 16:02:25.067 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.245 ms - -[0m
+[2025-06-16 16:02:26.407 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.127 ms - -[0m
+[2025-06-16 16:02:26.408 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.092 ms - -[0m
+[2025-06-16 16:02:26.412 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.604 ms - -[0m
+[2025-06-16 16:02:26.415 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.099 ms - -[0m
+[2025-06-16 16:02:32.454 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.121 ms - -[0m
+[2025-06-16 16:02:32.459 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 3.171 ms - 75[0m
+[2025-06-16 16:02:32.466 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.167 ms - -[0m
+[2025-06-16 16:02:32.468 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.079 ms - -[0m
+[2025-06-16 16:02:32.470 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.141 ms - -[0m
+[2025-06-16 16:02:32.474 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.333 ms - -[0m
+[2025-06-16 16:02:32.475 PM] info: 	[0mGET /api/providers [32m200[0m 1.600 ms - 178[0m
+[2025-06-16 16:02:32.476 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.079 ms - -[0m
+[2025-06-16 16:02:35.922 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.323 ms - 185[0m
+[2025-06-16 16:02:35.932 PM] info: 	[0mGET /api/providers [32m200[0m 0.897 ms - 288[0m
+[2025-06-16 16:02:35.932 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.717 ms - -[0m
+[2025-06-16 16:02:35.933 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.147 ms - -[0m
+[2025-06-16 16:02:45.420 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.088 ms - -[0m
+[2025-06-16 16:02:45.423 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.754 ms - 185[0m
+[2025-06-16 16:02:45.426 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.111 ms - -[0m
+[2025-06-16 16:02:45.431 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.092 ms - -[0m
+[2025-06-16 16:02:45.432 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.066 ms - -[0m
+[2025-06-16 16:02:45.433 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.123 ms - -[0m
+[2025-06-16 16:02:45.438 PM] info: 	[0mGET /api/providers [36m304[0m 1.923 ms - -[0m
+[2025-06-16 16:02:45.438 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.717 ms - -[0m
+[2025-06-16 16:02:53.538 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.115 ms - -[0m
+[2025-06-16 16:02:53.543 PM] info: 	[0mPOST /api/orders [32m201[0m 2.798 ms - 169[0m
+[2025-06-16 16:02:56.550 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.069 ms - -[0m
+[2025-06-16 16:02:56.551 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.047 ms - -[0m
+[2025-06-16 16:02:56.551 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.040 ms - -[0m
+[2025-06-16 16:02:56.553 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.038 ms - -[0m
+[2025-06-16 16:02:56.554 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 16:02:56.556 PM] info: 	[0mGET /api/providers [36m304[0m 1.714 ms - -[0m
+[2025-06-16 16:02:56.557 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 3.149 ms - 909[0m
+[2025-06-16 16:02:56.557 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.042 ms - -[0m
+[2025-06-16 16:02:56.557 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.498 ms - -[0m
+[2025-06-16 16:02:56.559 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.305 ms - -[0m
+[2025-06-16 16:02:56.568 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.058 ms - -[0m
+[2025-06-16 16:02:56.570 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.452 ms - 128[0m
+[2025-06-16 16:06:48.409 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:07:54.567 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:07:54.569 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:07:54.569 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:07:54.695 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:07:54.695 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:07:54.695 PM] info: 	- JWT认证系统
+[2025-06-16 16:07:54.695 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:07:54.695 PM] info: 	- SQL注入防护
+[2025-06-16 16:07:54.695 PM] info: 	- 速率限制
+[2025-06-16 16:07:54.695 PM] info: 	- 安全响应头
+[2025-06-16 16:07:54.696 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:07:54.696 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:07:54.697 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:08:20.614 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:08:20.749 PM] info: 	用户登录成功
+[2025-06-16 16:08:20.750 PM] info: 	[0mPOST /api/users/login [32m200[0m 62.903 ms - 733[0m
+[2025-06-16 16:08:20.754 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:08:20.754 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 1.781 ms - 192[0m
+[2025-06-16 16:08:20.756 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 0.504 ms - 149[0m
+[2025-06-16 16:10:15.112 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:10:15.114 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:10:15.114 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:10:15.238 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:10:15.238 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:10:15.238 PM] info: 	- JWT认证系统
+[2025-06-16 16:10:15.238 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:10:15.238 PM] info: 	- SQL注入防护
+[2025-06-16 16:10:15.238 PM] info: 	- 速率限制
+[2025-06-16 16:10:15.239 PM] info: 	- 安全响应头
+[2025-06-16 16:10:15.239 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:10:15.239 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:10:15.242 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:10:28.931 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.834 ms - -[0m
+[2025-06-16 16:10:29.013 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 16:10:29.015 PM] info: 	[0mPOST /api/auth/login [33m401[0m 81.848 ms - 43[0m
+[2025-06-16 16:10:39.749 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.225 ms - -[0m
+[2025-06-16 16:10:39.834 PM] warn: 	用户登录失败：密码错误
+[2025-06-16 16:10:39.835 PM] info: 	[0mPOST /api/auth/login [33m401[0m 82.746 ms - 43[0m
+[2025-06-16 16:10:49.676 PM] info: 	管理员登录成功
+[2025-06-16 16:10:49.676 PM] info: 	[0mPOST /api/admin/login [32m200[0m 82.458 ms - 601[0m
+[2025-06-16 16:10:49.697 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.949 ms - 133[0m
+[2025-06-16 16:10:49.698 PM] info: 	[0mGET /api/admin/stats [32m200[0m 1.596 ms - 133[0m
+[2025-06-16 16:10:51.909 PM] info: 	[0mGET /api/backup/history [32m200[0m 2.141 ms - 2[0m
+[2025-06-16 16:10:51.910 PM] info: 	[0mGET /api/backup/config [32m200[0m 5.345 ms - 375[0m
+[2025-06-16 16:10:51.912 PM] info: 	[0mGET /api/backup/config [32m200[0m 4.087 ms - 375[0m
+[2025-06-16 16:10:51.914 PM] info: 	[0mGET /api/backup/history [32m200[0m 2.470 ms - 2[0m
+[2025-06-16 16:10:53.864 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [32m200[0m 5.768 ms - 1661[0m
+[2025-06-16 16:10:53.865 PM] info: 	[0mGET /api/admin/orders?page=1&limit=20 [32m200[0m 4.571 ms - 1661[0m
+[2025-06-16 16:10:53.867 PM] info: 	[0mGET /api/admin/stats [36m304[0m 4.436 ms - -[0m
+[2025-06-16 16:10:53.868 PM] info: 	[0mGET /api/admin/stats [36m304[0m 2.582 ms - -[0m
+[2025-06-16 16:10:54.394 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 3.424 ms - 595[0m
+[2025-06-16 16:10:54.396 PM] info: 	[0mGET /api/users?page=1&limit=20 [32m200[0m 3.287 ms - 595[0m
+[2025-06-16 16:11:00.048 PM] info: 	用户密码重置成功
+[2025-06-16 16:11:00.049 PM] info: 	[0mPUT /api/users/8a9ebf27-d699-434c-849c-67226c97b313/password [32m200[0m 86.310 ms - 32[0m
+[2025-06-16 16:11:04.095 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.152 ms - -[0m
+[2025-06-16 16:11:04.173 PM] info: 	用户登录成功
+[2025-06-16 16:11:04.174 PM] info: 	[0mPOST /api/auth/login [32m200[0m 75.927 ms - 664[0m
+[2025-06-16 16:11:04.195 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.956 ms - -[0m
+[2025-06-16 16:11:04.196 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.083 ms - -[0m
+[2025-06-16 16:11:04.198 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.037 ms - -[0m
+[2025-06-16 16:11:04.199 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.029 ms - -[0m
+[2025-06-16 16:11:04.199 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.025 ms - -[0m
+[2025-06-16 16:11:04.200 PM] info: 	[0mGET /api/providers [36m304[0m 0.689 ms - -[0m
+[2025-06-16 16:11:04.200 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.094 ms - -[0m
+[2025-06-16 16:11:04.201 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.926 ms - -[0m
+[2025-06-16 16:11:04.201 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.159 ms - -[0m
+[2025-06-16 16:11:04.202 PM] info: 	[0mGET /api/providers [36m304[0m 0.656 ms - -[0m
+[2025-06-16 16:11:04.203 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.358 ms - -[0m
+[2025-06-16 16:11:04.203 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.599 ms - -[0m
+[2025-06-16 16:11:04.205 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.117 ms - -[0m
+[2025-06-16 16:11:04.205 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.035 ms - -[0m
+[2025-06-16 16:11:04.206 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.616 ms - -[0m
+[2025-06-16 16:11:04.207 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.245 ms - -[0m
+[2025-06-16 16:11:04.207 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.141 ms - -[0m
+[2025-06-16 16:11:11.978 PM] info: 	[0mOPTIONS /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 0.158 ms - -[0m
+[2025-06-16 16:11:11.982 PM] info: 	[0mPUT /api/providers/918f708d-55d4-46f4-9a0e-9ddcc19934ef/webhook [32m200[0m 2.558 ms - 160[0m
+[2025-06-16 16:11:11.990 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.167 ms - -[0m
+[2025-06-16 16:11:11.992 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.103 ms - -[0m
+[2025-06-16 16:11:11.996 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.141 ms - -[0m
+[2025-06-16 16:11:11.998 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.216 ms - -[0m
+[2025-06-16 16:11:11.999 PM] info: 	[0mGET /api/providers [32m200[0m 1.040 ms - 263[0m
+[2025-06-16 16:11:12.000 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.680 ms - -[0m
+[2025-06-16 16:11:24.361 PM] info: 	[0mOPTIONS /api/orders [32m200[0m 0.155 ms - -[0m
+[2025-06-16 16:11:24.369 PM] info: 	[0mPOST /api/orders [32m201[0m 4.764 ms - 177[0m
+[2025-06-16 16:11:27.376 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.182 ms - -[0m
+[2025-06-16 16:11:27.378 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.100 ms - -[0m
+[2025-06-16 16:11:27.379 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.088 ms - -[0m
+[2025-06-16 16:11:27.380 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.067 ms - -[0m
+[2025-06-16 16:11:27.383 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.069 ms - -[0m
+[2025-06-16 16:11:27.386 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [32m200[0m 5.807 ms - 1074[0m
+[2025-06-16 16:11:27.387 PM] info: 	[0mGET /api/providers [36m304[0m 2.334 ms - -[0m
+[2025-06-16 16:11:27.389 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 3.904 ms - -[0m
+[2025-06-16 16:11:27.390 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 6.399 ms - -[0m
+[2025-06-16 16:11:27.392 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.464 ms - -[0m
+[2025-06-16 16:11:27.404 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.071 ms - -[0m
+[2025-06-16 16:11:27.406 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.917 ms - 148[0m
+[2025-06-16 16:11:35.446 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.118 ms - -[0m
+[2025-06-16 16:11:35.455 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.088 ms - -[0m
+[2025-06-16 16:11:35.456 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.004 ms - -[0m
+[2025-06-16 16:11:35.458 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.602 ms - -[0m
+[2025-06-16 16:11:42.169 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.071 ms - -[0m
+[2025-06-16 16:11:42.170 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.069 ms - -[0m
+[2025-06-16 16:11:42.172 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 1.157 ms - 261[0m
+[2025-06-16 16:11:42.173 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.390 ms - -[0m
+[2025-06-16 16:11:42.204 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.070 ms - -[0m
+[2025-06-16 16:11:42.206 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:11:42.208 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 1.308 ms - 932[0m
+[2025-06-16 16:11:42.209 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.046 ms - -[0m
+[2025-06-16 16:11:42.210 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.154 ms - -[0m
+[2025-06-16 16:11:42.212 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.432 ms - -[0m
+[2025-06-16 16:11:42.212 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.471 ms - -[0m
+[2025-06-16 16:12:03.209 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.119 ms - -[0m
+[2025-06-16 16:12:03.217 PM] info: 	[0mPOST /api/quotes [32m201[0m 5.784 ms - 171[0m
+[2025-06-16 16:12:03.221 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.088 ms - -[0m
+[2025-06-16 16:12:03.224 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 1.155 ms - 767[0m
+[2025-06-16 16:12:03.230 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.107 ms - -[0m
+[2025-06-16 16:12:03.233 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.985 ms - 661[0m
+[2025-06-16 16:12:11.387 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.113 ms - -[0m
+[2025-06-16 16:12:11.387 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:12:11.388 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.037 ms - -[0m
+[2025-06-16 16:12:11.388 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.038 ms - -[0m
+[2025-06-16 16:12:11.389 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.060 ms - -[0m
+[2025-06-16 16:12:11.391 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:12:11.391 PM] info: 	[0mGET /api/providers [36m304[0m 1.527 ms - -[0m
+[2025-06-16 16:12:11.392 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.291 ms - -[0m
+[2025-06-16 16:12:11.393 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.398 ms - -[0m
+[2025-06-16 16:12:11.394 PM] info: 	[0mGET /api/providers [36m304[0m 2.087 ms - -[0m
+[2025-06-16 16:12:11.395 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.337 ms - -[0m
+[2025-06-16 16:12:11.395 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.446 ms - -[0m
+[2025-06-16 16:12:11.414 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.122 ms - -[0m
+[2025-06-16 16:12:11.414 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.065 ms - -[0m
+[2025-06-16 16:12:11.417 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.916 ms - 174[0m
+[2025-06-16 16:12:11.418 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.407 ms - 174[0m
+[2025-06-16 16:12:14.478 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.749 ms - -[0m
+[2025-06-16 16:12:14.479 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.518 ms - -[0m
+[2025-06-16 16:12:17.809 PM] info: 	[0mOPTIONS /api/orders/RX250616-006/quotes [32m200[0m 0.139 ms - -[0m
+[2025-06-16 16:12:17.811 PM] info: 	[0mGET /api/orders/RX250616-006/quotes [32m200[0m 1.012 ms - 173[0m
+[2025-06-16 16:12:23.410 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.159 ms - -[0m
+[2025-06-16 16:12:23.414 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.097 ms - -[0m
+[2025-06-16 16:12:23.415 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.526 ms - -[0m
+[2025-06-16 16:12:23.419 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.909 ms - -[0m
+[2025-06-16 16:12:31.794 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.135 ms - -[0m
+[2025-06-16 16:12:31.795 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.110 ms - -[0m
+[2025-06-16 16:12:31.797 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.788 ms - -[0m
+[2025-06-16 16:12:31.804 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 4.123 ms - -[0m
+[2025-06-16 16:12:35.908 PM] info: 	[0mOPTIONS /api/orders/RX250616-006/quotes [32m200[0m 0.180 ms - -[0m
+[2025-06-16 16:12:35.911 PM] info: 	[0mGET /api/orders/RX250616-006/quotes [36m304[0m 0.954 ms - -[0m
+[2025-06-16 16:12:38.528 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.145 ms - -[0m
+[2025-06-16 16:12:38.530 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.123 ms - -[0m
+[2025-06-16 16:12:38.532 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.259 ms - -[0m
+[2025-06-16 16:12:38.536 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.223 ms - -[0m
+[2025-06-16 16:12:39.827 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.151 ms - -[0m
+[2025-06-16 16:12:39.828 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.098 ms - -[0m
+[2025-06-16 16:12:39.831 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.701 ms - -[0m
+[2025-06-16 16:12:39.833 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.451 ms - -[0m
+[2025-06-16 16:12:41.411 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.997 ms - -[0m
+[2025-06-16 16:12:47.995 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.139 ms - -[0m
+[2025-06-16 16:12:48.000 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.410 ms - -[0m
+[2025-06-16 16:12:48.926 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.136 ms - -[0m
+[2025-06-16 16:12:48.928 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.086 ms - -[0m
+[2025-06-16 16:12:48.930 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.750 ms - -[0m
+[2025-06-16 16:12:48.933 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.082 ms - -[0m
+[2025-06-16 16:12:50.612 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.982 ms - -[0m
+[2025-06-16 16:12:50.617 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.067 ms - -[0m
+[2025-06-16 16:12:56.811 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.173 ms - -[0m
+[2025-06-16 16:12:56.812 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.083 ms - -[0m
+[2025-06-16 16:12:56.813 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.958 ms - -[0m
+[2025-06-16 16:12:56.815 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.904 ms - -[0m
+[2025-06-16 16:13:00.313 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:13:00.314 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 5.536 ms - 193[0m
+[2025-06-16 16:13:11.577 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.139 ms - -[0m
+[2025-06-16 16:13:11.581 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.875 ms - -[0m
+[2025-06-16 16:13:13.462 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.018 ms - -[0m
+[2025-06-16 16:13:13.466 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.858 ms - -[0m
+[2025-06-16 16:13:24.676 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.138 ms - -[0m
+[2025-06-16 16:13:24.678 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.129 ms - -[0m
+[2025-06-16 16:13:24.680 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 1.141 ms - 150[0m
+[2025-06-16 16:13:24.683 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.157 ms - -[0m
+[2025-06-16 16:18:47.765 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.087 ms - -[0m
+[2025-06-16 16:18:47.766 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.059 ms - -[0m
+[2025-06-16 16:18:47.768 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.041 ms - -[0m
+[2025-06-16 16:18:47.769 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.067 ms - -[0m
+[2025-06-16 16:18:47.770 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.044 ms - -[0m
+[2025-06-16 16:18:47.771 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.054 ms - -[0m
+[2025-06-16 16:18:47.772 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 5.155 ms - -[0m
+[2025-06-16 16:18:47.773 PM] info: 	[0mGET /api/providers [36m304[0m 2.403 ms - -[0m
+[2025-06-16 16:18:47.773 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 4.579 ms - -[0m
+[2025-06-16 16:18:47.779 PM] info: 	[0mGET /api/providers [36m304[0m 4.110 ms - -[0m
+[2025-06-16 16:18:47.780 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 6.149 ms - -[0m
+[2025-06-16 16:18:47.780 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.301 ms - -[0m
+[2025-06-16 16:18:47.802 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.095 ms - -[0m
+[2025-06-16 16:18:47.803 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.075 ms - -[0m
+[2025-06-16 16:18:47.805 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.867 ms - 174[0m
+[2025-06-16 16:18:47.807 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.777 ms - 174[0m
+[2025-06-16 16:18:48.162 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.075 ms - -[0m
+[2025-06-16 16:18:48.163 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.078 ms - -[0m
+[2025-06-16 16:18:48.165 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.560 ms - -[0m
+[2025-06-16 16:18:48.166 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.320 ms - -[0m
+[2025-06-16 16:18:48.194 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.106 ms - -[0m
+[2025-06-16 16:18:48.197 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.937 ms - -[0m
+[2025-06-16 16:18:48.198 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.470 ms - -[0m
+[2025-06-16 16:18:48.208 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.053 ms - -[0m
+[2025-06-16 16:18:48.209 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.107 ms - -[0m
+[2025-06-16 16:18:48.213 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.867 ms - -[0m
+[2025-06-16 16:18:48.214 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.589 ms - -[0m
+[2025-06-16 16:22:41.998 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.089 ms - -[0m
+[2025-06-16 16:22:41.998 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:22:41.999 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 16:22:41.999 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.035 ms - -[0m
+[2025-06-16 16:22:42.000 PM] info: 	Token刷新成功
+[2025-06-16 16:22:42.001 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 1.222 ms - 261[0m
+[2025-06-16 16:22:42.002 PM] info: 	Token刷新成功
+[2025-06-16 16:22:42.003 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 0.992 ms - 261[0m
+[2025-06-16 16:22:42.003 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.742 ms - -[0m
+[2025-06-16 16:22:42.004 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.299 ms - -[0m
+[2025-06-16 16:22:42.025 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.087 ms - -[0m
+[2025-06-16 16:22:42.026 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.063 ms - -[0m
+[2025-06-16 16:22:42.028 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.156 ms - -[0m
+[2025-06-16 16:22:42.029 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.070 ms - -[0m
+[2025-06-16 16:22:42.030 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.858 ms - -[0m
+[2025-06-16 16:22:42.031 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.612 ms - -[0m
+[2025-06-16 16:22:42.032 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.475 ms - -[0m
+[2025-06-16 16:22:44.166 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.139 ms - -[0m
+[2025-06-16 16:22:44.166 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.051 ms - -[0m
+[2025-06-16 16:22:44.166 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.038 ms - -[0m
+[2025-06-16 16:22:44.167 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.042 ms - -[0m
+[2025-06-16 16:22:44.169 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.045 ms - -[0m
+[2025-06-16 16:22:44.170 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.034 ms - -[0m
+[2025-06-16 16:22:44.170 PM] info: 	[0mGET /api/providers [36m304[0m 0.709 ms - -[0m
+[2025-06-16 16:22:44.170 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 2.613 ms - -[0m
+[2025-06-16 16:22:44.171 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 2.395 ms - -[0m
+[2025-06-16 16:22:44.173 PM] info: 	[0mGET /api/providers [36m304[0m 1.395 ms - -[0m
+[2025-06-16 16:22:44.173 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.891 ms - -[0m
+[2025-06-16 16:22:44.174 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 1.721 ms - -[0m
+[2025-06-16 16:22:44.193 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.098 ms - -[0m
+[2025-06-16 16:22:44.193 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:22:44.195 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.131 ms - -[0m
+[2025-06-16 16:22:44.196 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.374 ms - -[0m
+[2025-06-16 16:22:52.393 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.122 ms - -[0m
+[2025-06-16 16:22:52.394 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.101 ms - -[0m
+[2025-06-16 16:22:52.398 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.279 ms - -[0m
+[2025-06-16 16:22:52.401 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 0.904 ms - -[0m
+[2025-06-16 16:22:54.674 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:22:54.675 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 3.713 ms - 192[0m
+[2025-06-16 16:23:00.888 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.132 ms - -[0m
+[2025-06-16 16:23:00.894 PM] info: 	[0mPOST /api/providers [32m201[0m 3.166 ms - 176[0m
+[2025-06-16 16:23:00.902 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.163 ms - -[0m
+[2025-06-16 16:23:00.904 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.093 ms - -[0m
+[2025-06-16 16:23:00.909 PM] info: 	[0mGET /api/providers [32m200[0m 1.874 ms - 442[0m
+[2025-06-16 16:23:00.911 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 4.616 ms - -[0m
+[2025-06-16 16:23:00.911 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 3.370 ms - -[0m
+[2025-06-16 16:23:05.691 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.255 ms - -[0m
+[2025-06-16 16:23:05.695 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.064 ms - -[0m
+[2025-06-16 16:23:05.696 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 2.218 ms - 178[0m
+[2025-06-16 16:23:05.697 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.883 ms - -[0m
+[2025-06-16 16:23:05.724 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.059 ms - -[0m
+[2025-06-16 16:23:05.726 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.639 ms - 1097[0m
+[2025-06-16 16:23:05.727 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.636 ms - -[0m
+[2025-06-16 16:23:05.729 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.049 ms - -[0m
+[2025-06-16 16:23:05.731 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.066 ms - -[0m
+[2025-06-16 16:23:05.732 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.701 ms - 115[0m
+[2025-06-16 16:23:05.734 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.595 ms - -[0m
+[2025-06-16 16:23:10.360 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.156 ms - -[0m
+[2025-06-16 16:23:10.361 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.097 ms - -[0m
+[2025-06-16 16:23:10.364 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.396 ms - -[0m
+[2025-06-16 16:23:10.368 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.758 ms - -[0m
+[2025-06-16 16:23:22.361 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.189 ms - -[0m
+[2025-06-16 16:23:22.362 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.063 ms - -[0m
+[2025-06-16 16:23:22.363 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.339 ms - -[0m
+[2025-06-16 16:23:22.364 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.344 ms - -[0m
+[2025-06-16 16:23:22.384 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.057 ms - -[0m
+[2025-06-16 16:23:22.385 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.111 ms - -[0m
+[2025-06-16 16:23:22.386 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.996 ms - -[0m
+[2025-06-16 16:23:22.388 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.041 ms - -[0m
+[2025-06-16 16:23:22.388 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 1.035 ms - -[0m
+[2025-06-16 16:23:22.390 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.511 ms - -[0m
+[2025-06-16 16:23:22.391 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.556 ms - -[0m
+[2025-06-16 16:23:33.559 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.116 ms - -[0m
+[2025-06-16 16:23:33.565 PM] info: 	[0mPOST /api/quotes [32m201[0m 2.878 ms - 176[0m
+[2025-06-16 16:23:33.572 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.167 ms - -[0m
+[2025-06-16 16:23:33.579 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 2.111 ms - 932[0m
+[2025-06-16 16:23:33.583 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.091 ms - -[0m
+[2025-06-16 16:23:33.585 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.816 ms - 396[0m
+[2025-06-16 16:24:02.450 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.230 ms - -[0m
+[2025-06-16 16:24:02.451 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.057 ms - -[0m
+[2025-06-16 16:24:02.452 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.493 ms - -[0m
+[2025-06-16 16:24:02.452 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.280 ms - -[0m
+[2025-06-16 16:24:02.474 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.069 ms - -[0m
+[2025-06-16 16:24:02.474 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.040 ms - -[0m
+[2025-06-16 16:24:02.476 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.820 ms - -[0m
+[2025-06-16 16:24:02.477 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.539 ms - -[0m
+[2025-06-16 16:24:02.478 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.040 ms - -[0m
+[2025-06-16 16:24:02.478 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.037 ms - -[0m
+[2025-06-16 16:24:02.479 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.573 ms - -[0m
+[2025-06-16 16:24:02.480 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.489 ms - -[0m
+[2025-06-16 16:25:29.352 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.101 ms - -[0m
+[2025-06-16 16:25:29.352 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.037 ms - -[0m
+[2025-06-16 16:25:29.354 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.178 ms - -[0m
+[2025-06-16 16:25:29.354 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.592 ms - -[0m
+[2025-06-16 16:25:29.356 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.032 ms - -[0m
+[2025-06-16 16:25:29.356 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.020 ms - -[0m
+[2025-06-16 16:25:29.359 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 1.446 ms - -[0m
+[2025-06-16 16:25:29.360 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.973 ms - -[0m
+[2025-06-16 16:25:29.362 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.061 ms - -[0m
+[2025-06-16 16:25:29.362 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.024 ms - -[0m
+[2025-06-16 16:25:29.365 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.800 ms - -[0m
+[2025-06-16 16:25:29.365 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 1.239 ms - -[0m
+[2025-06-16 16:25:44.351 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.102 ms - -[0m
+[2025-06-16 16:25:44.352 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.093 ms - -[0m
+[2025-06-16 16:25:44.354 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.383 ms - -[0m
+[2025-06-16 16:25:44.354 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.217 ms - -[0m
+[2025-06-16 16:25:44.357 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.056 ms - -[0m
+[2025-06-16 16:25:44.358 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.044 ms - -[0m
+[2025-06-16 16:25:44.361 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 1.374 ms - -[0m
+[2025-06-16 16:25:44.361 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.244 ms - -[0m
+[2025-06-16 16:25:44.365 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.047 ms - -[0m
+[2025-06-16 16:25:44.365 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.039 ms - -[0m
+[2025-06-16 16:25:44.369 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 1.004 ms - -[0m
+[2025-06-16 16:25:44.369 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.985 ms - -[0m
+[2025-06-16 16:26:21.636 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:26:30.117 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:26:49.034 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:26:49.036 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:26:49.037 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:26:49.164 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:26:49.164 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:26:49.164 PM] info: 	- JWT认证系统
+[2025-06-16 16:26:49.164 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:26:49.164 PM] info: 	- SQL注入防护
+[2025-06-16 16:26:49.164 PM] info: 	- 速率限制
+[2025-06-16 16:26:49.165 PM] info: 	- 安全响应头
+[2025-06-16 16:26:49.165 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:26:49.165 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:26:49.167 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:29:00.140 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.355 ms - -[0m
+[2025-06-16 16:29:00.142 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.039 ms - -[0m
+[2025-06-16 16:29:00.144 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 2.238 ms - -[0m
+[2025-06-16 16:29:00.144 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.307 ms - -[0m
+[2025-06-16 16:29:00.165 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.103 ms - -[0m
+[2025-06-16 16:29:00.166 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.079 ms - -[0m
+[2025-06-16 16:29:00.168 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.754 ms - -[0m
+[2025-06-16 16:29:00.169 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 0.558 ms - -[0m
+[2025-06-16 16:29:00.173 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.044 ms - -[0m
+[2025-06-16 16:29:00.174 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.047 ms - -[0m
+[2025-06-16 16:29:00.175 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.653 ms - -[0m
+[2025-06-16 16:29:00.176 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.387 ms - -[0m
+[2025-06-16 16:31:12.220 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:31:12.222 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:31:12.223 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:31:12.347 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:31:12.347 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:31:12.347 PM] info: 	- JWT认证系统
+[2025-06-16 16:31:12.347 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:31:12.347 PM] info: 	- SQL注入防护
+[2025-06-16 16:31:12.347 PM] info: 	- 速率限制
+[2025-06-16 16:31:12.347 PM] info: 	- 安全响应头
+[2025-06-16 16:31:12.347 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:31:12.347 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:31:12.349 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:31:18.344 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 1.168 ms - -[0m
+[2025-06-16 16:31:18.350 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.059 ms - -[0m
+[2025-06-16 16:31:18.351 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.050 ms - -[0m
+[2025-06-16 16:31:18.353 PM] info: 	[0mOPTIONS /api/orders/active?pageSize=1000 [32m200[0m 0.140 ms - -[0m
+[2025-06-16 16:31:18.355 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 9.305 ms - -[0m
+[2025-06-16 16:31:18.356 PM] info: 	[0mOPTIONS /api/orders/closed?pageSize=1000 [32m200[0m 0.047 ms - -[0m
+[2025-06-16 16:31:18.358 PM] info: 	[0mGET /api/providers [36m304[0m 3.936 ms - -[0m
+[2025-06-16 16:31:18.359 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.049 ms - -[0m
+[2025-06-16 16:31:18.359 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 7.252 ms - -[0m
+[2025-06-16 16:31:18.361 PM] info: 	[0mGET /api/orders/active?pageSize=1000 [36m304[0m 3.686 ms - -[0m
+[2025-06-16 16:31:18.361 PM] info: 	[0mGET /api/providers [36m304[0m 1.398 ms - -[0m
+[2025-06-16 16:31:18.362 PM] info: 	[0mGET /api/orders/closed?pageSize=1000 [36m304[0m 1.920 ms - -[0m
+[2025-06-16 16:31:18.365 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.210 ms - -[0m
+[2025-06-16 16:31:18.366 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.064 ms - -[0m
+[2025-06-16 16:31:18.367 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.861 ms - 174[0m
+[2025-06-16 16:31:18.368 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.575 ms - 174[0m
+[2025-06-16 16:31:18.370 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.474 ms - -[0m
+[2025-06-16 16:31:20.674 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.143 ms - -[0m
+[2025-06-16 16:31:20.676 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.109 ms - -[0m
+[2025-06-16 16:31:20.681 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 2.577 ms - 149[0m
+[2025-06-16 16:31:20.684 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.450 ms - -[0m
+[2025-06-16 16:31:23.809 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:31:23.809 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 19.621 ms - 192[0m
+[2025-06-16 16:31:30.807 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.154 ms - -[0m
+[2025-06-16 16:31:30.808 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [32m200[0m 0.152 ms - -[0m
+[2025-06-16 16:31:30.813 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 1.684 ms - -[0m
+[2025-06-16 16:31:30.815 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250616-006%2CRX250616-005%2CRX250616-004%2CRX250616-003%2CRX250616-002%2CRX250616-001 [36m304[0m 0.719 ms - -[0m
+[2025-06-16 16:31:32.705 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.145 ms - -[0m
+[2025-06-16 16:31:32.706 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.110 ms - -[0m
+[2025-06-16 16:31:32.709 PM] info: 	[0mGET /api/users/me/wechat-config [32m200[0m 1.641 ms - 149[0m
+[2025-06-16 16:31:32.716 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 4.558 ms - -[0m
+[2025-06-16 16:31:41.171 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.240 ms - -[0m
+[2025-06-16 16:31:41.172 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [32m200[0m 0.127 ms - -[0m
+[2025-06-16 16:31:41.174 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.737 ms - -[0m
+[2025-06-16 16:31:41.175 PM] info: 	[0mGET /api/providers/details?accessKey=4d139b8c-3fed-4425-aeac-d19886225b59 [36m304[0m 0.511 ms - -[0m
+[2025-06-16 16:31:41.198 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.076 ms - -[0m
+[2025-06-16 16:31:41.199 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [32m200[0m 0.130 ms - -[0m
+[2025-06-16 16:31:41.200 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 1.137 ms - -[0m
+[2025-06-16 16:31:41.202 PM] info: 	[0mOPTIONS /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [32m200[0m 0.045 ms - -[0m
+[2025-06-16 16:31:41.203 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/available-orders [36m304[0m 1.119 ms - -[0m
+[2025-06-16 16:31:41.204 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.890 ms - -[0m
+[2025-06-16 16:31:41.205 PM] info: 	[0mGET /api/providers/4d139b8c-3fed-4425-aeac-d19886225b59/quote-history [36m304[0m 0.567 ms - -[0m
+[2025-06-16 16:31:47.460 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.141 ms - -[0m
+[2025-06-16 16:31:47.462 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.083 ms - -[0m
+[2025-06-16 16:31:47.463 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.804 ms - -[0m
+[2025-06-16 16:31:47.464 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.254 ms - -[0m
+[2025-06-16 16:31:47.488 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.063 ms - -[0m
+[2025-06-16 16:31:47.488 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.043 ms - -[0m
+[2025-06-16 16:31:47.490 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.204 ms - -[0m
+[2025-06-16 16:31:47.491 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.478 ms - -[0m
+[2025-06-16 16:31:47.493 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.073 ms - -[0m
+[2025-06-16 16:31:47.493 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.088 ms - -[0m
+[2025-06-16 16:31:47.496 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.837 ms - -[0m
+[2025-06-16 16:31:47.497 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.723 ms - -[0m
+[2025-06-16 16:31:54.019 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.128 ms - -[0m
+[2025-06-16 16:31:54.026 PM] info: 	[0mPOST /api/quotes [32m201[0m 4.598 ms - 171[0m
+[2025-06-16 16:31:54.032 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.146 ms - -[0m
+[2025-06-16 16:31:54.035 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 1.053 ms - 610[0m
+[2025-06-16 16:31:54.039 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.100 ms - -[0m
+[2025-06-16 16:31:54.041 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.783 ms - 930[0m
+[2025-06-16 16:32:21.260 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.162 ms - -[0m
+[2025-06-16 16:32:21.262 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.107 ms - -[0m
+[2025-06-16 16:32:21.265 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.290 ms - -[0m
+[2025-06-16 16:32:21.267 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.170 ms - -[0m
+[2025-06-16 16:32:48.347 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.124 ms - -[0m
+[2025-06-16 16:32:48.352 PM] info: 	Token刷新成功
+[2025-06-16 16:32:48.353 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 3.895 ms - 261[0m
+[2025-06-16 16:36:29.255 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:36:47.184 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:36:53.105 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:37:02.773 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:37:42.051 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:37:57.151 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:37:57.154 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:37:57.155 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:37:57.282 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:37:57.282 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:37:57.282 PM] info: 	- JWT认证系统
+[2025-06-16 16:37:57.282 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:37:57.282 PM] info: 	- SQL注入防护
+[2025-06-16 16:37:57.282 PM] info: 	- 速率限制
+[2025-06-16 16:37:57.283 PM] info: 	- 安全响应头
+[2025-06-16 16:37:57.283 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:37:57.283 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:37:57.285 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:38:59.836 PM] info: 	管理员登录成功
+[2025-06-16 16:38:59.838 PM] info: 	[0mPOST /api/admin/login [32m200[0m 60.652 ms - 601[0m
+[2025-06-16 16:38:59.842 PM] info: 	[0mPOST /api/admin/users [33m404[0m 0.666 ms - 155[0m
+[2025-06-16 16:40:41.775 PM] info: 	管理员登录成功
+[2025-06-16 16:40:41.776 PM] info: 	[0mPOST /api/admin/login [32m200[0m 51.631 ms - 601[0m
+[2025-06-16 16:40:41.779 PM] warn: 	认证失败：无效的Token
+[2025-06-16 16:40:41.780 PM] info: 	[0mPOST /api/users/create [33m403[0m 0.612 ms - 26[0m
+[2025-06-16 16:41:10.737 PM] info: 	管理员登录成功
+[2025-06-16 16:41:10.738 PM] info: 	[0mPOST /api/admin/login [32m200[0m 52.618 ms - 601[0m
+[2025-06-16 16:41:10.793 PM] info: 	管理员创建用户成功
+[2025-06-16 16:41:10.794 PM] info: 	[0mPOST /api/users/create [32m201[0m 53.196 ms - 221[0m
+[2025-06-16 16:41:10.795 PM] info: 	[0mPUT /api/users/4adb59f4-ca43-4528-a36e-91d5ec7c500c/wechat [33m404[0m 0.461 ms - 192[0m
+[2025-06-16 16:41:10.797 PM] info: 	用户删除成功
+[2025-06-16 16:41:10.797 PM] info: 	[0mDELETE /api/users/4adb59f4-ca43-4528-a36e-91d5ec7c500c [32m200[0m 0.700 ms - 32[0m
+[2025-06-16 16:42:02.345 PM] info: 	管理员登录成功
+[2025-06-16 16:42:02.346 PM] info: 	[0mPOST /api/admin/login [32m200[0m 50.984 ms - 601[0m
+[2025-06-16 16:42:02.400 PM] info: 	管理员创建用户成功
+[2025-06-16 16:42:02.401 PM] info: 	[0mPOST /api/users/create [32m201[0m 51.841 ms - 221[0m
+[2025-06-16 16:42:02.453 PM] info: 	用户登录成功
+[2025-06-16 16:42:02.453 PM] info: 	[0mPOST /api/auth/login [32m200[0m 51.084 ms - 771[0m
+[2025-06-16 16:42:02.454 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:42:02.455 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 0.649 ms - 174[0m
+[2025-06-16 16:42:02.456 PM] info: 	[0mPOST /api/providers [32m201[0m 0.525 ms - 180[0m
+[2025-06-16 16:42:02.457 PM] info: 	[0mPOST /api/orders [31m500[0m 0.859 ms - 30[0m
+[2025-06-16 16:42:02.458 PM] info: 	[0mDELETE /api/providers/f1f88079-b935-4586-932b-5fc43f2f1f1f [32m200[0m 0.261 ms - 38[0m
+[2025-06-16 16:42:02.459 PM] info: 	用户删除成功
+[2025-06-16 16:42:02.460 PM] info: 	[0mDELETE /api/users/5a86dba6-fff8-4cf0-b4d9-13f1ef74df5a [32m200[0m 0.435 ms - 32[0m
+[2025-06-16 16:42:28.565 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.149 ms - -[0m
+[2025-06-16 16:42:28.566 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.060 ms - -[0m
+[2025-06-16 16:42:28.568 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 1.546 ms - -[0m
+[2025-06-16 16:42:28.570 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.578 ms - -[0m
+[2025-06-16 16:42:28.592 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.116 ms - -[0m
+[2025-06-16 16:42:28.594 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 1.195 ms - -[0m
+[2025-06-16 16:42:28.596 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [36m304[0m 0.616 ms - -[0m
+[2025-06-16 16:42:28.598 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.271 ms - -[0m
+[2025-06-16 16:42:28.599 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.077 ms - -[0m
+[2025-06-16 16:42:28.602 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 2.725 ms - 656[0m
+[2025-06-16 16:42:28.604 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.774 ms - -[0m
+[2025-06-16 16:42:39.676 PM] info: 	[0mOPTIONS /api/quotes [32m200[0m 0.059 ms - -[0m
+[2025-06-16 16:42:39.679 PM] info: 	[0mPOST /api/quotes [32m201[0m 1.465 ms - 171[0m
+[2025-06-16 16:42:39.714 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.035 ms - -[0m
+[2025-06-16 16:42:39.715 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders [32m200[0m 0.343 ms - 451[0m
+[2025-06-16 16:42:39.718 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.024 ms - -[0m
+[2025-06-16 16:42:39.720 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.272 ms - 927[0m
+[2025-06-16 16:42:49.348 PM] info: 	[0mOPTIONS /api/auth/refresh [32m200[0m 0.169 ms - -[0m
+[2025-06-16 16:42:49.352 PM] info: 	Token刷新成功
+[2025-06-16 16:42:49.353 PM] info: 	[0mPOST /api/auth/refresh [32m200[0m 2.750 ms - 261[0m
+[2025-06-16 16:42:51.583 PM] info: 	管理员登录成功
+[2025-06-16 16:42:51.583 PM] info: 	[0mPOST /api/admin/login [32m200[0m 51.978 ms - 601[0m
+[2025-06-16 16:42:51.640 PM] info: 	管理员创建用户成功
+[2025-06-16 16:42:51.640 PM] info: 	[0mPOST /api/users/create [32m201[0m 53.729 ms - 221[0m
+[2025-06-16 16:42:51.693 PM] info: 	用户登录成功
+[2025-06-16 16:42:51.693 PM] info: 	[0mPOST /api/auth/login [32m200[0m 51.650 ms - 771[0m
+[2025-06-16 16:42:51.695 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:42:51.695 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 0.766 ms - 174[0m
+[2025-06-16 16:42:51.696 PM] info: 	[0mPOST /api/providers [32m201[0m 0.394 ms - 180[0m
+[2025-06-16 16:42:51.698 PM] info: 	[0mPOST /api/orders [31m500[0m 0.506 ms - 30[0m
+[2025-06-16 16:42:51.699 PM] info: 	[0mDELETE /api/providers/86cb06b3-07ef-425c-b0bc-592e667e36d7 [32m200[0m 0.221 ms - 38[0m
+[2025-06-16 16:42:51.700 PM] info: 	用户删除成功
+[2025-06-16 16:42:51.700 PM] info: 	[0mDELETE /api/users/16ffead7-ed38-45bf-ac02-650612e0df6e [32m200[0m 0.778 ms - 32[0m
+[2025-06-16 16:45:05.114 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-16 16:45:05.116 PM] info: 	用户认证密码已从环境变量加载。
+[2025-06-16 16:45:05.116 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-16 16:45:05.245 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-16 16:45:05.245 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-16 16:45:05.246 PM] info: 	- JWT认证系统
+[2025-06-16 16:45:05.246 PM] info: 	- 输入验证和XSS防护
+[2025-06-16 16:45:05.246 PM] info: 	- SQL注入防护
+[2025-06-16 16:45:05.246 PM] info: 	- 速率限制
+[2025-06-16 16:45:05.246 PM] info: 	- 安全响应头
+[2025-06-16 16:45:05.246 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-16 16:45:05.246 PM] info: 	- 数据库查询性能监控
+[2025-06-16 16:45:05.248 PM] info: 	SQLite WAL模式已启用
+[2025-06-16 16:45:25.968 PM] info: 	管理员登录成功
+[2025-06-16 16:45:25.970 PM] info: 	[0mPOST /api/admin/login [32m200[0m 63.036 ms - 601[0m
+[2025-06-16 16:45:26.027 PM] info: 	管理员创建用户成功
+[2025-06-16 16:45:26.028 PM] info: 	[0mPOST /api/users/create [32m201[0m 54.776 ms - 221[0m
+[2025-06-16 16:45:26.081 PM] info: 	用户登录成功
+[2025-06-16 16:45:26.081 PM] info: 	[0mPOST /api/auth/login [32m200[0m 52.052 ms - 771[0m
+[2025-06-16 16:45:26.083 PM] info: 	用户企业微信配置更新成功
+[2025-06-16 16:45:26.083 PM] info: 	[0mPUT /api/users/me/wechat-config [32m200[0m 1.020 ms - 174[0m
+[2025-06-16 16:45:26.086 PM] info: 	[0mPOST /api/providers [32m201[0m 1.572 ms - 180[0m
+[2025-06-16 16:45:26.088 PM] info: 	[0mPOST /api/orders [32m201[0m 1.195 ms - 202[0m
+[2025-06-16 16:45:26.114 PM] info: 	[0mPOST /api/quotes [32m201[0m 0.773 ms - 195[0m
+[2025-06-16 16:45:28.123 PM] info: 	[0mDELETE /api/providers/b3556c3a-50c5-4616-84a4-cb919d1ae5fe [32m200[0m 2.030 ms - 38[0m
+[2025-06-16 16:45:28.130 PM] info: 	[0mDELETE /api/users/746a3b4d-79df-4d0c-9627-c6e7350b0622 [33m400[0m 1.895 ms - 90[0m

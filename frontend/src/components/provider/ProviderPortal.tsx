@@ -35,7 +35,16 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
         // 获取可报价订单
         const ordersResponse = await api.providers.getAvailableOrders(providerKey);
         const orders = ordersResponse.items || ordersResponse || [];
-        setAvailableOrders(orders);
+
+        // 转换数据格式以匹配前端组件期望的字段
+        const transformedOrders = orders.map((order: any) => ({
+          ...order,
+          from: order.warehouse, // 后端字段映射：warehouse -> from
+          to: order.deliveryAddress, // 后端字段映射：deliveryAddress -> to
+          createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
+        }));
+
+        setAvailableOrders(transformedOrders);
 
         // 获取报价历史
         const quotesResponse = await api.providers.getQuoteHistory(providerKey);
@@ -139,7 +148,16 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
                 try {
                   const ordersResponse = await api.providers.getAvailableOrders(providerKey);
                   const orders = ordersResponse.items || ordersResponse || [];
-                  setAvailableOrders(orders);
+
+                  // 转换数据格式以匹配前端组件期望的字段
+                  const transformedOrders = orders.map((order: any) => ({
+                    ...order,
+                    from: order.warehouse, // 后端字段映射：warehouse -> from
+                    to: order.deliveryAddress, // 后端字段映射：deliveryAddress -> to
+                    createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
+                  }));
+
+                  setAvailableOrders(transformedOrders);
 
                   const quotesResponse = await api.providers.getQuoteHistory(providerKey);
                   const quotes = quotesResponse.items || quotesResponse || [];

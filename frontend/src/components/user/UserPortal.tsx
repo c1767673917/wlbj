@@ -4,7 +4,8 @@ import Card from '../ui/Card';
 import Button from '../ui/Button';
 import OrderList from './OrderList';
 import ProviderManagement from './ProviderManagement';
-import { PlusIcon, FileTextIcon, HistoryIcon, TruckIcon, CheckCircleIcon, SparklesIcon, LogOutIcon, UserIcon } from 'lucide-react';
+import UserSettings from './UserSettings';
+import { PlusIcon, FileTextIcon, HistoryIcon, TruckIcon, CheckCircleIcon, SparklesIcon, LogOutIcon, UserIcon, SettingsIcon } from 'lucide-react';
 import api, { exportAPI } from '../../services/api';
 import AuthService from '../../services/auth';
 
@@ -206,6 +207,11 @@ const UserPortal = () => {
       label: '物流公司管理',
       content: <ProviderManagement providers={providers} onRefresh={refreshData} />,
     },
+    {
+      id: 'settings',
+      label: '通知设置',
+      content: <UserSettings />,
+    },
   ];
 
   // 如果正在加载，显示加载状态
@@ -247,7 +253,7 @@ const UserPortal = () => {
             </div>
             <h1 className="text-xl font-bold text-gray-800">瑞勋报价平台</h1>
           </div>
-          
+
           {/* 用户信息和登出按钮 */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center text-sm text-gray-600">
