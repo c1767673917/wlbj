@@ -26,13 +26,23 @@ interface Order {
   deliveryAddress?: string;
 }
 
+interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  total: number;
+  pageSize: number;
+  loading: boolean;
+}
+
 interface OrderListProps {
   orders: Order[];
   showSelected?: boolean;
   onRefresh?: () => void;
+  pagination?: PaginationInfo;
+  onPageChange?: (page: number) => void;
 }
 
-const OrderList = ({ orders, showSelected = false, onRefresh }: OrderListProps) => {
+const OrderList = ({ orders, showSelected = false, onRefresh, pagination, onPageChange }: OrderListProps) => {
   const [ordersWithQuotes, setOrdersWithQuotes] = useState<Order[]>([]);
   const [quotesModalOpen, setQuotesModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -163,16 +173,28 @@ const OrderList = ({ orders, showSelected = false, onRefresh }: OrderListProps) 
     }
   };
 
-  if (orders.length === 0) {
+  if (orders.length === 0 && !pagination?.loading) {
     return (
       <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-gray-500">暂无订单数据</p>
+        <p className="text-gray-500">
+          {pagination && pagination.total === 0 ? '暂无订单数据' : '当前页面暂无数据'}
+        </p>
+        {pagination && pagination.total > 0 && pagination.currentPage > 1 && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-4"
+            onClick={() => onPageChange && onPageChange(1)}
+          >
+            返回第一页
+          </Button>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -271,19 +293,59 @@ const OrderList = ({ orders, showSelected = false, onRefresh }: OrderListProps) 
         </tbody>
       </table>
 
-      <div className="flex justify-between items-center mt-4 px-6 py-3 bg-white border-t border-gray-200">
-        <div className="text-sm text-gray-700">
-          显示 <span className="font-medium">{orders.length}</span> 条结果
+      {/* 分页组件 */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="px-6 py-3 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+              显示第 {((pagination.currentPage - 1) * pagination.pageSize) + 1} - {Math.min(pagination.currentPage * pagination.pageSize, pagination.total)} 条，共 {pagination.total} 条记录
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange && onPageChange(Math.max(pagination.currentPage - 1, 1))}
+                disabled={pagination.currentPage === 1 || pagination.loading}
+              >
+                上一页
+              </Button>
+              <span className="px-3 py-1 text-sm text-gray-700">
+                第 {pagination.currentPage} / {pagination.totalPages} 页
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange && onPageChange(Math.min(pagination.currentPage + 1, pagination.totalPages))}
+                disabled={pagination.currentPage === pagination.totalPages || pagination.loading}
+              >
+                下一页
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-            上一页
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-            下一页
-          </button>
+      )}
+
+      {/* 无分页时显示简单统计 */}
+      {(!pagination || pagination.totalPages <= 1) && (
+        <div className="px-6 py-3 border-t border-gray-200">
+          <div className="text-sm text-gray-700">
+            显示 <span className="font-medium">{orders.length}</span> 条结果
+            {pagination && pagination.total > 0 && (
+              <span>，共 {pagination.total} 条记录</span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* 加载状态覆盖层 */}
+      {pagination?.loading && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <p className="text-gray-600">加载中...</p>
+          </div>
+        </div>
+      )}
 
       {/* 查看报价模态框 */}
       {quotesModalOpen && selectedOrder && (

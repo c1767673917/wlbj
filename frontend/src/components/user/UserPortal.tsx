@@ -18,35 +18,113 @@ const UserPortal = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 加载数据
+  // 分页状态 - 活跃订单
+  const [activeOrdersPagination, setActiveOrdersPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    pageSize: 20,
+    loading: false
+  });
+
+  // 分页状态 - 历史订单
+  const [closedOrdersPagination, setClosedOrdersPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    pageSize: 20,
+    loading: false
+  });
+
+  // 转换数据格式的辅助函数
+  const transformOrder = (order: any) => ({
+    ...order,
+    from: order.warehouse, // 后端字段映射
+    to: order.deliveryAddress, // 后端字段映射
+    createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
+    // 保留选择的物流商信息
+    selectedProvider: order.selectedProvider,
+    selectedPrice: order.selectedPrice,
+    selectedAt: order.selectedAt,
+  });
+
+  // 加载活跃订单
+  const loadActiveOrders = async (page: number = 1, search?: string) => {
+    try {
+      setActiveOrdersPagination(prev => ({ ...prev, loading: true }));
+
+      const response = await api.orders.getActiveOrders({
+        page,
+        pageSize: activeOrdersPagination.pageSize,
+        search: search?.trim()
+      });
+
+      // 处理后端返回的分页数据
+      const orders = response.data || response.items || response || [];
+      setActiveOrders(orders.map(transformOrder));
+
+      setActiveOrdersPagination(prev => ({
+        ...prev,
+        currentPage: response.currentPage || response.page || page,
+        totalPages: response.totalPages || response.pages || Math.ceil((response.totalItems || response.total || 0) / prev.pageSize),
+        total: response.totalItems || response.total || 0,
+        loading: false
+      }));
+    } catch (error) {
+      console.error('加载活跃订单失败:', error);
+      setActiveOrdersPagination(prev => ({ ...prev, loading: false }));
+      // 如果是网络错误，显示友好提示
+      if (error instanceof Error && error.message.includes('网络')) {
+        setError('网络连接失败，请检查网络后重试');
+      }
+    }
+  };
+
+  // 加载历史订单
+  const loadClosedOrders = async (page: number = 1, search?: string) => {
+    try {
+      setClosedOrdersPagination(prev => ({ ...prev, loading: true }));
+
+      const response = await api.orders.getClosedOrders({
+        page,
+        pageSize: closedOrdersPagination.pageSize,
+        search: search?.trim()
+      });
+
+      // 处理后端返回的分页数据
+      const orders = response.data || response.items || response || [];
+      setClosedOrders(orders.map(transformOrder));
+
+      setClosedOrdersPagination(prev => ({
+        ...prev,
+        currentPage: response.currentPage || response.page || page,
+        totalPages: response.totalPages || response.pages || Math.ceil((response.totalItems || response.total || 0) / prev.pageSize),
+        total: response.totalItems || response.total || 0,
+        loading: false
+      }));
+    } catch (error) {
+      console.error('加载历史订单失败:', error);
+      setClosedOrdersPagination(prev => ({ ...prev, loading: false }));
+      // 如果是网络错误，显示友好提示
+      if (error instanceof Error && error.message.includes('网络')) {
+        setError('网络连接失败，请检查网络后重试');
+      }
+    }
+  };
+
+  // 初始化数据加载
   useEffect(() => {
-    const loadData = async () => {
+    const loadInitialData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // 并行加载不同状态的订单
-        const [activeOrdersRes, closedOrdersRes, providersRes] = await Promise.all([
-          api.orders.getActiveOrders(),
-          api.orders.getClosedOrders(),
-          api.providers.getAll()
+        // 并行加载数据
+        await Promise.all([
+          loadActiveOrders(1),
+          loadClosedOrders(1),
+          api.providers.getAll().then(providersRes => setProviders(providersRes || []))
         ]);
-
-        // 转换数据格式以匹配前端组件期望的字段
-        const transformOrder = (order: any) => ({
-          ...order,
-          from: order.warehouse, // 后端字段映射
-          to: order.deliveryAddress, // 后端字段映射
-          createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
-          // 保留选择的物流商信息
-          selectedProvider: order.selectedProvider,
-          selectedPrice: order.selectedPrice,
-          selectedAt: order.selectedAt,
-        });
-
-        setActiveOrders((activeOrdersRes || []).map(transformOrder));
-        setClosedOrders((closedOrdersRes || []).map(transformOrder));
-        setProviders(providersRes || []);
       } catch (error) {
         console.error('加载数据失败:', error);
         setError('加载数据失败，请刷新页面重试');
@@ -55,38 +133,45 @@ const UserPortal = () => {
       }
     };
 
-    loadData();
+    loadInitialData();
   }, []);
 
   // 刷新数据的函数
   const refreshData = async () => {
     try {
-      // 并行加载不同状态的订单
-      const [activeOrdersRes, closedOrdersRes, providersRes] = await Promise.all([
-        api.orders.getActiveOrders(),
-        api.orders.getClosedOrders(),
-        api.providers.getAll()
+      // 刷新当前页面的数据
+      await Promise.all([
+        loadActiveOrders(activeOrdersPagination.currentPage, searchTerm),
+        loadClosedOrders(closedOrdersPagination.currentPage, searchTerm),
+        api.providers.getAll().then(providersRes => setProviders(providersRes || []))
       ]);
-
-      // 转换数据格式以匹配前端组件期望的字段
-      const transformOrder = (order: any) => ({
-        ...order,
-        from: order.warehouse, // 后端字段映射
-        to: order.deliveryAddress, // 后端字段映射
-        createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
-        // 保留选择的物流商信息
-        selectedProvider: order.selectedProvider,
-        selectedPrice: order.selectedPrice,
-        selectedAt: order.selectedAt,
-      });
-
-      setActiveOrders((activeOrdersRes || []).map(transformOrder));
-      setClosedOrders((closedOrdersRes || []).map(transformOrder));
-      setProviders(providersRes || []);
     } catch (error) {
       console.error('刷新数据失败:', error);
     }
   };
+
+  // 处理搜索
+  const handleSearch = async () => {
+    // 搜索时重置到第一页
+    await Promise.all([
+      loadActiveOrders(1, searchTerm),
+      loadClosedOrders(1, searchTerm)
+    ]);
+    setActiveOrdersPagination(prev => ({ ...prev, currentPage: 1 }));
+    setClosedOrdersPagination(prev => ({ ...prev, currentPage: 1 }));
+  };
+
+  // 监听搜索词变化，自动搜索
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      // 只有在组件已经初始化完成后才执行搜索
+      if (!loading) {
+        handleSearch();
+      }
+    }, 500); // 500ms 防抖
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]); // 移除 loading 依赖，避免无限循环
 
   // 导出活跃订单
   const handleExportActiveOrders = () => {
@@ -95,6 +180,7 @@ const UserPortal = () => {
       console.log('活跃订单导出已开始下载');
     } catch (error) {
       console.error('导出活跃订单失败:', error);
+      alert('导出失败，请重试');
     }
   };
 
@@ -105,6 +191,7 @@ const UserPortal = () => {
       console.log('历史订单导出已开始下载');
     } catch (error) {
       console.error('导出历史订单失败:', error);
+      alert('导出失败，请重试');
     }
   };
 
@@ -150,13 +237,10 @@ const UserPortal = () => {
             </div>
           </div>
           <OrderList
-            orders={activeOrders.filter(order =>
-              order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.goods.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.to.toLowerCase().includes(searchTerm.toLowerCase())
-            )}
+            orders={activeOrders}
             onRefresh={refreshData}
+            pagination={activeOrdersPagination}
+            onPageChange={(page) => loadActiveOrders(page, searchTerm)}
           />
         </div>
       ),
@@ -190,14 +274,11 @@ const UserPortal = () => {
             </Button>
           </div>
           <OrderList
-            orders={closedOrders.filter(order =>
-              order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.goods.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.to.toLowerCase().includes(searchTerm.toLowerCase())
-            )}
+            orders={closedOrders}
             showSelected={true}
             onRefresh={refreshData}
+            pagination={closedOrdersPagination}
+            onPageChange={(page) => loadClosedOrders(page, searchTerm)}
           />
         </div>
       ),
@@ -234,9 +315,24 @@ const UserPortal = () => {
       <div className="max-w-7xl mx-auto">
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()} variant="primary">
-            刷新页面
-          </Button>
+          <div className="flex justify-center space-x-3">
+            <Button
+              onClick={() => {
+                setError(null);
+                // 重新加载数据
+                Promise.all([
+                  loadActiveOrders(activeOrdersPagination.currentPage, searchTerm),
+                  loadClosedOrders(closedOrdersPagination.currentPage, searchTerm)
+                ]);
+              }}
+              variant="primary"
+            >
+              重试
+            </Button>
+            <Button onClick={() => window.location.reload()} variant="outline">
+              刷新页面
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -288,7 +384,7 @@ const UserPortal = () => {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-gray-600">活跃订单</p>
-                <p className="text-2xl font-bold text-gray-800">{activeOrders.length}</p>
+                <p className="text-2xl font-bold text-gray-800">{activeOrdersPagination.total}</p>
               </div>
             </div>
           </div>
@@ -301,7 +397,7 @@ const UserPortal = () => {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-gray-600">历史订单</p>
-                <p className="text-2xl font-bold text-gray-800">{closedOrders.length}</p>
+                <p className="text-2xl font-bold text-gray-800">{closedOrdersPagination.total}</p>
               </div>
             </div>
           </div>

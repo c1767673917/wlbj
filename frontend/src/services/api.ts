@@ -308,15 +308,33 @@ export const ordersAPI = {
   },
 
   // 获取活跃订单（用户端）
-  getActiveOrders: async () => {
-    const response = await apiRequest<any>('/orders/active?pageSize=1000');
-    return response.items || response;
+  getActiveOrders: async (params?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    const response = await apiRequest<any>(`/orders/active?${searchParams.toString()}`);
+    return response;
   },
 
   // 获取历史订单（用户端）
-  getClosedOrders: async () => {
-    const response = await apiRequest<any>('/orders/closed?pageSize=1000');
-    return response.items || response;
+  getClosedOrders: async (params?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    const response = await apiRequest<any>(`/orders/closed?${searchParams.toString()}`);
+    return response;
   },
 
   // 创建新订单
