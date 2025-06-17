@@ -46,6 +46,7 @@
 ### 系统要求
 - **Node.js**: 18+ (推荐 20.x)
 - **npm**: 9.0+
+- **Redis**: 6.0+ (必需，用于缓存和会话管理)
 - **操作系统**: Windows, macOS, Linux
 
 ### 一键启动 (开发环境)
@@ -76,7 +77,7 @@
 1.  **环境变量**:
     复制环境变量文件，并根据需要修改。
     ```bash
-    cp .env.example .env
+    cp env.example .env
     nano .env
     ```
     **关键配置**:
@@ -84,6 +85,13 @@
     NODE_ENV=development
     PORT=3000
     JWT_SECRET=your_very_long_and_secure_jwt_secret_here
+
+    # Redis配置（必需）
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+
+    # 管理员密码（强烈建议修改）
+    APP_PASSWORD=your_secure_admin_password_here
     ```
 
 2.  **用户认证**:
@@ -103,22 +111,26 @@
 推荐使用 PM2 和 Nginx 进行生产环境部署。
 
 1.  **环境准备**:
-    确保服务器已安装 Node.js 20.x, PM2 和 Nginx。
+    确保服务器已安装 Node.js 20.x, PM2, Nginx 和 Redis。
     ```bash
     # 安装 Node.js 和 PM2
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y nodejs
     sudo npm install -g pm2
 
-    # 安装 Nginx
-    sudo apt install nginx -y
+    # 安装 Nginx 和 Redis
+    sudo apt install nginx redis-server -y
+
+    # 启动并启用 Redis
+    sudo systemctl start redis-server
+    sudo systemctl enable redis-server
     ```
 
 2.  **部署代码**:
     ```bash
     sudo git clone https://github.com/c1767673917/wlbj.git /var/www/wlbj
     cd /var/www/wlbj
-    
+
     # 安装依赖并构建前端
     npm install --production
     cd frontend
@@ -129,6 +141,11 @@
 
 3.  **配置与启动**:
     - 参考 **快速开始** 部分完成 `.env` 和 `auth_config.json` 的生产环境配置。
+    - **重要**: 在生产环境中设置强密码：
+      ```bash
+      # 在 .env 文件中设置管理员密码
+      echo "APP_PASSWORD=your_very_secure_password_here" >> .env
+      ```
     - 使用 PM2 启动应用：
       ```bash
       pm2 start app.js --name wlbj-app
