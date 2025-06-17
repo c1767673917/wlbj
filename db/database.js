@@ -533,9 +533,20 @@ function initializeAdminConfig() {
     // 如果没有管理员配置，创建默认配置
     if (row.count === 0) {
       const bcrypt = require('bcryptjs');
-      const defaultPassword = 'admin123'; // 默认管理员密码
 
-      bcrypt.hash(defaultPassword, 10, (err, hashedPassword) => {
+      // 优先使用环境变量APP_PASSWORD作为管理员密码
+      let adminPassword = process.env.APP_PASSWORD;
+
+      // 如果环境变量未设置或为默认值，使用默认密码
+      if (!adminPassword || adminPassword === 'your_secure_password_here_change_this' || adminPassword === 'shrx') {
+        adminPassword = 'admin123';
+        console.warn('⚠️  警告：未设置APP_PASSWORD环境变量或使用了默认值，使用默认管理员密码: admin123');
+        console.warn('⚠️  建议在.env文件中设置APP_PASSWORD为强密码');
+      } else {
+        console.log('✅ 使用环境变量APP_PASSWORD作为管理员密码');
+      }
+
+      bcrypt.hash(adminPassword, 10, (err, hashedPassword) => {
         if (err) {
           console.error('生成管理员密码哈希失败:', err.message);
           return;
@@ -548,7 +559,12 @@ function initializeAdminConfig() {
             if (err) {
               console.error('初始化管理员配置失败:', err.message);
             } else {
-              console.log('已初始化管理员配置，默认密码: admin123');
+              if (adminPassword === 'admin123') {
+                console.log('🔐 已初始化管理员配置，默认密码: admin123');
+                console.log('🔒 请立即登录管理后台修改密码！');
+              } else {
+                console.log('🔐 已初始化管理员配置，使用环境变量中的密码');
+              }
             }
           }
         );
