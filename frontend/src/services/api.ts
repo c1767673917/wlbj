@@ -364,6 +364,16 @@ export const ordersAPI = {
   close: (id: string) => apiRequest<any>(`/orders/${id}/close`, {
     method: 'PUT',
   }),
+
+  // 重新开启订单
+  reopen: (id: string) => apiRequest<any>(`/orders/${id}/reopen`, {
+    method: 'PUT',
+  }),
+
+  // 删除订单
+  delete: (id: string) => apiRequest<any>(`/orders/${id}`, {
+    method: 'DELETE',
+  }),
 };
 
 // 报价相关API

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { EyeIcon, EditIcon, XIcon, CheckIcon, CalendarIcon } from 'lucide-react';
+import { EyeIcon, EditIcon, XIcon, CheckIcon, CalendarIcon, RotateCcwIcon, TrashIcon } from 'lucide-react';
 import Button from '../ui/Button';
 import api from '../../services/api';
 
@@ -151,6 +151,45 @@ const OrderList = ({ orders, showSelected = false, onRefresh, pagination, onPage
     }
   };
 
+  // 重新开启订单
+  const handleReopenOrder = async (order: Order) => {
+    if (!confirm('确定要重新开启这个订单吗？开启后将移至我的订单列表。')) {
+      return;
+    }
+
+    try {
+      await api.orders.reopen(order.id);
+      alert('订单已成功重新开启');
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      console.error('重新开启订单失败:', error);
+      alert('重新开启订单失败，请重试');
+    }
+  };
+
+  // 删除订单
+  const handleDeleteOrder = async (order: Order) => {
+    // 单次确认，但提供详细的警告信息
+    const confirmMessage = `⚠️ 确定要永久删除订单 ${order.id} 吗？\n\n此操作将：\n• 永久删除订单记录和所有相关报价\n• 无法恢复已删除的数据\n• 不可撤销\n\n请确认您真的要删除此订单。`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      await api.orders.delete(order.id);
+      alert('订单已成功删除');
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      console.error('删除订单失败:', error);
+      alert('删除订单失败，请重试');
+    }
+  };
+
   // 提交编辑
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,7 +305,8 @@ const OrderList = ({ orders, showSelected = false, onRefresh, pagination, onPage
                     查看报价
                   </Button>
 
-                  {!showSelected && (
+                  {!showSelected ? (
+                    // 活跃订单的操作按钮
                     <>
                       <Button
                         variant="outline"
@@ -283,6 +323,28 @@ const OrderList = ({ orders, showSelected = false, onRefresh, pagination, onPage
                         onClick={() => handleCloseOrder(order)}
                       >
                         关闭
+                      </Button>
+                    </>
+                  ) : (
+                    // 历史订单的操作按钮
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={<RotateCcwIcon size={16} />}
+                        onClick={() => handleReopenOrder(order)}
+                        className="text-green-600 hover:text-green-700 hover:border-green-300"
+                      >
+                        开启
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={<TrashIcon size={16} />}
+                        onClick={() => handleDeleteOrder(order)}
+                        className="text-red-600 hover:text-red-700 hover:border-red-300"
+                      >
+                        删除
                       </Button>
                     </>
                   )}

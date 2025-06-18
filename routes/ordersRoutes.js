@@ -657,4 +657,171 @@ router.post('/:id/quotes', (req, res) => {
   }
 });
 
+// PUT /api/orders/:id/reopen - 重新开启历史订单（支持用户级别数据隔离）
+router.put('/:id/reopen',
+  authenticateToken,
+  requirePermission(PERMISSIONS.UPDATE_ORDER),
+  (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const updatedAt = new Date().toISOString();
+
+    // 首先检查订单是否存在且为关闭状态
+    let checkQuery = 'SELECT * FROM orders WHERE id = ? AND status = ?';
+    let checkParams = [orderId, 'closed'];
+
+    // 数据隔离：普通用户只能操作自己的订单
+    if (req.user.role !== ROLES.ADMIN) {
+      checkQuery += ' AND userId = ?';
+      checkParams.push(req.user.id);
+    }
+
+    db.get(checkQuery, checkParams, (err, order) => {
+      if (err) {
+        console.error('检查订单状态失败:', err);
+        return res.status(500).json({ error: '检查订单状态失败' });
+      }
+
+      if (!order) {
+        return res.status(404).json({ error: '订单不存在、不是历史订单或无权限操作' });
+      }
+
+      // 开始数据库事务
+      db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+
+        // 更新订单状态为active，清空选择的物流商信息
+        let updateQuery = 'UPDATE orders SET status = ?, selectedProvider = NULL, selectedPrice = NULL, selectedAt = NULL, updatedAt = ? WHERE id = ?';
+        let updateParams = ['active', updatedAt, orderId];
+
+        // 数据隔离：普通用户只能操作自己的订单
+        if (req.user.role !== ROLES.ADMIN) {
+          updateQuery += ' AND userId = ?';
+          updateParams.push(req.user.id);
+        }
+
+        db.run(updateQuery, updateParams, function(updateErr) {
+          if (updateErr) {
+            console.error('重新开启订单失败:', updateErr);
+            db.run('ROLLBACK');
+            return res.status(500).json({ error: '重新开启订单失败' });
+          }
+
+          if (this.changes === 0) {
+            db.run('ROLLBACK');
+            return res.status(404).json({ error: '订单不存在或无权限操作' });
+          }
+
+          // 提交事务
+          db.run('COMMIT', (commitErr) => {
+            if (commitErr) {
+              console.error('提交事务失败:', commitErr);
+              return res.status(500).json({ error: '重新开启订单失败' });
+            }
+
+            // 返回更新后的订单信息
+            db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+              if (err) {
+                console.error('获取更新后的订单失败:', err);
+                return res.status(500).json({ error: '获取更新后的订单失败' });
+              }
+              res.json({
+                ...row,
+                message: '订单已成功重新开启，移至我的订单列表'
+              });
+            });
+          });
+        });
+      });
+    });
+  } catch (error) {
+    console.error('重新开启订单失败:', error);
+    res.status(500).json({ error: '重新开启订单失败' });
+  }
+});
+
+// DELETE /api/orders/:id - 删除订单（支持用户级别数据隔离）
+router.delete('/:id',
+  authenticateToken,
+  requirePermission(PERMISSIONS.DELETE_ORDER),
+  (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    // 首先检查订单是否存在
+    let checkQuery = 'SELECT * FROM orders WHERE id = ?';
+    let checkParams = [orderId];
+
+    // 数据隔离：普通用户只能操作自己的订单
+    if (req.user.role !== ROLES.ADMIN) {
+      checkQuery += ' AND userId = ?';
+      checkParams.push(req.user.id);
+    }
+
+    db.get(checkQuery, checkParams, (err, order) => {
+      if (err) {
+        console.error('检查订单是否存在失败:', err);
+        return res.status(500).json({ error: '检查订单失败' });
+      }
+
+      if (!order) {
+        return res.status(404).json({ error: '订单不存在或无权限操作' });
+      }
+
+      // 开始数据库事务
+      db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+
+        // 首先删除相关的报价记录
+        db.run('DELETE FROM quotes WHERE orderId = ?', [orderId], function(quotesErr) {
+          if (quotesErr) {
+            console.error('删除订单报价失败:', quotesErr);
+            db.run('ROLLBACK');
+            return res.status(500).json({ error: '删除订单失败' });
+          }
+
+          // 然后删除订单记录
+          let deleteQuery = 'DELETE FROM orders WHERE id = ?';
+          let deleteParams = [orderId];
+
+          // 数据隔离：普通用户只能删除自己的订单
+          if (req.user.role !== ROLES.ADMIN) {
+            deleteQuery += ' AND userId = ?';
+            deleteParams.push(req.user.id);
+          }
+
+          db.run(deleteQuery, deleteParams, function(orderErr) {
+            if (orderErr) {
+              console.error('删除订单失败:', orderErr);
+              db.run('ROLLBACK');
+              return res.status(500).json({ error: '删除订单失败' });
+            }
+
+            if (this.changes === 0) {
+              db.run('ROLLBACK');
+              return res.status(404).json({ error: '订单不存在或无权限操作' });
+            }
+
+            // 提交事务
+            db.run('COMMIT', (commitErr) => {
+              if (commitErr) {
+                console.error('提交事务失败:', commitErr);
+                return res.status(500).json({ error: '删除订单失败' });
+              }
+
+              res.json({
+                message: '订单已成功删除',
+                deletedOrderId: orderId
+              });
+            });
+          });
+        });
+      });
+    });
+  } catch (error) {
+    console.error('删除订单失败:', error);
+    res.status(500).json({ error: '删除订单失败' });
+  }
+});
+
 module.exports = router;
