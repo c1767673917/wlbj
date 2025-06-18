@@ -439,10 +439,32 @@ export const providersAPI = {
   getByAccessKey: (accessKey: string) => apiRequest<any>(`/providers/details?accessKey=${accessKey}`),
 
   // 获取供应商的可用订单
-  getAvailableOrders: (accessKey: string) => apiRequest<any>(`/providers/${accessKey}/available-orders`),
+  getAvailableOrders: (accessKey: string, params?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    return apiRequest<any>(`/providers/${accessKey}/available-orders?${searchParams.toString()}`);
+  },
 
   // 获取供应商的报价历史
-  getQuoteHistory: (accessKey: string) => apiRequest<any>(`/providers/${accessKey}/quote-history`),
+  getQuoteHistory: (accessKey: string, params?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    return apiRequest<any>(`/providers/${accessKey}/quote-history?${searchParams.toString()}`);
+  },
 };
 
 // 导出相关API - 需要添加认证头

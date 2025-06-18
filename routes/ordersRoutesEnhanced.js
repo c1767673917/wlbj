@@ -123,12 +123,21 @@ router.get('/active',
         return res.status(500).json({ error: '获取活跃订单失败' });
       }
 
+      // 统一返回格式
+      const response = {
+        items: result.data || [],
+        totalItems: result.total || 0,
+        totalPages: result.pages || 0,
+        currentPage: result.page || page,
+        pageSize: pageSize
+      };
+
       // 如果没有搜索条件，则缓存结果
       if (!search) {
-        await cache.set(cacheKey, result, 300); // 缓存5分钟
+        await cache.set(cacheKey, response, 300); // 缓存5分钟
       }
 
-      res.json(result);
+      res.json(response);
     });
   }
 );
@@ -169,12 +178,21 @@ router.get('/closed',
         return res.status(500).json({ error: '获取历史订单失败' });
       }
 
+      // 统一返回格式
+      const response = {
+        items: result.data || [],
+        totalItems: result.total || 0,
+        totalPages: result.pages || 0,
+        currentPage: result.page || page,
+        pageSize: pageSize
+      };
+
       // 如果没有搜索条件，则缓存结果
       if (!search) {
-        await cache.set(cacheKey, result, 600); // 缓存10分钟
+        await cache.set(cacheKey, response, 600); // 缓存10分钟
       }
 
-      res.json(result);
+      res.json(response);
     });
   }
 );

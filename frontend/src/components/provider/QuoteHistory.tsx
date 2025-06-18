@@ -1,4 +1,5 @@
 import { CheckCircleIcon } from 'lucide-react';
+import Button from '../ui/Button';
 
 interface Quote {
   orderId: string;
@@ -11,11 +12,21 @@ interface Quote {
   selected?: boolean;
 }
 
-interface QuoteHistoryProps {
-  quotes: Quote[];
+interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  total: number;
+  pageSize: number;
+  loading: boolean;
 }
 
-const QuoteHistory = ({ quotes }: QuoteHistoryProps) => {
+interface QuoteHistoryProps {
+  quotes: Quote[];
+  pagination?: PaginationInfo;
+  onPageChange?: (page: number) => void;
+}
+
+const QuoteHistory = ({ quotes, pagination, onPageChange }: QuoteHistoryProps) => {
   if (quotes.length === 0) {
     return (
       <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
@@ -25,7 +36,17 @@ const QuoteHistory = ({ quotes }: QuoteHistoryProps) => {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
+      {/* 加载状态覆盖层 */}
+      {pagination?.loading && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <p className="text-gray-600">加载中...</p>
+          </div>
+        </div>
+      )}
+
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -93,19 +114,49 @@ const QuoteHistory = ({ quotes }: QuoteHistoryProps) => {
         </tbody>
       </table>
 
-      <div className="flex justify-between items-center mt-4 px-6 py-3 bg-white border-t border-gray-200">
-        <div className="text-sm text-gray-700">
-          显示 <span className="font-medium">{quotes.length}</span> 条结果
+      {/* 分页组件 */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="px-6 py-3 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+              显示第 {((pagination.currentPage - 1) * pagination.pageSize) + 1} - {Math.min(pagination.currentPage * pagination.pageSize, pagination.total)} 条，共 {pagination.total} 条记录
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange && onPageChange(Math.max(pagination.currentPage - 1, 1))}
+                disabled={pagination.currentPage === 1 || pagination.loading}
+              >
+                上一页
+              </Button>
+              <span className="px-3 py-1 text-sm text-gray-700">
+                第 {pagination.currentPage} / {pagination.totalPages} 页
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange && onPageChange(Math.min(pagination.currentPage + 1, pagination.totalPages))}
+                disabled={pagination.currentPage === pagination.totalPages || pagination.loading}
+              >
+                下一页
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-            上一页
-          </button>
-          <button className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-            下一页
-          </button>
+      )}
+
+      {/* 无分页时显示简单统计 */}
+      {(!pagination || pagination.totalPages <= 1) && (
+        <div className="px-6 py-3 border-t border-gray-200">
+          <div className="text-sm text-gray-700">
+            显示 <span className="font-medium">{quotes.length}</span> 条结果
+            {pagination && pagination.total > 0 && (
+              <span>，共 {pagination.total} 条记录</span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

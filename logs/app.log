@@ -5462,3 +5462,75 @@
 [2025-06-17 16:52:11.752 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [32m200[0m 0.063 ms - -[0m
 [2025-06-17 16:52:11.754 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 1.036 ms - -[0m
 [2025-06-17 16:52:11.756 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history [36m304[0m 0.712 ms - -[0m
+[2025-06-17 22:58:44.975 PM] info: 	未配置Redis，使用内存缓存
+[2025-06-17 22:58:44.980 PM] info: 	开发环境：前端由Vite开发服务器提供服务 (http://localhost:5173)
+[2025-06-17 22:58:45.211 PM] info: 	服务器运行在 http://localhost:3000
+[2025-06-17 22:58:45.211 PM] info: 	✅ 管理员密码已通过环境变量配置
+[2025-06-17 22:58:45.211 PM] info: 	服务器启动完成，已启用以下安全特性：
+[2025-06-17 22:58:45.211 PM] info: 	- JWT认证系统
+[2025-06-17 22:58:45.211 PM] info: 	- 输入验证和XSS防护
+[2025-06-17 22:58:45.211 PM] info: 	- SQL注入防护
+[2025-06-17 22:58:45.211 PM] info: 	- 速率限制
+[2025-06-17 22:58:45.212 PM] info: 	- 安全响应头
+[2025-06-17 22:58:45.212 PM] info: 	- 多级缓存系统（内存+Redis）
+[2025-06-17 22:58:45.212 PM] info: 	- 数据库查询性能监控
+[2025-06-17 22:58:45.224 PM] info: 	SQLite WAL模式已启用
+[2025-06-17 22:59:40.820 PM] info: 	[0mOPTIONS /api/auth/login [32m200[0m 0.906 ms - -[0m
+[2025-06-17 22:59:40.951 PM] info: 	用户登录成功
+[2025-06-17 22:59:40.952 PM] info: 	[0mPOST /api/auth/login [32m200[0m 130.396 ms - 664[0m
+[2025-06-17 22:59:40.980 PM] info: 	[0mOPTIONS /api/orders/active?page=1&pageSize=20 [32m200[0m 0.130 ms - -[0m
+[2025-06-17 22:59:40.982 PM] info: 	[0mOPTIONS /api/orders/closed?page=1&pageSize=20 [32m200[0m 0.083 ms - -[0m
+[2025-06-17 22:59:40.985 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.066 ms - -[0m
+[2025-06-17 22:59:40.988 PM] info: 	[0mOPTIONS /api/orders/active?page=1&pageSize=20 [32m200[0m 0.057 ms - -[0m
+[2025-06-17 22:59:40.990 PM] info: 	[0mOPTIONS /api/orders/closed?page=1&pageSize=20 [32m200[0m 0.054 ms - -[0m
+[2025-06-17 22:59:40.991 PM] info: 	[0mGET /api/orders/active?page=1&pageSize=20 [36m304[0m 8.257 ms - -[0m
+[2025-06-17 22:59:40.992 PM] info: 	[0mGET /api/providers [36m304[0m 2.491 ms - -[0m
+[2025-06-17 22:59:40.993 PM] info: 	[0mOPTIONS /api/providers [32m200[0m 0.055 ms - -[0m
+[2025-06-17 22:59:40.994 PM] info: 	[0mGET /api/orders/closed?page=1&pageSize=20 [36m304[0m 7.997 ms - -[0m
+[2025-06-17 22:59:40.996 PM] info: 	[0mGET /api/providers [36m304[0m 1.327 ms - -[0m
+[2025-06-17 22:59:40.997 PM] info: 	[0mGET /api/orders/active?page=1&pageSize=20 [36m304[0m 3.345 ms - -[0m
+[2025-06-17 22:59:40.998 PM] info: 	[0mGET /api/orders/closed?page=1&pageSize=20 [36m304[0m 2.612 ms - -[0m
+[2025-06-17 22:59:40.999 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250617-050%2CRX250617-049%2CRX250617-048%2CRX250617-047%2CRX250617-046%2CRX250617-045%2CRX250617-044%2CRX250617-043%2CRX250617-042%2CRX250617-041%2CRX250617-040%2CRX250617-039%2CRX250617-038%2CRX250617-037%2CRX250617-036%2CRX250617-035%2CRX250617-034%2CRX250617-033%2CRX250617-032%2CRX250617-031 [32m200[0m 0.079 ms - -[0m
+[2025-06-17 22:59:41.000 PM] info: 	[0mOPTIONS /api/quotes/lowest-batch?orderIds=RX250617-050%2CRX250617-049%2CRX250617-048%2CRX250617-047%2CRX250617-046%2CRX250617-045%2CRX250617-044%2CRX250617-043%2CRX250617-042%2CRX250617-041%2CRX250617-040%2CRX250617-039%2CRX250617-038%2CRX250617-037%2CRX250617-036%2CRX250617-035%2CRX250617-034%2CRX250617-033%2CRX250617-032%2CRX250617-031 [32m200[0m 0.066 ms - -[0m
+[2025-06-17 22:59:41.003 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250617-050%2CRX250617-049%2CRX250617-048%2CRX250617-047%2CRX250617-046%2CRX250617-045%2CRX250617-044%2CRX250617-043%2CRX250617-042%2CRX250617-041%2CRX250617-040%2CRX250617-039%2CRX250617-038%2CRX250617-037%2CRX250617-036%2CRX250617-035%2CRX250617-034%2CRX250617-033%2CRX250617-032%2CRX250617-031 [36m304[0m 1.460 ms - -[0m
+[2025-06-17 22:59:41.004 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250617-050%2CRX250617-049%2CRX250617-048%2CRX250617-047%2CRX250617-046%2CRX250617-045%2CRX250617-044%2CRX250617-043%2CRX250617-042%2CRX250617-041%2CRX250617-040%2CRX250617-039%2CRX250617-038%2CRX250617-037%2CRX250617-036%2CRX250617-035%2CRX250617-034%2CRX250617-033%2CRX250617-032%2CRX250617-031 [36m304[0m 0.561 ms - -[0m
+[2025-06-17 22:59:41.005 PM] info: 	[0mGET /api/quotes/lowest-batch?orderIds=RX250617-050%2CRX250617-049%2CRX250617-048%2CRX250617-047%2CRX250617-046%2CRX250617-045%2CRX250617-044%2CRX250617-043%2CRX250617-042%2CRX250617-041%2CRX250617-040%2CRX250617-039%2CRX250617-038%2CRX250617-037%2CRX250617-036%2CRX250617-035%2CRX250617-034%2CRX250617-033%2CRX250617-032%2CRX250617-031 [36m304[0m 0.371 ms - -[0m
+[2025-06-17 22:59:43.308 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.174 ms - -[0m
+[2025-06-17 22:59:43.310 PM] info: 	[0mOPTIONS /api/users/me/wechat-config [32m200[0m 0.097 ms - -[0m
+[2025-06-17 22:59:43.314 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 2.281 ms - -[0m
+[2025-06-17 22:59:43.317 PM] info: 	[0mGET /api/users/me/wechat-config [36m304[0m 1.316 ms - -[0m
+[2025-06-17 22:59:48.135 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.108 ms - -[0m
+[2025-06-17 22:59:48.136 PM] info: 	[0mOPTIONS /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [32m200[0m 0.073 ms - -[0m
+[2025-06-17 22:59:48.139 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.807 ms - -[0m
+[2025-06-17 22:59:48.140 PM] info: 	[0mGET /api/providers/details?accessKey=5caf386d-37bd-4e9e-a199-9442cb8c6cd8 [36m304[0m 0.381 ms - -[0m
+[2025-06-17 22:59:48.175 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=20 [32m200[0m 0.079 ms - -[0m
+[2025-06-17 22:59:48.176 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history?page=1&pageSize=20 [32m200[0m 0.055 ms - -[0m
+[2025-06-17 22:59:48.178 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=20 [32m200[0m 0.044 ms - -[0m
+[2025-06-17 22:59:48.179 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history?page=1&pageSize=20 [32m200[0m 0.052 ms - -[0m
+[2025-06-17 22:59:48.181 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history?page=1&pageSize=20 [32m200[0m 3.898 ms - 927[0m
+[2025-06-17 22:59:48.182 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=20 [32m200[0m 4.199 ms - 5011[0m
+[2025-06-17 22:59:48.184 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history?page=1&pageSize=20 [36m304[0m 1.570 ms - -[0m
+[2025-06-17 22:59:48.185 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=20 [36m304[0m 1.779 ms - -[0m
+[2025-06-17 22:59:56.250 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=1&pageSize=5 [33m404[0m 0.449 ms - 53[0m
+[2025-06-17 22:59:56.255 PM] info: 	[0mGET /api/providers/test-provider-key/quote-history?page=1&pageSize=5 [33m404[0m 0.290 ms - 53[0m
+[2025-06-17 22:59:56.258 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=1&pageSize=5&search=test [33m404[0m 0.892 ms - 53[0m
+[2025-06-17 22:59:56.262 PM] warn: 	用户登录失败：密码错误
+[2025-06-17 22:59:56.262 PM] info: 	[0mPOST /api/auth/login [33m401[0m 1.862 ms - 43[0m
+[2025-06-17 22:59:56.263 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=0&pageSize=5 [33m404[0m 0.203 ms - 53[0m
+[2025-06-17 22:59:56.265 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=-1&pageSize=5 [33m404[0m 0.174 ms - 53[0m
+[2025-06-17 22:59:56.266 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=1&pageSize=9999 [33m404[0m 0.237 ms - 53[0m
+[2025-06-17 22:59:56.268 PM] info: 	[0mGET /api/providers/test-provider-key/available-orders?page=1&pageSize=5&search= [33m404[0m 0.250 ms - 53[0m
+[2025-06-17 23:00:00.270 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=2&pageSize=20 [32m200[0m 0.154 ms - -[0m
+[2025-06-17 23:00:00.273 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=2&pageSize=20 [32m200[0m 1.782 ms - 5006[0m
+[2025-06-17 23:00:00.802 PM] info: 	[0mOPTIONS /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=3&pageSize=20 [32m200[0m 0.152 ms - -[0m
+[2025-06-17 23:00:00.806 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=3&pageSize=20 [32m200[0m 1.639 ms - 3077[0m
+[2025-06-17 23:00:39.897 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=5 [32m200[0m 0.645 ms - 1341[0m
+[2025-06-17 23:00:39.904 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=2&pageSize=5 [32m200[0m 1.439 ms - 1341[0m
+[2025-06-17 23:00:39.907 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/quote-history?page=1&pageSize=5 [32m200[0m 0.526 ms - 926[0m
+[2025-06-17 23:00:39.909 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=5&search=test [32m200[0m 0.653 ms - 109[0m
+[2025-06-17 23:00:39.912 PM] warn: 	用户登录失败：密码错误
+[2025-06-17 23:00:39.912 PM] info: 	[0mPOST /api/auth/login [33m401[0m 1.441 ms - 43[0m
+[2025-06-17 23:00:39.914 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=0&pageSize=5 [32m200[0m 0.468 ms - 1341[0m
+[2025-06-17 23:00:39.916 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=-1&pageSize=5 [32m200[0m 0.795 ms - 1342[0m
+[2025-06-17 23:00:39.918 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=9999 [32m200[0m 0.773 ms - 12874[0m
+[2025-06-17 23:00:39.921 PM] info: 	[0mGET /api/providers/5caf386d-37bd-4e9e-a199-9442cb8c6cd8/available-orders?page=1&pageSize=5&search= [32m200[0m 0.875 ms - 1341[0m

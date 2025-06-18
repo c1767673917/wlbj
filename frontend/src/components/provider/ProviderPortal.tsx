@@ -19,6 +19,84 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // 分页状态 - 可报价订单
+  const [availableOrdersPagination, setAvailableOrdersPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    pageSize: 20,
+    loading: false
+  });
+
+  // 分页状态 - 报价历史
+  const [quoteHistoryPagination, setQuoteHistoryPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    pageSize: 20,
+    loading: false
+  });
+
+  // 加载可报价订单
+  const loadAvailableOrders = async (page: number = 1, search?: string) => {
+    try {
+      setAvailableOrdersPagination(prev => ({ ...prev, loading: true }));
+
+      const response = await api.providers.getAvailableOrders(providerKey, {
+        page,
+        pageSize: availableOrdersPagination.pageSize,
+        search: search?.trim()
+      });
+
+      const orders = response.items || response || [];
+      const transformedOrders = orders.map((order: any) => ({
+        ...order,
+        from: order.warehouse,
+        to: order.deliveryAddress,
+        createdAt: new Date(order.createdAt).toLocaleString('zh-CN'),
+      }));
+
+      setAvailableOrders(transformedOrders);
+      setAvailableOrdersPagination(prev => ({
+        ...prev,
+        currentPage: response.currentPage || page,
+        totalPages: response.totalPages || Math.ceil((response.totalItems || 0) / prev.pageSize),
+        total: response.totalItems || 0,
+        loading: false
+      }));
+    } catch (error) {
+      console.error('加载可报价订单失败:', error);
+      setAvailableOrdersPagination(prev => ({ ...prev, loading: false }));
+    }
+  };
+
+  // 加载报价历史
+  const loadQuoteHistory = async (page: number = 1, search?: string) => {
+    try {
+      setQuoteHistoryPagination(prev => ({ ...prev, loading: true }));
+
+      const response = await api.providers.getQuoteHistory(providerKey, {
+        page,
+        pageSize: quoteHistoryPagination.pageSize,
+        search: search?.trim()
+      });
+
+      const quotes = response.items || response || [];
+      setQuoteHistory(quotes);
+
+      setQuoteHistoryPagination(prev => ({
+        ...prev,
+        currentPage: response.currentPage || page,
+        totalPages: response.totalPages || Math.ceil((response.totalItems || 0) / prev.pageSize),
+        total: response.totalItems || 0,
+        loading: false
+      }));
+    } catch (error) {
+      console.error('加载报价历史失败:', error);
+      setQuoteHistoryPagination(prev => ({ ...prev, loading: false }));
+    }
+  };
+
   useEffect(() => {
     const loadProviderData = async () => {
       if (!providerKey) {
@@ -28,28 +106,18 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
       }
 
       try {
+        setLoading(true);
+        setError('');
+
         // 验证供应商并获取基本信息
         const provider = await api.providers.getByAccessKey(providerKey);
         setProviderInfo(provider);
 
-        // 获取可报价订单
-        const ordersResponse = await api.providers.getAvailableOrders(providerKey);
-        const orders = ordersResponse.items || ordersResponse || [];
-
-        // 转换数据格式以匹配前端组件期望的字段
-        const transformedOrders = orders.map((order: any) => ({
-          ...order,
-          from: order.warehouse, // 后端字段映射：warehouse -> from
-          to: order.deliveryAddress, // 后端字段映射：deliveryAddress -> to
-          createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
-        }));
-
-        setAvailableOrders(transformedOrders);
-
-        // 获取报价历史
-        const quotesResponse = await api.providers.getQuoteHistory(providerKey);
-        const quotes = quotesResponse.items || quotesResponse || [];
-        setQuoteHistory(quotes);
+        // 并行加载数据
+        await Promise.all([
+          loadAvailableOrders(1),
+          loadQuoteHistory(1)
+        ]);
 
       } catch (error) {
         console.error('加载供应商数据失败:', error);
@@ -61,6 +129,30 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
 
     loadProviderData();
   }, [providerKey]);
+
+  // 处理搜索
+  const handleSearch = async () => {
+    // 搜索时重置到第一页
+    await Promise.all([
+      loadAvailableOrders(1, searchTerm),
+      loadQuoteHistory(1, searchTerm)
+    ]);
+    setAvailableOrdersPagination(prev => ({ ...prev, currentPage: 1 }));
+    setQuoteHistoryPagination(prev => ({ ...prev, currentPage: 1 }));
+  };
+
+  // 刷新数据的函数
+  const refreshData = async () => {
+    try {
+      // 刷新当前页面的数据
+      await Promise.all([
+        loadAvailableOrders(availableOrdersPagination.currentPage, searchTerm),
+        loadQuoteHistory(quoteHistoryPagination.currentPage, searchTerm)
+      ]);
+    } catch (error) {
+      console.error('刷新数据失败:', error);
+    }
+  };
 
   // 导出可报价订单
   const handleExportAvailableOrders = () => {
@@ -112,19 +204,28 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
       content: (
         <div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="搜索订单..."
-                className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                </svg>
+            <div className="flex gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="搜索订单..."
+                  className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
+              <Button
+                variant="primary"
+                onClick={handleSearch}
+              >
+                搜索
+              </Button>
             </div>
             <Button
               variant="outline"
@@ -135,39 +236,11 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
             </Button>
           </div>
           <AvailableOrdersList
-            orders={availableOrders.filter(order =>
-              order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.goods.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              order.to.toLowerCase().includes(searchTerm.toLowerCase())
-            )}
+            orders={availableOrders}
             accessKey={providerKey}
-            onQuoteSubmitted={() => {
-              // 重新加载数据
-              const loadData = async () => {
-                try {
-                  const ordersResponse = await api.providers.getAvailableOrders(providerKey);
-                  const orders = ordersResponse.items || ordersResponse || [];
-
-                  // 转换数据格式以匹配前端组件期望的字段
-                  const transformedOrders = orders.map((order: any) => ({
-                    ...order,
-                    from: order.warehouse, // 后端字段映射：warehouse -> from
-                    to: order.deliveryAddress, // 后端字段映射：deliveryAddress -> to
-                    createdAt: new Date(order.createdAt).toLocaleString('zh-CN'), // 格式化时间
-                  }));
-
-                  setAvailableOrders(transformedOrders);
-
-                  const quotesResponse = await api.providers.getQuoteHistory(providerKey);
-                  const quotes = quotesResponse.items || quotesResponse || [];
-                  setQuoteHistory(quotes);
-                } catch (error) {
-                  console.error('重新加载数据失败:', error);
-                }
-              };
-              loadData();
-            }}
+            pagination={availableOrdersPagination}
+            onPageChange={(page) => loadAvailableOrders(page, searchTerm)}
+            onQuoteSubmitted={refreshData}
           />
         </div>
       ),
@@ -178,19 +251,28 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
       content: (
         <div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="搜索报价历史..."
-                className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                </svg>
+            <div className="flex gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="搜索报价历史..."
+                  className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
+              <Button
+                variant="primary"
+                onClick={handleSearch}
+              >
+                搜索
+              </Button>
             </div>
             <Button
               variant="outline"
@@ -201,12 +283,9 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
             </Button>
           </div>
           <QuoteHistory
-            quotes={quoteHistory.filter(quote =>
-              quote.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              quote.warehouse.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              quote.goods.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              quote.deliveryAddress.toLowerCase().includes(searchTerm.toLowerCase())
-            )}
+            quotes={quoteHistory}
+            pagination={quoteHistoryPagination}
+            onPageChange={(page) => loadQuoteHistory(page, searchTerm)}
           />
         </div>
       ),
