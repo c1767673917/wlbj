@@ -1,7 +1,7 @@
 import AuthService from './auth';
 
 // API服务配置
-const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
 
 // 认证API端点（不需要token）
 const PUBLIC_ENDPOINTS = ['/auth/login', '/auth/login/provider', '/auth/refresh', '/providers/details'];

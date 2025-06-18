@@ -174,6 +174,37 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
     }
   };
 
+  // 处理重新报价
+  const handleRequote = async (orderId: string, price: number, estimatedDelivery: string) => {
+    try {
+      await api.quotes.submitByProvider({
+        orderId,
+        price,
+        estimatedDelivery,
+        accessKey: providerKey
+      });
+
+      // 重新报价成功后刷新数据
+      await refreshData();
+
+      console.log('重新报价成功');
+    } catch (error: any) {
+      console.error('重新报价失败:', error);
+
+      // 提取错误信息
+      let errorMessage = '重新报价失败，请稍后重试';
+      if (error?.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      // 创建一个包含错误信息的Error对象重新抛出
+      const customError = new Error(errorMessage);
+      throw customError;
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -286,6 +317,7 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
             quotes={quoteHistory}
             pagination={quoteHistoryPagination}
             onPageChange={(page) => loadQuoteHistory(page, searchTerm)}
+            onRequote={handleRequote}
           />
         </div>
       ),

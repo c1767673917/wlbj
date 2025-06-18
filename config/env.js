@@ -13,6 +13,9 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'default_jwt_secret_change_in_production',
   adminPassword: process.env.APP_PASSWORD || '', // 管理员密码（部署时设置）
 
+  // 代理配置
+  trustProxy: process.env.TRUST_PROXY || 'auto', // auto, true, false, loopback, 或具体IP
+
   // 开发模式检查
   isDevelopment: () => config.nodeEnv === 'development',
   isProduction: () => config.nodeEnv === 'production',

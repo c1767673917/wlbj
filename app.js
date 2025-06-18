@@ -56,10 +56,37 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', { str
 // --- 认证相关配置结束 ---
 
 // 中间件
-// 注意：如果你打算在 Nginx 等反向代理后面运行此应用，请确保设置 'trust proxy'
-// 例如: app.set('trust proxy', true); 或者 app.set('trust proxy', 'loopback');
-// 这对于 req.ip 正确解析客户端真实IP地址很重要。
-// app.set('trust proxy', true); // 根据您的部署环境取消注释并配置
+// 配置 trust proxy 以支持反向代理环境
+// 根据部署环境选择合适的配置：
+// - 'loopback': 仅信任本地回环地址（推荐用于单机部署）
+// - 1: 信任第一层代理（推荐用于 Nginx/Apache 代理）
+// - ['127.0.0.1', '::1']: 信任特定IP地址
+// - true: 信任所有代理（不推荐，安全风险）
+
+// 配置 trust proxy
+let trustProxyConfig = config.trustProxy;
+
+if (trustProxyConfig === 'auto') {
+  // 自动配置：生产环境信任第一层代理，开发环境不信任
+  trustProxyConfig = config.isProduction() ? 1 : false;
+} else if (trustProxyConfig === 'true') {
+  trustProxyConfig = true;
+} else if (trustProxyConfig === 'false') {
+  trustProxyConfig = false;
+} else if (trustProxyConfig === 'loopback') {
+  trustProxyConfig = 'loopback';
+} else if (trustProxyConfig.includes(',')) {
+  // 支持多个IP地址，用逗号分隔
+  trustProxyConfig = trustProxyConfig.split(',').map(ip => ip.trim());
+}
+
+app.set('trust proxy', trustProxyConfig);
+logger.info(`Trust proxy 配置: ${JSON.stringify(trustProxyConfig)}`);
+
+// 验证代理配置
+if (config.isProduction() && trustProxyConfig === false) {
+  logger.warn('⚠️  生产环境建议配置 trust proxy 以支持反向代理');
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
