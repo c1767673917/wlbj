@@ -6,21 +6,16 @@ const logger = require('../config/logger');
 const { notifyAllProvidersNewOrder } = require('../utils/wechatNotification');
 
 // 导入认证和权限控制
-const { 
-  authenticateToken, 
-  requirePermission, 
-  PERMISSIONS 
-} = require('../utils/auth');
+const { authenticateToken, requirePermission, PERMISSIONS } = require('../utils/auth');
 
 // 导入输入验证和速率限制
-const { 
-  validate, 
-  validationRules, 
-  createOrderLimiter 
-} = require('../middleware/security');
+const { validate, validationRules, createOrderLimiter } = require('../middleware/security');
 
 // 导入缓存模块
 const { cache, cacheKeys, cacheInvalidation } = require('../utils/redisCache');
+
+// 导入错误处理中间件
+const { asyncHandler } = require('../middleware/errorHandler');
 
 // 生成订单号：RX + yymmdd + "-" + 3位流水号
 async function generateOrderId() {
@@ -55,155 +50,182 @@ async function generateOrderId() {
 // 发送企业微信通知的异步函数
 async function sendWechatNotifications(order) {
   try {
-    db.all('SELECT name, wechat_webhook_url FROM providers WHERE wechat_webhook_url IS NOT NULL AND wechat_webhook_url != ""', [], async (err, providers) => {
-      if (err) {
-        logger.error('获取物流公司列表失败:', { error: err.message });
-        return;
-      }
-
-      if (providers.length === 0) {
-        logger.debug('没有配置企业微信webhook的物流公司，跳过通知发送');
-        return;
-      }
-
-      logger.info(`开始向 ${providers.length} 个物流公司发送订单通知...`);
-
-      const results = await notifyAllProvidersNewOrder(order, providers);
-
-      results.forEach(result => {
-        if (result.success) {
-          logger.info(`✓ 成功向 ${result.providerName} 发送订单通知`);
-        } else {
-          logger.error(`✗ 向 ${result.providerName} 发送订单通知失败: ${result.message}`);
+    db.all(
+      'SELECT name, wechat_webhook_url FROM providers WHERE wechat_webhook_url IS NOT NULL AND wechat_webhook_url != ""',
+      [],
+      async (err, providers) => {
+        if (err) {
+          logger.error('获取物流公司列表失败:', { error: err.message });
+          return;
         }
-      });
 
-      const successCount = results.filter(r => r.success).length;
-      logger.info(`订单通知发送完成: ${successCount}/${results.length} 成功`);
-    });
+        if (providers.length === 0) {
+          logger.debug('没有配置企业微信webhook的物流公司，跳过通知发送');
+          return;
+        }
+
+        logger.info(`开始向 ${providers.length} 个物流公司发送订单通知...`);
+
+        const results = await notifyAllProvidersNewOrder(order, providers);
+
+        results.forEach(result => {
+          if (result.success) {
+            logger.info(`✓ 成功向 ${result.providerName} 发送订单通知`);
+          } else {
+            logger.error(`✗ 向 ${result.providerName} 发送订单通知失败: ${result.message}`);
+          }
+        });
+
+        const successCount = results.filter(r => r.success).length;
+        logger.info(`订单通知发送完成: ${successCount}/${results.length} 成功`);
+      }
+    );
   } catch (error) {
     logger.error('发送企业微信通知时出错:', { error: error.message });
   }
 }
 
 // GET /api/orders/active - 获取活跃订单（用户端专用）
-router.get('/active', 
+router.get(
+  '/active',
   authenticateToken,
   requirePermission(PERMISSIONS.VIEW_ORDER),
   validate(validationRules.pagination),
-  async (req, res) => {
-    const search = req.query.search;
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 100);
-    
-    // 尝试从缓存获取
-    const cacheKey = cacheKeys.ordersList('active', page, pageSize);
-    const cached = await cache.get(cacheKey);
-    
-    if (cached && !search) {
-      logger.debug('从缓存返回活跃订单列表');
-      return res.json(cached);
-    }
+  asyncHandler(async (req, res) => {
+    try {
+      const search = req.query.search;
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 100);
 
-    // 使用优化的分页查询
-    let baseQuery = 'SELECT * FROM orders WHERE status = ?';
-    let params = ['active'];
+      // 尝试从缓存获取
+      const cacheKey = cacheKeys.ordersList('active', page, pageSize);
+      const cached = await cache.get(cacheKey);
 
-    if (search && search.trim()) {
-      const searchTerm = `%${search.trim()}%`;
-      baseQuery += ' AND (id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)';
-      params.push(searchTerm, searchTerm, searchTerm, searchTerm);
-    }
-
-    baseQuery += ' ORDER BY createdAt DESC';
-
-    db.getPaginated(baseQuery, params, page, pageSize, async (err, result) => {
-      if (err) {
-        logger.error('获取活跃订单失败', { error: err.message });
-        return res.status(500).json({ error: '获取活跃订单失败' });
+      if (cached && !search) {
+        logger.debug('从缓存返回活跃订单列表');
+        return res.json(cached);
       }
 
-      // 统一返回格式
-      const response = {
-        items: result.data || [],
-        totalItems: result.total || 0,
-        totalPages: result.pages || 0,
-        currentPage: result.page || page,
-        pageSize: pageSize
-      };
+      // 使用优化的分页查询
+      let baseQuery = 'SELECT * FROM orders WHERE status = ?';
+      const params = ['active'];
 
-      // 如果没有搜索条件，则缓存结果
-      if (!search) {
-        await cache.set(cacheKey, response, 300); // 缓存5分钟
+      if (search && search.trim()) {
+        const searchTerm = `%${search.trim()}%`;
+        baseQuery +=
+          ' AND (id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)';
+        params.push(searchTerm, searchTerm, searchTerm, searchTerm);
       }
 
-      res.json(response);
-    });
-  }
+      baseQuery += ' ORDER BY createdAt DESC';
+
+      db.getPaginated(baseQuery, params, page, pageSize, async (err, result) => {
+        if (err) {
+          logger.error('获取活跃订单失败', { error: err.message });
+          return res.status(500).json({ error: '获取活跃订单失败' });
+        }
+
+        // 统一返回格式
+        const response = {
+          items: result.data || [],
+          totalItems: result.total || 0,
+          totalPages: result.pages || 0,
+          currentPage: result.page || page,
+          pageSize: pageSize,
+        };
+
+        // 如果没有搜索条件，则缓存结果
+        if (!search) {
+          await cache.set(cacheKey, response, 300); // 缓存5分钟
+        }
+
+        res.json(response);
+      });
+    } catch (error) {
+      logger.error('获取活跃订单失败:', {
+        error: error.message,
+        userId: req.user?.id,
+        query: req.query,
+      });
+      res.status(500).json({ error: '获取订单失败，请稍后重试' });
+    }
+  })
 );
 
 // GET /api/orders/closed - 获取历史订单（用户端专用）
-router.get('/closed', 
+router.get(
+  '/closed',
   authenticateToken,
   requirePermission(PERMISSIONS.VIEW_ORDER),
   validate(validationRules.pagination),
-  async (req, res) => {
-    const search = req.query.search;
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 100);
-    
-    // 尝试从缓存获取
-    const cacheKey = cacheKeys.ordersList('closed', page, pageSize);
-    const cached = await cache.get(cacheKey);
-    
-    if (cached && !search) {
-      logger.debug('从缓存返回历史订单列表');
-      return res.json(cached);
-    }
+  asyncHandler(async (req, res) => {
+    try {
+      const search = req.query.search;
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 100);
 
-    let baseQuery = 'SELECT * FROM orders WHERE status = ?';
-    let params = ['closed'];
+      // 尝试从缓存获取
+      const cacheKey = cacheKeys.ordersList('closed', page, pageSize);
+      const cached = await cache.get(cacheKey);
 
-    if (search && search.trim()) {
-      const searchTerm = `%${search.trim()}%`;
-      baseQuery += ' AND (id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)';
-      params.push(searchTerm, searchTerm, searchTerm, searchTerm);
-    }
-
-    baseQuery += ' ORDER BY selectedAt DESC, createdAt DESC';
-
-    db.getPaginated(baseQuery, params, page, pageSize, async (err, result) => {
-      if (err) {
-        logger.error('获取历史订单失败', { error: err.message });
-        return res.status(500).json({ error: '获取历史订单失败' });
+      if (cached && !search) {
+        logger.debug('从缓存返回历史订单列表');
+        return res.json(cached);
       }
 
-      // 统一返回格式
-      const response = {
-        items: result.data || [],
-        totalItems: result.total || 0,
-        totalPages: result.pages || 0,
-        currentPage: result.page || page,
-        pageSize: pageSize
-      };
+      let baseQuery = 'SELECT * FROM orders WHERE status = ?';
+      const params = ['closed'];
 
-      // 如果没有搜索条件，则缓存结果
-      if (!search) {
-        await cache.set(cacheKey, response, 600); // 缓存10分钟
+      if (search && search.trim()) {
+        const searchTerm = `%${search.trim()}%`;
+        baseQuery +=
+          ' AND (id LIKE ? OR warehouse LIKE ? OR goods LIKE ? OR deliveryAddress LIKE ?)';
+        params.push(searchTerm, searchTerm, searchTerm, searchTerm);
       }
 
-      res.json(response);
-    });
-  }
+      baseQuery += ' ORDER BY selectedAt DESC, createdAt DESC';
+
+      db.getPaginated(baseQuery, params, page, pageSize, async (err, result) => {
+        if (err) {
+          logger.error('获取历史订单失败', { error: err.message });
+          return res.status(500).json({ error: '获取历史订单失败' });
+        }
+
+        // 统一返回格式
+        const response = {
+          items: result.data || [],
+          totalItems: result.total || 0,
+          totalPages: result.pages || 0,
+          currentPage: result.page || page,
+          pageSize: pageSize,
+        };
+
+        // 如果没有搜索条件，则缓存结果
+        if (!search) {
+          await cache.set(cacheKey, response, 600); // 缓存10分钟
+        }
+
+        res.json(response);
+      });
+    } catch (error) {
+      logger.error('获取历史订单失败:', {
+        error: error.message,
+        userId: req.user?.id,
+        query: req.query,
+      });
+      res.status(500).json({ error: '获取订单失败，请稍后重试' });
+    }
+  })
 );
 
 // POST /api/orders - 提交新订单
-router.post('/', 
+router.post(
+  '/',
   authenticateToken,
   requirePermission(PERMISSIONS.CREATE_ORDER),
   createOrderLimiter, // 速率限制
   validate(validationRules.createOrder),
-  async (req, res) => {
+  asyncHandler(async (req, res) => {
     try {
       const orderId = await generateOrderId();
 
@@ -213,13 +235,19 @@ router.post('/',
         goods: req.body.goods,
         deliveryAddress: req.body.deliveryAddress,
         createdAt: new Date().toISOString(),
-        createdBy: req.user.id
+        createdBy: req.user.id,
       };
 
       db.run(
         'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt) VALUES (?, ?, ?, ?, ?)',
-        [newOrder.id, newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt],
-        async function(err) {
+        [
+          newOrder.id,
+          newOrder.warehouse,
+          newOrder.goods,
+          newOrder.deliveryAddress,
+          newOrder.createdAt,
+        ],
+        async function (err) {
           if (err) {
             logger.error('创建订单失败', { error: err.message, userId: req.user.id });
             return res.status(500).json({ error: '创建订单失败' });
@@ -239,21 +267,22 @@ router.post('/',
       logger.error('生成订单号失败:', { error: error.message });
       res.status(500).json({ error: '创建订单失败' });
     }
-  }
+  })
 );
 
 // GET /api/orders/:id - 获取单个订单
-router.get('/:id', 
+router.get(
+  '/:id',
   authenticateToken,
   requirePermission(PERMISSIONS.VIEW_ORDER),
   validate(validationRules.idParam),
   async (req, res) => {
     const orderId = req.params.id;
-    
+
     // 尝试从缓存获取
     const cacheKey = cacheKeys.orderDetail(orderId);
     const cached = await cache.get(cacheKey);
-    
+
     if (cached) {
       logger.debug('从缓存返回订单详情', { orderId });
       return res.json(cached);
@@ -277,17 +306,18 @@ router.get('/:id',
 );
 
 // GET /api/orders/:id/quotes - 获取订单的报价
-router.get('/:id/quotes', 
+router.get(
+  '/:id/quotes',
   authenticateToken,
   requirePermission(PERMISSIONS.VIEW_ORDER),
   validate(validationRules.idParam),
   async (req, res) => {
     const orderId = req.params.id;
-    
+
     // 尝试从缓存获取
     const cacheKey = cacheKeys.orderQuotes(orderId);
     const cached = await cache.get(cacheKey);
-    
+
     if (cached) {
       logger.debug('从缓存返回订单报价', { orderId });
       return res.json(cached);
@@ -301,7 +331,7 @@ router.get('/:id/quotes',
           logger.error('获取报价失败', { error: err.message, orderId });
           return res.status(500).json({ error: '获取报价失败' });
         }
-        
+
         // 缓存报价列表
         await cache.set(cacheKey, rows, 300); // 缓存5分钟
         res.json(rows);
@@ -311,7 +341,8 @@ router.get('/:id/quotes',
 );
 
 // PUT /api/orders/:id - 更新订单
-router.put('/:id', 
+router.put(
+  '/:id',
   authenticateToken,
   requirePermission(PERMISSIONS.UPDATE_ORDER),
   validate(validationRules.updateOrder),
@@ -329,7 +360,7 @@ router.put('/:id',
       db.run(
         'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, updatedAt = ? WHERE id = ?',
         [warehouse, goods, deliveryAddress, updatedAt, orderId],
-        async function(err) {
+        async function (err) {
           if (err) {
             logger.error('更新订单失败', { error: err.message, orderId });
             return res.status(500).json({ error: '更新订单失败' });
@@ -347,7 +378,7 @@ router.put('/:id',
               logger.error('获取更新后的订单失败', { error: err.message, orderId });
               return res.status(500).json({ error: '获取更新后的订单失败' });
             }
-            
+
             logger.info('订单更新成功', { orderId, userId: req.user.id });
             res.json(row);
           });
@@ -361,7 +392,8 @@ router.put('/:id',
 );
 
 // PUT /api/orders/:id/close - 关闭订单
-router.put('/:id/close', 
+router.put(
+  '/:id/close',
   authenticateToken,
   requirePermission(PERMISSIONS.CLOSE_ORDER),
   validate(validationRules.idParam),
@@ -373,7 +405,7 @@ router.put('/:id/close',
       db.run(
         'UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?',
         ['closed', updatedAt, orderId],
-        async function(err) {
+        async function (err) {
           if (err) {
             logger.error('关闭订单失败', { error: err.message, orderId });
             return res.status(500).json({ error: '关闭订单失败' });
@@ -391,7 +423,7 @@ router.put('/:id/close',
               logger.error('获取更新后的订单失败', { error: err.message, orderId });
               return res.status(500).json({ error: '获取更新后的订单失败' });
             }
-            
+
             logger.info('订单关闭成功', { orderId, userId: req.user.id });
             res.json(row);
           });
@@ -405,7 +437,8 @@ router.put('/:id/close',
 );
 
 // PUT /api/orders/:id/select-provider - 选择物流商
-router.put('/:id/select-provider', 
+router.put(
+  '/:id/select-provider',
   authenticateToken,
   requirePermission(PERMISSIONS.SELECT_PROVIDER),
   async (req, res) => {
@@ -438,7 +471,7 @@ router.put('/:id/select-provider',
           db.run(
             'UPDATE orders SET status = ?, selectedProvider = ?, selectedPrice = ?, selectedAt = ?, updatedAt = ? WHERE id = ? AND status = ?',
             ['closed', provider, parseFloat(price), selectedAt, updatedAt, orderId, 'active'],
-            async function(err) {
+            async function (err) {
               if (err) {
                 logger.error('选择物流商失败', { error: err.message, orderId });
                 return res.status(500).json({ error: '选择物流商失败' });
@@ -457,17 +490,17 @@ router.put('/:id/select-provider',
                   logger.error('获取更新后的订单失败', { error: err.message, orderId });
                   return res.status(500).json({ error: '获取更新后的订单失败' });
                 }
-                
-                logger.info('选择物流商成功', { 
-                  orderId, 
-                  provider, 
-                  price, 
-                  userId: req.user.id 
+
+                logger.info('选择物流商成功', {
+                  orderId,
+                  provider,
+                  price,
+                  userId: req.user.id,
                 });
-                
+
                 res.json({
                   ...row,
-                  message: '成功选择物流商，订单已移至历史记录'
+                  message: '成功选择物流商，订单已移至历史记录',
                 });
               });
             }
@@ -481,4 +514,4 @@ router.put('/:id/select-provider',
   }
 );
 
-module.exports = router; 
+module.exports = router;

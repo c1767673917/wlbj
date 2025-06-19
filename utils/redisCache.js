@@ -9,7 +9,7 @@ const redisConfig = {
   password: process.env.REDIS_PASSWORD || undefined,
   db: process.env.REDIS_DB || 0,
   keyPrefix: 'wlbj:',
-  retryStrategy: (times) => {
+  retryStrategy: times => {
     // 如果重试次数超过3次，就停止重试
     if (times > 3) {
       return null;
@@ -21,7 +21,7 @@ const redisConfig = {
   enableReadyCheck: false,
   enableOfflineQueue: false,
   connectTimeout: 5000,
-  lazyConnect: true
+  lazyConnect: true,
 };
 
 // 创建Redis客户端
@@ -42,7 +42,7 @@ if (shouldUseRedis) {
       redisAvailable = true;
     });
 
-    redis.on('error', (err) => {
+    redis.on('error', err => {
       if (!redisAvailable) {
         logger.warn('Redis服务不可用，将使用内存缓存');
       }
@@ -99,10 +99,10 @@ class MultiLevelCache {
         if (l2Value !== null) {
           logger.debug('L2缓存命中', { key });
           const parsedValue = JSON.parse(l2Value);
-          
+
           // 将数据写回L1缓存
           memoryCache.set(key, parsedValue, this.l1TTL);
-          
+
           return parsedValue;
         }
       }
@@ -189,7 +189,7 @@ class MultiLevelCache {
   async warmUp(dataLoader) {
     try {
       logger.info('开始缓存预热');
-      
+
       // 预热常用数据
       const warmUpTasks = [];
 
@@ -218,7 +218,7 @@ class MultiLevelCache {
       );
 
       await Promise.all(warmUpTasks);
-      
+
       logger.info('缓存预热完成');
       return true;
     } catch (error) {
@@ -234,12 +234,12 @@ class MultiLevelCache {
     const stats = {
       l1: {
         size: memoryCache.size(),
-        maxSize: memoryCache.maxSize
+        maxSize: memoryCache.maxSize,
       },
       l2: {
         available: redisAvailable,
-        info: null
-      }
+        info: null,
+      },
     };
 
     if (redisAvailable && redis) {
@@ -259,9 +259,7 @@ class MultiLevelCache {
    */
   wrap(fn, keyGenerator, ttl = this.defaultTTL) {
     return async (...args) => {
-      const key = typeof keyGenerator === 'function' 
-        ? keyGenerator(...args) 
-        : keyGenerator;
+      const key = typeof keyGenerator === 'function' ? keyGenerator(...args) : keyGenerator;
 
       // 尝试从缓存获取
       const cached = await this.get(key);
@@ -286,32 +284,24 @@ const cache = new MultiLevelCache();
 // 缓存键生成辅助函数
 const cacheKeys = {
   // 订单相关
-  ordersList: (status, page = 1, limit = 10) => 
+  ordersList: (status, page = 1, limit = 10) =>
     cache.generateKey('orders', status, `page:${page}`, `limit:${limit}`),
-  orderDetail: (orderId) => 
-    cache.generateKey('orders', orderId),
-  orderQuotes: (orderId) => 
-    cache.generateKey('orders', orderId, 'quotes'),
-  
+  orderDetail: orderId => cache.generateKey('orders', orderId),
+  orderQuotes: orderId => cache.generateKey('orders', orderId, 'quotes'),
+
   // 供应商相关
-  providersList: () => 
-    cache.generateKey('providers', 'list'),
-  providerDetail: (providerId) => 
-    cache.generateKey('providers', providerId),
-  providerOrders: (providerId, page = 1) => 
+  providersList: () => cache.generateKey('providers', 'list'),
+  providerDetail: providerId => cache.generateKey('providers', providerId),
+  providerOrders: (providerId, page = 1) =>
     cache.generateKey('providers', providerId, 'orders', `page:${page}`),
-  
+
   // 报价相关
-  lowestQuotes: (orderIds) => 
-    cache.generateKey('quotes', 'lowest', orderIds.join('-')),
-  quotesByOrder: (orderId) => 
-    cache.generateKey('quotes', 'by-order', orderId),
-  
+  lowestQuotes: orderIds => cache.generateKey('quotes', 'lowest', orderIds.join('-')),
+  quotesByOrder: orderId => cache.generateKey('quotes', 'by-order', orderId),
+
   // 统计相关
-  dailyStats: (date) => 
-    cache.generateKey('stats', 'daily', date),
-  providerStats: (providerId) => 
-    cache.generateKey('stats', 'provider', providerId)
+  dailyStats: date => cache.generateKey('stats', 'daily', date),
+  providerStats: providerId => cache.generateKey('stats', 'provider', providerId),
 };
 
 // 缓存失效策略
@@ -321,15 +311,15 @@ const cacheInvalidation = {
     await cache.deletePattern('orders:active:*');
     await cache.deletePattern('stats:daily:*');
   },
-  
+
   // 订单更新后，清理相关缓存
-  onOrderUpdated: async (orderId) => {
+  onOrderUpdated: async orderId => {
     await cache.delete(cacheKeys.orderDetail(orderId));
     await cache.delete(cacheKeys.orderQuotes(orderId));
     await cache.deletePattern('orders:active:*');
     await cache.deletePattern('orders:closed:*');
   },
-  
+
   // 报价创建后，清理相关缓存
   onQuoteCreated: async (orderId, providerId) => {
     await cache.delete(cacheKeys.orderQuotes(orderId));
@@ -337,12 +327,12 @@ const cacheInvalidation = {
     await cache.deletePattern(`quotes:lowest:*${orderId}*`);
     await cache.deletePattern(`providers:${providerId}:*`);
   },
-  
+
   // 供应商更新后，清理相关缓存
-  onProviderUpdated: async (providerId) => {
+  onProviderUpdated: async providerId => {
     await cache.delete(cacheKeys.providerDetail(providerId));
     await cache.delete(cacheKeys.providersList());
-  }
+  },
 };
 
 // 导出
@@ -350,5 +340,5 @@ module.exports = {
   cache,
   cacheKeys,
   cacheInvalidation,
-  redisAvailable: () => redisAvailable
-}; 
+  redisAvailable: () => redisAvailable,
+};

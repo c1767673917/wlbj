@@ -56,7 +56,7 @@ const LoginPage = ({ hasError = false }: LoginPageProps) => {
       } else {
         setError('登录失败，请重试');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(error.message || '登录失败，请检查用户名和密码是否正确');
     } finally {
       setIsLoading(false);

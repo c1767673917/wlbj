@@ -6,6 +6,7 @@ import AvailableOrdersList from './AvailableOrdersList';
 import QuoteHistory from './QuoteHistory';
 import { TruckIcon, FileTextIcon } from 'lucide-react';
 import api, { exportAPI } from '../../services/api';
+import type { Provider, Order, Quote } from '../../types/api';
 
 interface ProviderPortalProps {
   providerKey: string;
@@ -13,9 +14,9 @@ interface ProviderPortalProps {
 
 const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [providerInfo, setProviderInfo] = useState<any>(null);
-  const [availableOrders, setAvailableOrders] = useState<any[]>([]);
-  const [quoteHistory, setQuoteHistory] = useState<any[]>([]);
+  const [providerInfo, setProviderInfo] = useState<Provider | null>(null);
+  const [availableOrders, setAvailableOrders] = useState<Order[]>([]);
+  const [quoteHistory, setQuoteHistory] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -48,8 +49,8 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
         search: search?.trim()
       });
 
-      const orders = response.items || response || [];
-      const transformedOrders = orders.map((order: any) => ({
+      const orders = response.items || [];
+      const transformedOrders = orders.map((order: Order) => ({
         ...order,
         from: order.warehouse,
         to: order.deliveryAddress,
@@ -188,14 +189,17 @@ const ProviderPortal = ({ providerKey }: ProviderPortalProps) => {
       await refreshData();
 
       console.log('重新报价成功');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('重新报价失败:', error);
 
       // 提取错误信息
       let errorMessage = '重新报价失败，请稍后重试';
-      if (error?.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error?.message) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { data?: { error?: string } } };
+        if (apiError.response?.data?.error) {
+          errorMessage = apiError.response.data.error;
+        }
+      } else if (error instanceof Error) {
         errorMessage = error.message;
       }
 

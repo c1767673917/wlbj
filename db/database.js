@@ -13,7 +13,7 @@ if (!fs.existsSync(dataDir)) {
 const dbPath = path.join(dataDir, 'logistics.db');
 
 // 创建数据库实例 - 启用缓存模式以提升性能
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
   if (err) {
     console.error('Error opening database', err.message);
   } else {
@@ -26,8 +26,26 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
 
 // 优化数据库性能设置
 function optimizeDatabase() {
+  // 启用外键约束
+  db.run('PRAGMA foreign_keys = ON', err => {
+    if (err) {
+      logger.error('启用外键约束失败:', err.message);
+    } else {
+      logger.info('SQLite外键约束已启用');
+    }
+  });
+
+  // 验证外键约束是否启用
+  db.get('PRAGMA foreign_keys', (err, row) => {
+    if (err) {
+      logger.error('检查外键约束状态失败:', err.message);
+    } else {
+      logger.info('外键约束状态:', row.foreign_keys ? '已启用' : '未启用');
+    }
+  });
+
   // 启用WAL模式，提升并发性能
-  db.run('PRAGMA journal_mode = WAL', (err) => {
+  db.run('PRAGMA journal_mode = WAL', err => {
     if (err) {
       logger.error('设置WAL模式失败:', err.message);
     } else {
@@ -36,14 +54,14 @@ function optimizeDatabase() {
   });
 
   // 设置缓存大小（-2000表示2000KB）
-  db.run('PRAGMA cache_size = -2000', (err) => {
+  db.run('PRAGMA cache_size = -2000', err => {
     if (err) {
       logger.error('设置缓存大小失败:', err.message);
     }
   });
 
   // 设置临时存储在内存中
-  db.run('PRAGMA temp_store = MEMORY', (err) => {
+  db.run('PRAGMA temp_store = MEMORY', err => {
     if (err) {
       logger.error('设置临时存储失败:', err.message);
     }
@@ -66,12 +84,12 @@ function trackQueryPerformance(queryName, query, params, callback) {
         queryName,
         duration: `${duration}ms`,
         query: query.substring(0, 200), // 只记录前200个字符
-        paramsCount: params ? params.length : 0
+        paramsCount: params ? params.length : 0,
       });
     } else if (duration > 50) {
       logger.debug('查询性能', {
         queryName,
-        duration: `${duration}ms`
+        duration: `${duration}ms`,
       });
     }
 
@@ -87,35 +105,41 @@ const originalGet = db.get.bind(db);
 const originalAll = db.all.bind(db);
 
 // 重写run方法
-db.run = function(query, params, callback) {
+db.run = function (query, params, callback) {
   if (typeof params === 'function') {
     callback = params;
     params = [];
   }
 
-  const trackedCallback = callback ? trackQueryPerformance('run', query, params, callback) : undefined;
+  const trackedCallback = callback
+    ? trackQueryPerformance('run', query, params, callback)
+    : undefined;
   return originalRun(query, params, trackedCallback);
 };
 
 // 重写get方法
-db.get = function(query, params, callback) {
+db.get = function (query, params, callback) {
   if (typeof params === 'function') {
     callback = params;
     params = [];
   }
 
-  const trackedCallback = callback ? trackQueryPerformance('get', query, params, callback) : undefined;
+  const trackedCallback = callback
+    ? trackQueryPerformance('get', query, params, callback)
+    : undefined;
   return originalGet(query, params, trackedCallback);
 };
 
 // 重写all方法
-db.all = function(query, params, callback) {
+db.all = function (query, params, callback) {
   if (typeof params === 'function') {
     callback = params;
     params = [];
   }
 
-  const trackedCallback = callback ? trackQueryPerformance('all', query, params, callback) : undefined;
+  const trackedCallback = callback
+    ? trackQueryPerformance('all', query, params, callback)
+    : undefined;
   return originalAll(query, params, trackedCallback);
 };
 
@@ -260,11 +284,11 @@ function createPerformanceIndexes() {
 
     // 物流公司表索引
     'CREATE INDEX IF NOT EXISTS idx_providers_access_key ON providers(accessKey)',
-    'CREATE INDEX IF NOT EXISTS idx_providers_name ON providers(name)'
+    'CREATE INDEX IF NOT EXISTS idx_providers_name ON providers(name)',
   ];
 
   indexes.forEach((indexSQL, i) => {
-    db.run(indexSQL, (err) => {
+    db.run(indexSQL, err => {
       if (err) {
         console.error(`创建索引失败 (${i + 1}):`, err.message);
       } else {
@@ -277,7 +301,7 @@ function createPerformanceIndexes() {
 // 数据库迁移：为现有providers表添加wechat_webhook_url字段
 function migrateProvidersTable() {
   // 检查wechat_webhook_url字段是否已存在
-  db.all("PRAGMA table_info(providers)", (err, columns) => {
+  db.all('PRAGMA table_info(providers)', (err, columns) => {
     if (err) {
       console.error('检查providers表结构失败:', err.message);
       return;
@@ -286,7 +310,7 @@ function migrateProvidersTable() {
     const hasWebhookColumn = columns.some(col => col.name === 'wechat_webhook_url');
 
     if (!hasWebhookColumn) {
-      db.run('ALTER TABLE providers ADD COLUMN wechat_webhook_url TEXT', (err) => {
+      db.run('ALTER TABLE providers ADD COLUMN wechat_webhook_url TEXT', err => {
         if (err) {
           console.error('添加wechat_webhook_url字段失败:', err.message);
         } else {
@@ -302,7 +326,7 @@ function migrateProvidersTable() {
 // 数据库迁移：为现有orders表添加选择物流商相关字段
 function migrateOrdersTable() {
   // 检查orders表结构
-  db.all("PRAGMA table_info(orders)", (err, columns) => {
+  db.all('PRAGMA table_info(orders)', (err, columns) => {
     if (err) {
       console.error('检查orders表结构失败:', err.message);
       return;
@@ -315,7 +339,7 @@ function migrateOrdersTable() {
 
     // 添加缺失的字段
     if (!hasSelectedProvider) {
-      db.run('ALTER TABLE orders ADD COLUMN selectedProvider TEXT', (err) => {
+      db.run('ALTER TABLE orders ADD COLUMN selectedProvider TEXT', err => {
         if (err) {
           console.error('添加selectedProvider字段失败:', err.message);
         } else {
@@ -325,7 +349,7 @@ function migrateOrdersTable() {
     }
 
     if (!hasSelectedPrice) {
-      db.run('ALTER TABLE orders ADD COLUMN selectedPrice REAL', (err) => {
+      db.run('ALTER TABLE orders ADD COLUMN selectedPrice REAL', err => {
         if (err) {
           console.error('添加selectedPrice字段失败:', err.message);
         } else {
@@ -335,7 +359,7 @@ function migrateOrdersTable() {
     }
 
     if (!hasSelectedAt) {
-      db.run('ALTER TABLE orders ADD COLUMN selectedAt TEXT', (err) => {
+      db.run('ALTER TABLE orders ADD COLUMN selectedAt TEXT', err => {
         if (err) {
           console.error('添加selectedAt字段失败:', err.message);
         } else {
@@ -351,7 +375,29 @@ function migrateOrdersTable() {
 }
 
 // 批量操作优化函数
-db.batchInsert = function(table, columns, values, callback) {
+db.batchInsert = function (table, columns, values, callback) {
+  // 验证表名和列名，防止SQL注入
+  const validTables = ['orders', 'quotes', 'providers', 'users', 'backup_config', 'admin_config'];
+  if (!validTables.includes(table)) {
+    return callback(new Error('Invalid table name: ' + table));
+  }
+
+  // 验证列名格式（只允许字母、数字和下划线，且必须以字母或下划线开头）
+  const validColumnPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+  if (!Array.isArray(columns) || !columns.every(col => validColumnPattern.test(col))) {
+    return callback(new Error('Invalid column name(s)'));
+  }
+
+  // 验证values数组
+  if (!Array.isArray(values) || values.length === 0) {
+    return callback(new Error('Values array is required and cannot be empty'));
+  }
+
+  // 验证每个值集合的长度与列数匹配
+  if (!values.every(valueSet => Array.isArray(valueSet) && valueSet.length === columns.length)) {
+    return callback(new Error('Each value set must match the number of columns'));
+  }
+
   const placeholders = columns.map(() => '?').join(',');
   const query = `INSERT INTO ${table} (${columns.join(',')}) VALUES (${placeholders})`;
 
@@ -362,16 +408,17 @@ db.batchInsert = function(table, columns, values, callback) {
   db.run('BEGIN TRANSACTION');
 
   values.forEach((valueSet, index) => {
-    stmt.run(valueSet, (err) => {
+    stmt.run(valueSet, err => {
       if (err && !hasError) {
         hasError = true;
         db.run('ROLLBACK');
+        stmt.finalize();
         return callback(err);
       }
 
       completed++;
       if (completed === values.length && !hasError) {
-        db.run('COMMIT', (err) => {
+        db.run('COMMIT', err => {
           stmt.finalize();
           callback(err);
         });
@@ -380,14 +427,60 @@ db.batchInsert = function(table, columns, values, callback) {
   });
 };
 
+// 安全的查询构建器，防止SQL注入
+db.buildSafeQuery = function (baseQuery, conditions, orderBy, limit, offset) {
+  let query = baseQuery;
+  const params = [];
+
+  // 添加WHERE条件
+  if (conditions && conditions.length > 0) {
+    const whereClause = conditions
+      .map(condition => {
+        if (typeof condition === 'object' && condition.clause && condition.params) {
+          params.push(...condition.params);
+          return condition.clause;
+        }
+        return condition;
+      })
+      .join(' AND ');
+
+    query += ' WHERE ' + whereClause;
+  }
+
+  // 添加ORDER BY（验证列名安全性）
+  if (orderBy) {
+    const validColumnPattern = /^[a-zA-Z_][a-zA-Z0-9_.]*(\s+(ASC|DESC))?$/i;
+    if (validColumnPattern.test(orderBy)) {
+      query += ' ORDER BY ' + orderBy;
+    } else {
+      throw new Error('Invalid ORDER BY clause');
+    }
+  }
+
+  // 添加LIMIT和OFFSET
+  if (limit !== undefined) {
+    query += ' LIMIT ?';
+    params.push(limit);
+
+    if (offset !== undefined) {
+      query += ' OFFSET ?';
+      params.push(offset);
+    }
+  }
+
+  return { query, params };
+};
+
 // 查询结果预加载和分页优化
-db.getPaginated = function(query, params, page, limit, callback) {
+db.getPaginated = function (query, params, page, limit, callback) {
   const offset = (page - 1) * limit;
   const paginatedQuery = `${query} LIMIT ? OFFSET ?`;
-  const countQuery = query.replace(/SELECT.*FROM/i, 'SELECT COUNT(*) as total FROM').replace(/ORDER BY.*/i, '');
+  const countQuery = query
+    .replace(/SELECT.*FROM/i, 'SELECT COUNT(*) as total FROM')
+    .replace(/ORDER BY.*/i, '');
 
   // 并行执行计数和数据查询
-  let results = {};
+  const results = {};
   let completed = 0;
   let hasError = false;
 
@@ -421,8 +514,50 @@ db.getPaginated = function(query, params, page, limit, callback) {
   });
 };
 
+// 输入验证工具函数
+db.validateInput = {
+  // 验证表名
+  tableName: function (tableName) {
+    const validTables = ['orders', 'quotes', 'providers', 'users', 'backup_config', 'admin_config'];
+    return validTables.includes(tableName);
+  },
+
+  // 验证列名
+  columnName: function (columnName) {
+    const validColumnPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+    return validColumnPattern.test(columnName);
+  },
+
+  // 验证排序字段
+  orderBy: function (orderBy) {
+    const validOrderPattern = /^[a-zA-Z_][a-zA-Z0-9_.]*(\s+(ASC|DESC))?$/i;
+    return validOrderPattern.test(orderBy);
+  },
+
+  // 验证搜索字符串（防止特殊字符注入）
+  searchTerm: function (searchTerm) {
+    if (typeof searchTerm !== 'string') {
+      return false;
+    }
+    // 移除潜在的SQL注入字符
+    const cleanTerm = searchTerm.replace(/['";\\-]/g, '');
+    return cleanTerm.length <= 100; // 限制长度
+  },
+
+  // 清理搜索字符串
+  sanitizeSearchTerm: function (searchTerm) {
+    if (typeof searchTerm !== 'string') {
+      return '';
+    }
+    return searchTerm
+      .replace(/['";\\-]/g, '')
+      .trim()
+      .substring(0, 100);
+  },
+};
+
 // 添加查询分析功能
-db.explainQuery = function(query, params, callback) {
+db.explainQuery = function (query, params, callback) {
   const explainQuery = `EXPLAIN QUERY PLAN ${query}`;
   db.all(explainQuery, params, (err, plan) => {
     if (err) {
@@ -432,7 +567,7 @@ db.explainQuery = function(query, params, callback) {
 
     logger.info('查询执行计划', {
       query: query.substring(0, 200),
-      plan: plan
+      plan: plan,
     });
 
     callback(null, plan);
@@ -440,28 +575,32 @@ db.explainQuery = function(query, params, callback) {
 };
 
 // 定期优化数据库（每天执行一次）
-setInterval(() => {
-  db.run('PRAGMA optimize', (err) => {
-    if (err) {
-      logger.error('数据库优化失败', { error: err.message });
-    } else {
-      logger.info('数据库优化完成');
-    }
-  });
+// 注释掉定时器，避免阻止进程退出
+// setInterval(
+//   () => {
+//     db.run('PRAGMA optimize', err => {
+//       if (err) {
+//         logger.error('数据库优化失败', { error: err.message });
+//       } else {
+//         logger.info('数据库优化完成');
+//       }
+//     });
 
-  // 执行VACUUM以减少数据库文件大小
-  db.run('VACUUM', (err) => {
-    if (err) {
-      logger.error('VACUUM操作失败', { error: err.message });
-    } else {
-      logger.info('数据库VACUUM完成');
-    }
-  });
-}, 24 * 60 * 60 * 1000); // 24小时
+//     // 执行VACUUM以减少数据库文件大小
+//     db.run('VACUUM', err => {
+//       if (err) {
+//         logger.error('VACUUM操作失败', { error: err.message });
+//       } else {
+//         logger.info('数据库VACUUM完成');
+//       }
+//     });
+//   },
+//   24 * 60 * 60 * 1000
+// ); // 24小时
 
 // 数据库迁移：为现有orders表添加用户ID字段
 function migrateOrdersTableForUsers() {
-  db.all("PRAGMA table_info(orders)", (err, columns) => {
+  db.all('PRAGMA table_info(orders)', (err, columns) => {
     if (err) {
       console.error('获取orders表列信息失败:', err.message);
       return;
@@ -471,7 +610,7 @@ function migrateOrdersTableForUsers() {
 
     // 添加userId字段
     if (!columnNames.includes('userId')) {
-      db.run('ALTER TABLE orders ADD COLUMN userId TEXT', (err) => {
+      db.run('ALTER TABLE orders ADD COLUMN userId TEXT', err => {
         if (err) {
           console.error('添加userId字段失败:', err.message);
         } else {
@@ -486,7 +625,7 @@ function migrateOrdersTableForUsers() {
 
 // 数据库迁移：为现有users表添加企业微信配置字段
 function migrateUsersTableForWechat() {
-  db.all("PRAGMA table_info(users)", (err, columns) => {
+  db.all('PRAGMA table_info(users)', (err, columns) => {
     if (err) {
       console.error('获取users表列信息失败:', err.message);
       return;
@@ -496,7 +635,7 @@ function migrateUsersTableForWechat() {
 
     // 添加wechat_webhook_url字段
     if (!columnNames.includes('wechat_webhook_url')) {
-      db.run('ALTER TABLE users ADD COLUMN wechat_webhook_url TEXT', (err) => {
+      db.run('ALTER TABLE users ADD COLUMN wechat_webhook_url TEXT', err => {
         if (err) {
           console.error('添加wechat_webhook_url字段失败:', err.message);
         } else {
@@ -509,7 +648,7 @@ function migrateUsersTableForWechat() {
 
     // 添加wechat_notification_enabled字段
     if (!columnNames.includes('wechat_notification_enabled')) {
-      db.run('ALTER TABLE users ADD COLUMN wechat_notification_enabled INTEGER DEFAULT 1', (err) => {
+      db.run('ALTER TABLE users ADD COLUMN wechat_notification_enabled INTEGER DEFAULT 1', err => {
         if (err) {
           console.error('添加wechat_notification_enabled字段失败:', err.message);
         } else {
@@ -538,9 +677,15 @@ function initializeAdminConfig() {
       let adminPassword = process.env.APP_PASSWORD;
 
       // 如果环境变量未设置或为默认值，使用默认密码
-      if (!adminPassword || adminPassword === 'your_secure_password_here_change_this' || adminPassword === 'shrx') {
+      if (
+        !adminPassword ||
+        adminPassword === 'your_secure_password_here_change_this' ||
+        adminPassword === 'shrx'
+      ) {
         adminPassword = 'admin123';
-        console.warn('⚠️  警告：未设置APP_PASSWORD环境变量或使用了默认值，使用默认管理员密码: admin123');
+        console.warn(
+          '⚠️  警告：未设置APP_PASSWORD环境变量或使用了默认值，使用默认管理员密码: admin123'
+        );
         console.warn('⚠️  建议在.env文件中设置APP_PASSWORD为强密码');
       } else {
         console.log('✅ 使用环境变量APP_PASSWORD作为管理员密码');
@@ -555,7 +700,7 @@ function initializeAdminConfig() {
         db.run(
           'INSERT INTO admin_config (password, updatedAt) VALUES (?, ?)',
           [hashedPassword, new Date().toISOString()],
-          (err) => {
+          err => {
             if (err) {
               console.error('初始化管理员配置失败:', err.message);
             } else {
@@ -592,7 +737,7 @@ function initializeBackupConfig() {
           retention_days, notification_enabled, created_at, updated_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         ['z0', 'daily', 0, 30, 1, now, now],
-        (err) => {
+        err => {
           if (err) {
             console.error('初始化备份配置失败:', err.message);
           } else {

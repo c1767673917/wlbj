@@ -12,62 +12,68 @@ const {
   generateRefreshToken,
   authenticateToken,
   requirePermission,
-  requireRole
+  requireRole,
 } = require('../utils/auth');
 
 // 用户注册验证规则
 const registerValidation = [
   body('email').isEmail().normalizeEmail().withMessage('请输入有效的邮箱地址'),
   body('password').isLength({ min: 4 }).trim().withMessage('密码至少需要4个字符'),
-  body('name').notEmpty().trim().isLength({ min: 1, max: 100 }).withMessage('用户名不能为空且不超过100个字符')
+  body('name')
+    .notEmpty()
+    .trim()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('用户名不能为空且不超过100个字符'),
 ];
 
 // 用户更新验证规则
 const updateUserValidation = [
   body('email').optional().isEmail().normalizeEmail(),
   body('name').optional().trim().isLength({ min: 1, max: 100 }),
-  body('isActive').optional().isBoolean()
+  body('isActive').optional().isBoolean(),
 ];
 
 // 密码更新验证规则
-const updatePasswordValidation = [
-  body('newPassword').isLength({ min: 4 }).trim()
-];
+const updatePasswordValidation = [body('newPassword').isLength({ min: 4 }).trim()];
 
 // 用户企业微信配置更新验证规则
 const updateWechatConfigValidation = [
-  body('wechat_webhook_url').optional().custom((value) => {
-    if (!value || value.trim() === '') {
-      return true; // 允许空值
-    }
-    // 检查是否是企业微信webhook URL格式
-    if (value.includes('qyapi.weixin.qq.com') && value.includes('webhook/send')) {
-      return true;
-    }
-    // 也允许其他有效的URL格式
-    try {
-      new URL(value);
-      return true;
-    } catch {
-      throw new Error('企业微信webhook URL格式不正确');
-    }
-  }),
-  body('wechat_notification_enabled').optional().custom((value) => {
-    if (value === undefined || value === null) {
-      return true; // 允许空值
-    }
-    // 允许布尔值、字符串 'true'/'false'、数字 0/1
-    if (typeof value === 'boolean') {
-      return true;
-    }
-    if (typeof value === 'string' && (value === 'true' || value === 'false')) {
-      return true;
-    }
-    if (typeof value === 'number' && (value === 0 || value === 1)) {
-      return true;
-    }
-    throw new Error('通知启用状态必须是布尔值');
-  })
+  body('wechat_webhook_url')
+    .optional()
+    .custom(value => {
+      if (!value || value.trim() === '') {
+        return true; // 允许空值
+      }
+      // 检查是否是企业微信webhook URL格式
+      if (value.includes('qyapi.weixin.qq.com') && value.includes('webhook/send')) {
+        return true;
+      }
+      // 也允许其他有效的URL格式
+      try {
+        new URL(value);
+        return true;
+      } catch {
+        throw new Error('企业微信webhook URL格式不正确');
+      }
+    }),
+  body('wechat_notification_enabled')
+    .optional()
+    .custom(value => {
+      if (value === undefined || value === null) {
+        return true; // 允许空值
+      }
+      // 允许布尔值、字符串 'true'/'false'、数字 0/1
+      if (typeof value === 'boolean') {
+        return true;
+      }
+      if (typeof value === 'string' && (value === 'true' || value === 'false')) {
+        return true;
+      }
+      if (typeof value === 'number' && (value === 0 || value === 1)) {
+        return true;
+      }
+      throw new Error('通知启用状态必须是布尔值');
+    }),
 ];
 
 // 处理验证错误
@@ -86,18 +92,21 @@ router.post('/register', (req, res) => {
   logger.warn('用户尝试自主注册，已被拒绝', { ip: req.ip, userAgent: req.get('User-Agent') });
   res.status(403).json({
     error: '用户注册功能已关闭，请联系管理员开通账户',
-    message: '系统采用管理员统一管理模式，用户账户由管理员创建'
+    message: '系统采用管理员统一管理模式，用户账户由管理员创建',
   });
 });
 
 // 管理员创建用户
-router.post('/create',
+router.post(
+  '/create',
   authenticateToken,
   requireRole(ROLES.ADMIN),
   registerValidation,
   async (req, res) => {
     const validationError = handleValidationErrors(req, res);
-    if (validationError) return;
+    if (validationError) {
+      return;
+    }
 
     const { email, password, name } = req.body;
     const userId = uuidv4();
@@ -139,7 +148,7 @@ router.post('/create',
             db.run(
               'INSERT INTO users (id, email, password, name, role, createdAt, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)',
               [userId, email, hashedPassword, name, ROLES.USER, createdAt, 1],
-              function(err) {
+              function (err) {
                 if (err) {
                   logger.error('创建用户失败', { error: err.message, email, name });
                   return res.status(500).json({ error: '创建用户失败' });
@@ -150,7 +159,7 @@ router.post('/create',
                   email,
                   name,
                   adminId: req.user.id,
-                  ip: req.ip
+                  ip: req.ip,
                 });
 
                 res.status(201).json({
@@ -161,8 +170,8 @@ router.post('/create',
                     name,
                     role: ROLES.USER,
                     createdAt,
-                    isActive: 1
-                  }
+                    isActive: 1,
+                  },
                 });
               }
             );
@@ -180,123 +189,122 @@ router.post('/create',
 );
 
 // 用户登录（邮箱密码方式）
-router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
-  body('password').notEmpty().trim()
-], async (req, res) => {
-  const validationError = handleValidationErrors(req, res);
-  if (validationError) return;
-
-  const { email, password } = req.body;
-
-  try {
-    db.get('SELECT * FROM users WHERE email = ? AND isActive = 1', [email], async (err, user) => {
-      if (err) {
-        logger.error('用户登录查询失败', { error: err.message });
-        return res.status(500).json({ error: '服务器错误' });
-      }
-
-      if (!user) {
-        logger.warn('用户登录失败：用户不存在或已禁用', { email, ip: req.ip });
-        return res.status(401).json({ error: '邮箱或密码错误' });
-      }
-
-      // 验证密码
-      const isValidPassword = await bcrypt.compare(password, user.password);
-      if (!isValidPassword) {
-        logger.warn('用户登录失败：密码错误', { email, ip: req.ip });
-        return res.status(401).json({ error: '邮箱或密码错误' });
-      }
-
-      // 生成tokens
-      const userInfo = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      };
-
-      const accessToken = generateAccessToken(userInfo);
-      const refreshToken = generateRefreshToken(userInfo);
-
-      logger.info('用户登录成功', { userId: user.id, email, ip: req.ip });
-
-      res.json({
-        accessToken,
-        refreshToken,
-        user: userInfo
-      });
-    });
-  } catch (error) {
-    logger.error('用户登录处理失败', { error: error.message, stack: error.stack });
-    res.status(500).json({ error: '登录失败，请稍后重试' });
-  }
-});
-
-// 获取所有用户（管理员专用）
-router.get('/',
-  authenticateToken,
-  requireRole(ROLES.ADMIN),
-  (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const search = req.query.search || '';
-
-    let query = 'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users';
-    let params = [];
-
-    if (search) {
-      query += ' WHERE email LIKE ? OR name LIKE ?';
-      params.push(`%${search}%`, `%${search}%`);
+router.post(
+  '/login',
+  [body('email').isEmail().normalizeEmail(), body('password').notEmpty().trim()],
+  async (req, res) => {
+    const validationError = handleValidationErrors(req, res);
+    if (validationError) {
+      return;
     }
 
-    query += ' ORDER BY createdAt DESC';
+    const { email, password } = req.body;
 
-    db.getPaginated(query, params, page, limit, (err, result) => {
-      if (err) {
-        logger.error('获取用户列表失败', { error: err.message });
-        return res.status(500).json({ error: '获取用户列表失败' });
-      }
-
-      res.json(result);
-    });
-  }
-);
-
-// 获取单个用户信息（管理员专用）
-router.get('/:id',
-  authenticateToken,
-  requireRole(ROLES.ADMIN),
-  (req, res) => {
-    const userId = req.params.id;
-
-    db.get(
-      'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
-      [userId],
-      (err, user) => {
+    try {
+      db.get('SELECT * FROM users WHERE email = ? AND isActive = 1', [email], async (err, user) => {
         if (err) {
-          logger.error('获取用户信息失败', { error: err.message, userId });
-          return res.status(500).json({ error: '获取用户信息失败' });
+          logger.error('用户登录查询失败', { error: err.message });
+          return res.status(500).json({ error: '服务器错误' });
         }
 
         if (!user) {
-          return res.status(404).json({ error: '用户不存在' });
+          logger.warn('用户登录失败：用户不存在或已禁用', { email, ip: req.ip });
+          return res.status(401).json({ error: '邮箱或密码错误' });
         }
 
-        res.json(user);
-      }
-    );
+        // 验证密码
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+          logger.warn('用户登录失败：密码错误', { email, ip: req.ip });
+          return res.status(401).json({ error: '邮箱或密码错误' });
+        }
+
+        // 生成tokens
+        const userInfo = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+
+        const accessToken = generateAccessToken(userInfo);
+        const refreshToken = generateRefreshToken(userInfo);
+
+        logger.info('用户登录成功', { userId: user.id, email, ip: req.ip });
+
+        res.json({
+          accessToken,
+          refreshToken,
+          user: userInfo,
+        });
+      });
+    } catch (error) {
+      logger.error('用户登录处理失败', { error: error.message, stack: error.stack });
+      res.status(500).json({ error: '登录失败，请稍后重试' });
+    }
   }
 );
 
+// 获取所有用户（管理员专用）
+router.get('/', authenticateToken, requireRole(ROLES.ADMIN), (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const search = req.query.search || '';
+
+  let query =
+    'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users';
+  const params = [];
+
+  if (search) {
+    query += ' WHERE email LIKE ? OR name LIKE ?';
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  query += ' ORDER BY createdAt DESC';
+
+  db.getPaginated(query, params, page, limit, (err, result) => {
+    if (err) {
+      logger.error('获取用户列表失败', { error: err.message });
+      return res.status(500).json({ error: '获取用户列表失败' });
+    }
+
+    res.json(result);
+  });
+});
+
+// 获取单个用户信息（管理员专用）
+router.get('/:id', authenticateToken, requireRole(ROLES.ADMIN), (req, res) => {
+  const userId = req.params.id;
+
+  db.get(
+    'SELECT id, email, name, role, createdAt, updatedAt, isActive, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
+    [userId],
+    (err, user) => {
+      if (err) {
+        logger.error('获取用户信息失败', { error: err.message, userId });
+        return res.status(500).json({ error: '获取用户信息失败' });
+      }
+
+      if (!user) {
+        return res.status(404).json({ error: '用户不存在' });
+      }
+
+      res.json(user);
+    }
+  );
+});
+
 // 更新用户信息（管理员专用）
-router.put('/:id',
+router.put(
+  '/:id',
   authenticateToken,
   requireRole(ROLES.ADMIN),
   updateUserValidation,
   (req, res) => {
     const validationError = handleValidationErrors(req, res);
-    if (validationError) return;
+    if (validationError) {
+      return;
+    }
 
     const userId = req.params.id;
     const { email, name, isActive } = req.body;
@@ -323,13 +331,14 @@ router.put('/:id',
     params.push(updatedAt);
     params.push(userId);
 
-    if (updates.length === 1) { // 只有updatedAt
+    if (updates.length === 1) {
+      // 只有updatedAt
       return res.status(400).json({ error: '没有提供要更新的字段' });
     }
 
     const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
 
-    db.run(query, params, function(err) {
+    db.run(query, params, function (err) {
       if (err) {
         logger.error('更新用户信息失败', { error: err.message, userId });
         return res.status(500).json({ error: '更新用户信息失败' });
@@ -346,13 +355,16 @@ router.put('/:id',
 );
 
 // 重置用户密码（管理员专用）
-router.put('/:id/password',
+router.put(
+  '/:id/password',
   authenticateToken,
   requireRole(ROLES.ADMIN),
   updatePasswordValidation,
   async (req, res) => {
     const validationError = handleValidationErrors(req, res);
-    if (validationError) return;
+    if (validationError) {
+      return;
+    }
 
     const userId = req.params.id;
     const { newPassword } = req.body;
@@ -364,7 +376,7 @@ router.put('/:id/password',
       db.run(
         'UPDATE users SET password = ?, updatedAt = ? WHERE id = ?',
         [hashedPassword, updatedAt, userId],
-        function(err) {
+        function (err) {
           if (err) {
             logger.error('重置用户密码失败', { error: err.message, userId });
             return res.status(500).json({ error: '重置密码失败' });
@@ -386,134 +398,125 @@ router.put('/:id/password',
 );
 
 // 删除用户（管理员专用）
-router.delete('/:id',
-  authenticateToken,
-  requireRole(ROLES.ADMIN),
-  (req, res) => {
-    const userId = req.params.id;
+router.delete('/:id', authenticateToken, requireRole(ROLES.ADMIN), (req, res) => {
+  const userId = req.params.id;
 
-    // 检查用户是否存在以及是否有关联的订单
-    db.get('SELECT COUNT(*) as orderCount FROM orders WHERE userId = ?', [userId], (err, result) => {
-      if (err) {
-        logger.error('检查用户订单失败', { error: err.message, userId });
-        return res.status(500).json({ error: '删除用户失败' });
-      }
+  // 检查用户是否存在以及是否有关联的订单
+  db.get('SELECT COUNT(*) as orderCount FROM orders WHERE userId = ?', [userId], (err, result) => {
+    if (err) {
+      logger.error('检查用户订单失败', { error: err.message, userId });
+      return res.status(500).json({ error: '删除用户失败' });
+    }
 
-      if (result.orderCount > 0) {
-        return res.status(400).json({
-          error: '无法删除该用户，因为该用户有关联的订单数据',
-          orderCount: result.orderCount
-        });
-      }
-
-      // 删除用户
-      db.run('DELETE FROM users WHERE id = ?', [userId], function(err) {
-        if (err) {
-          logger.error('删除用户失败', { error: err.message, userId });
-          return res.status(500).json({ error: '删除用户失败' });
-        }
-
-        if (this.changes === 0) {
-          return res.status(404).json({ error: '用户不存在' });
-        }
-
-        logger.info('用户删除成功', { userId, adminId: req.user.id });
-        res.json({ message: '用户删除成功' });
+    if (result.orderCount > 0) {
+      return res.status(400).json({
+        error: '无法删除该用户，因为该用户有关联的订单数据',
+        orderCount: result.orderCount,
       });
-    });
-  }
-);
-
-// 获取当前用户的企业微信配置
-router.get('/me/wechat-config',
-  authenticateToken,
-  (req, res) => {
-    const userId = req.user.id;
-
-    db.get(
-      'SELECT wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
-      [userId],
-      (err, user) => {
-        if (err) {
-          logger.error('获取用户企业微信配置失败', { error: err.message, userId });
-          return res.status(500).json({ error: '获取企业微信配置失败' });
-        }
-
-        if (!user) {
-          return res.status(404).json({ error: '用户不存在' });
-        }
-
-        res.json({
-          wechat_webhook_url: user.wechat_webhook_url || '',
-          wechat_notification_enabled: user.wechat_notification_enabled !== 0
-        });
-      }
-    );
-  }
-);
-
-// 更新当前用户的企业微信配置
-router.put('/me/wechat-config',
-  authenticateToken,
-  updateWechatConfigValidation,
-  (req, res) => {
-    const validationError = handleValidationErrors(req, res);
-    if (validationError) return;
-
-    const userId = req.user.id;
-    const { wechat_webhook_url, wechat_notification_enabled } = req.body;
-    const updatedAt = new Date().toISOString();
-
-    // 构建更新字段
-    const updates = [];
-    const params = [];
-
-    if (wechat_webhook_url !== undefined) {
-      updates.push('wechat_webhook_url = ?');
-      params.push(wechat_webhook_url || null);
     }
 
-    if (wechat_notification_enabled !== undefined) {
-      updates.push('wechat_notification_enabled = ?');
-      // 正确转换各种类型的布尔值
-      let boolValue = false;
-      if (typeof wechat_notification_enabled === 'boolean') {
-        boolValue = wechat_notification_enabled;
-      } else if (typeof wechat_notification_enabled === 'string') {
-        boolValue = wechat_notification_enabled === 'true';
-      } else if (typeof wechat_notification_enabled === 'number') {
-        boolValue = wechat_notification_enabled === 1;
-      }
-      params.push(boolValue ? 1 : 0);
-    }
-
-    if (updates.length === 0) {
-      return res.status(400).json({ error: '没有提供要更新的字段' });
-    }
-
-    updates.push('updatedAt = ?');
-    params.push(updatedAt, userId);
-
-    const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
-
-    db.run(sql, params, function(err) {
+    // 删除用户
+    db.run('DELETE FROM users WHERE id = ?', [userId], function (err) {
       if (err) {
-        logger.error('更新用户企业微信配置失败', { error: err.message, userId });
-        return res.status(500).json({ error: '更新企业微信配置失败' });
+        logger.error('删除用户失败', { error: err.message, userId });
+        return res.status(500).json({ error: '删除用户失败' });
       }
 
       if (this.changes === 0) {
         return res.status(404).json({ error: '用户不存在' });
       }
 
-      logger.info('用户企业微信配置更新成功', { userId });
-      res.json({
-        message: '企业微信配置更新成功',
-        wechat_webhook_url: wechat_webhook_url || null,
-        wechat_notification_enabled: wechat_notification_enabled !== false
-      });
+      logger.info('用户删除成功', { userId, adminId: req.user.id });
+      res.json({ message: '用户删除成功' });
     });
+  });
+});
+
+// 获取当前用户的企业微信配置
+router.get('/me/wechat-config', authenticateToken, (req, res) => {
+  const userId = req.user.id;
+
+  db.get(
+    'SELECT wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
+    [userId],
+    (err, user) => {
+      if (err) {
+        logger.error('获取用户企业微信配置失败', { error: err.message, userId });
+        return res.status(500).json({ error: '获取企业微信配置失败' });
+      }
+
+      if (!user) {
+        return res.status(404).json({ error: '用户不存在' });
+      }
+
+      res.json({
+        wechat_webhook_url: user.wechat_webhook_url || '',
+        wechat_notification_enabled: user.wechat_notification_enabled !== 0,
+      });
+    }
+  );
+});
+
+// 更新当前用户的企业微信配置
+router.put('/me/wechat-config', authenticateToken, updateWechatConfigValidation, (req, res) => {
+  const validationError = handleValidationErrors(req, res);
+  if (validationError) {
+    return;
   }
-);
+
+  const userId = req.user.id;
+  const { wechat_webhook_url, wechat_notification_enabled } = req.body;
+  const updatedAt = new Date().toISOString();
+
+  // 构建更新字段
+  const updates = [];
+  const params = [];
+
+  if (wechat_webhook_url !== undefined) {
+    updates.push('wechat_webhook_url = ?');
+    params.push(wechat_webhook_url || null);
+  }
+
+  if (wechat_notification_enabled !== undefined) {
+    updates.push('wechat_notification_enabled = ?');
+    // 正确转换各种类型的布尔值
+    let boolValue = false;
+    if (typeof wechat_notification_enabled === 'boolean') {
+      boolValue = wechat_notification_enabled;
+    } else if (typeof wechat_notification_enabled === 'string') {
+      boolValue = wechat_notification_enabled === 'true';
+    } else if (typeof wechat_notification_enabled === 'number') {
+      boolValue = wechat_notification_enabled === 1;
+    }
+    params.push(boolValue ? 1 : 0);
+  }
+
+  if (updates.length === 0) {
+    return res.status(400).json({ error: '没有提供要更新的字段' });
+  }
+
+  updates.push('updatedAt = ?');
+  params.push(updatedAt, userId);
+
+  const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+
+  db.run(sql, params, function (err) {
+    if (err) {
+      logger.error('更新用户企业微信配置失败', { error: err.message, userId });
+      return res.status(500).json({ error: '更新企业微信配置失败' });
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).json({ error: '用户不存在' });
+    }
+
+    logger.info('用户企业微信配置更新成功', { userId });
+    res.json({
+      message: '企业微信配置更新成功',
+      wechat_webhook_url: wechat_webhook_url || null,
+      wechat_notification_enabled: wechat_notification_enabled !== false,
+    });
+  });
+});
 
 module.exports = router;

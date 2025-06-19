@@ -6,7 +6,7 @@ const { CacheManager } = require('../utils/cache');
 // 批量获取最低报价的优化接口
 router.get('/lowest-batch', (req, res) => {
   const orderIds = req.query.orderIds;
-  
+
   if (!orderIds) {
     return res.status(400).json({ error: '缺少订单ID参数' });
   }
@@ -44,33 +44,36 @@ router.get('/lowest-batch', (req, res) => {
   // 批量查询未缓存的数据
   const placeholders = uncachedOrderIds.map(() => '?').join(',');
   const query = `
-    SELECT 
-      orderId,
-      provider,
-      price,
-      MIN(price) as minPrice
-    FROM quotes 
-    WHERE orderId IN (${placeholders})
-    GROUP BY orderId
-    HAVING price = MIN(price)
+    SELECT
+      q1.orderId,
+      q1.provider,
+      q1.price
+    FROM quotes q1
+    INNER JOIN (
+      SELECT orderId, MIN(price) as minPrice
+      FROM quotes
+      WHERE orderId IN (${placeholders})
+      GROUP BY orderId
+    ) q2 ON q1.orderId = q2.orderId AND q1.price = q2.minPrice
+    WHERE q1.orderId IN (${placeholders})
   `;
 
-  db.all(query, uncachedOrderIds, (err, rows) => {
+  db.all(query, [...uncachedOrderIds, ...uncachedOrderIds], (err, rows) => {
     if (err) {
       console.error('批量获取最低报价失败:', err);
       return res.status(500).json({ error: '获取最低报价失败' });
     }
 
     const dbResults = {};
-    
+
     // 处理查询结果
     rows.forEach(row => {
       const lowestQuote = {
         provider: row.provider,
-        price: row.price
+        price: row.price,
       };
       dbResults[row.orderId] = lowestQuote;
-      
+
       // 缓存结果
       CacheManager.setLowestQuoteCache(row.orderId, lowestQuote);
     });
@@ -115,10 +118,10 @@ router.get('/lowest/:orderId', (req, res) => {
     }
 
     const result = row ? { provider: row.provider, price: row.price } : null;
-    
+
     // 缓存结果
     CacheManager.setLowestQuoteCache(orderId, result);
-    
+
     res.json(result);
   });
 });
@@ -148,10 +151,10 @@ router.get('/order/:orderId', (req, res) => {
     }
 
     const result = rows || [];
-    
+
     // 缓存结果
     CacheManager.setQuotesCache(orderId, result);
-    
+
     res.json(result);
   });
 });

@@ -57,7 +57,7 @@ const AdminLoginPage = ({ hasError = false }: AdminLoginPageProps) => {
       } else {
         setError('登录失败，请重试');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(error.message || '登录失败，请检查密码是否正确');
     } finally {
       setIsLoading(false);

@@ -21,7 +21,7 @@ class DataLoader {
         ORDER BY o.createdAt DESC
         LIMIT 100
       `;
-      
+
       db.all(query, (err, rows) => {
         if (err) {
           logger.error('加载活跃订单失败', { error: err.message });
@@ -48,7 +48,7 @@ class DataLoader {
         GROUP BY p.id
         ORDER BY p.name
       `;
-      
+
       db.all(query, (err, rows) => {
         if (err) {
           logger.error('加载供应商列表失败', { error: err.message });
@@ -77,7 +77,7 @@ class DataLoader {
         ORDER BY q.createdAt DESC
         LIMIT 200
       `;
-      
+
       db.all(query, (err, rows) => {
         if (err) {
           logger.error('加载最近报价失败', { error: err.message });
@@ -107,7 +107,7 @@ class DataLoader {
         ORDER BY orderCount DESC
         LIMIT 50
       `;
-      
+
       db.all(query, (err, rows) => {
         if (err) {
           logger.error('加载热门路线失败', { error: err.message });
@@ -138,7 +138,7 @@ class DataLoader {
         GROUP BY q.provider
         ORDER BY wonOrders DESC
       `;
-      
+
       db.all(query, (err, rows) => {
         if (err) {
           logger.error('加载供应商性能数据失败', { error: err.message });
@@ -171,7 +171,7 @@ class DataLoader {
         GROUP BY orderId
         HAVING price = MIN(price)
       `;
-      
+
       db.all(query, orderIds, (err, rows) => {
         if (err) {
           logger.error('批量加载最低报价失败', { error: err.message });
@@ -183,10 +183,10 @@ class DataLoader {
             lowestQuotesMap[row.orderId] = {
               price: row.lowestPrice,
               provider: row.lowestProvider,
-              estimatedDelivery: row.estimatedDelivery
+              estimatedDelivery: row.estimatedDelivery,
             };
           });
-          
+
           logger.info('成功批量加载最低报价', { count: rows.length });
           resolve(lowestQuotesMap);
         }
@@ -198,4 +198,4 @@ class DataLoader {
 // 创建单例实例
 const dataLoader = new DataLoader();
 
-module.exports = dataLoader; 
+module.exports = dataLoader;

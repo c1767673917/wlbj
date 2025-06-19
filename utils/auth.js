@@ -4,7 +4,7 @@ const config = require('../config/env');
 const logger = require('../config/logger');
 
 // JWT配置
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = config.jwtSecret;
 const ACCESS_TOKEN_EXPIRE = '15m'; // 访问token过期时间
 const REFRESH_TOKEN_EXPIRE = '7d'; // 刷新token过期时间
 
@@ -12,7 +12,7 @@ const REFRESH_TOKEN_EXPIRE = '7d'; // 刷新token过期时间
 const ROLES = {
   ADMIN: 'admin',
   USER: 'user',
-  PROVIDER: 'provider'
+  PROVIDER: 'provider',
 };
 
 // 权限定义
@@ -24,16 +24,16 @@ const PERMISSIONS = {
   DELETE_ORDER: 'delete_order',
   CLOSE_ORDER: 'close_order',
   SELECT_PROVIDER: 'select_provider',
-  
+
   // 供应商权限
   VIEW_AVAILABLE_ORDERS: 'view_available_orders',
   CREATE_QUOTE: 'create_quote',
   VIEW_OWN_QUOTES: 'view_own_quotes',
-  
+
   // 管理员权限
   MANAGE_PROVIDERS: 'manage_providers',
   EXPORT_DATA: 'export_data',
-  VIEW_ALL_DATA: 'view_all_data'
+  VIEW_ALL_DATA: 'view_all_data',
 };
 
 // 角色权限映射
@@ -47,13 +47,13 @@ const ROLE_PERMISSIONS = {
     PERMISSIONS.CLOSE_ORDER,
     PERMISSIONS.SELECT_PROVIDER,
     PERMISSIONS.MANAGE_PROVIDERS,
-    PERMISSIONS.EXPORT_DATA
+    PERMISSIONS.EXPORT_DATA,
   ],
   [ROLES.PROVIDER]: [
     PERMISSIONS.VIEW_AVAILABLE_ORDERS,
     PERMISSIONS.CREATE_QUOTE,
-    PERMISSIONS.VIEW_OWN_QUOTES
-  ]
+    PERMISSIONS.VIEW_OWN_QUOTES,
+  ],
 };
 
 // 生成访问token
@@ -144,7 +144,7 @@ function requirePermission(...permissions) {
         userId: req.user.id,
         role: req.user.role,
         requiredPermissions: permissions,
-        path: req.path
+        path: req.path,
       });
       return res.status(403).json({ error: '权限不足' });
     }
@@ -165,7 +165,7 @@ function requireRole(...roles) {
         userId: req.user.id,
         userRole: req.user.role,
         requiredRoles: roles,
-        path: req.path
+        path: req.path,
       });
       return res.status(403).json({ error: '角色权限不足' });
     }
@@ -180,7 +180,7 @@ function refreshAccessToken(refreshToken) {
     const newAccessToken = generateAccessToken({
       id: decoded.id,
       role: decoded.role,
-      email: decoded.email
+      email: decoded.email,
     });
     return newAccessToken;
   } catch (error) {
@@ -203,5 +203,5 @@ module.exports = {
   authenticateToken,
   requirePermission,
   requireRole,
-  refreshAccessToken
-}; 
+  refreshAccessToken,
+};

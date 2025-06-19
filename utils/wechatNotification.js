@@ -52,17 +52,17 @@ function generateOrderNotificationMessage(order, providerName) {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 
   // 截取货物信息和收货信息，避免消息过长
   const maxLength = 100;
-  const goodsInfo = order.goods.length > maxLength
-    ? order.goods.substring(0, maxLength) + '...'
-    : order.goods;
-  const deliveryInfo = order.deliveryAddress.length > maxLength
-    ? order.deliveryAddress.substring(0, maxLength) + '...'
-    : order.deliveryAddress;
+  const goodsInfo =
+    order.goods.length > maxLength ? order.goods.substring(0, maxLength) + '...' : order.goods;
+  const deliveryInfo =
+    order.deliveryAddress.length > maxLength
+      ? order.deliveryAddress.substring(0, maxLength) + '...'
+      : order.deliveryAddress;
 
   const content = `📦 **新订单报价提醒**
 
@@ -79,10 +79,10 @@ function generateOrderNotificationMessage(order, providerName) {
 *物流报价系统自动通知*`;
 
   return {
-    msgtype: "markdown",
+    msgtype: 'markdown',
     markdown: {
-      content: content
-    }
+      content: content,
+    },
   };
 }
 
@@ -99,7 +99,7 @@ async function sendWechatNotification(webhookUrl, message) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(message)
+      body: JSON.stringify(message),
     });
 
     const result = await response.json();
@@ -108,20 +108,20 @@ async function sendWechatNotification(webhookUrl, message) {
       return {
         success: true,
         message: '消息发送成功',
-        data: result
+        data: result,
       };
     } else {
       return {
         success: false,
         message: `消息发送失败: ${result.errmsg || '未知错误'}`,
-        error: result
+        error: result,
       };
     }
   } catch (error) {
     return {
       success: false,
       message: `网络请求失败: ${error.message}`,
-      error: error
+      error: error,
     };
   }
 }
@@ -138,7 +138,7 @@ async function notifyProviderNewOrder(order, providerName, webhookUrl) {
   if (!validateWechatWebhookUrl(webhookUrl)) {
     return {
       success: false,
-      message: '无效的企业微信webhook URL格式'
+      message: '无效的企业微信webhook URL格式',
     };
   }
 
@@ -161,24 +161,28 @@ async function notifyAllProvidersNewOrder(order, providers) {
   for (const provider of providers) {
     if (provider.wechat_webhook_url) {
       try {
-        const result = await notifyProviderNewOrder(order, provider.name, provider.wechat_webhook_url);
+        const result = await notifyProviderNewOrder(
+          order,
+          provider.name,
+          provider.wechat_webhook_url
+        );
         results.push({
           providerName: provider.name,
-          ...result
+          ...result,
         });
       } catch (error) {
         results.push({
           providerName: provider.name,
           success: false,
           message: `发送失败: ${error.message}`,
-          error: error
+          error: error,
         });
       }
     } else {
       results.push({
         providerName: provider.name,
         success: false,
-        message: '未配置企业微信webhook URL'
+        message: '未配置企业微信webhook URL',
       });
     }
   }
@@ -200,14 +204,13 @@ function generateUserQuoteNotificationMessage(order, quote, user) {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 
   // 截取货物信息，避免消息过长
   const maxLength = 80;
-  const goodsInfo = order.goods.length > maxLength
-    ? order.goods.substring(0, maxLength) + '...'
-    : order.goods;
+  const goodsInfo =
+    order.goods.length > maxLength ? order.goods.substring(0, maxLength) + '...' : order.goods;
 
   const content = `💰 **新报价通知**
 
@@ -224,10 +227,10 @@ function generateUserQuoteNotificationMessage(order, quote, user) {
 *物流报价系统自动通知*`;
 
   return {
-    msgtype: "markdown",
+    msgtype: 'markdown',
     markdown: {
-      content: content
-    }
+      content: content,
+    },
   };
 }
 
@@ -237,5 +240,5 @@ module.exports = {
   generateUserQuoteNotificationMessage,
   sendWechatNotification,
   notifyProviderNewOrder,
-  notifyAllProvidersNewOrder
+  notifyAllProvidersNewOrder,
 };

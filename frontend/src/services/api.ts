@@ -1,7 +1,34 @@
 import AuthService from './auth';
+import type {
+  LoginResponse,
+  AuthUser,
+  User,
+  Order,
+  Quote,
+  Provider,
+  PaginatedResponse,
+  AdminStats,
+  UserActivity,
+  WechatConfig,
+  ApiError,
+  PaginationParams,
+  OrdersParams,
+  UserActivityParams,
+  CreateUserRequest,
+  UpdateUserRequest,
+  CreateOrderRequest,
+  UpdateOrderRequest,
+  CreateQuoteRequest,
+  CreateProviderRequest,
+  SelectProviderRequest,
+  BatchQuotesResponse,
+  FileUploadResponse,
+  UpdatePasswordRequest,
+  ResetPasswordRequest
+} from '../types/api';
 
 // API服务配置
-const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
 
 // 认证API端点（不需要token）
 const PUBLIC_ENDPOINTS = ['/auth/login', '/auth/login/provider', '/auth/refresh', '/providers/details'];
@@ -70,7 +97,7 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
     }
 
     if (!response.ok) {
-      let errorData: any = {};
+      let errorData: ApiError = { error: 'Unknown error' };
       try {
         errorData = await response.json();
       } catch (parseError) {
@@ -94,8 +121,8 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 // 认证相关API
 export const authAPI = {
   // 用户登录
-  login: async (password: string, email?: string) => {
-    const response = await apiRequest<any>('/auth/login', {
+  login: async (password: string, email?: string): Promise<LoginResponse> => {
+    const response = await apiRequest<LoginResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ password, email }),
     });
@@ -109,8 +136,8 @@ export const authAPI = {
   },
 
   // 供应商登录
-  loginProvider: async (accessKey: string) => {
-    const response = await apiRequest<any>('/auth/login/provider', {
+  loginProvider: async (accessKey: string): Promise<LoginResponse> => {
+    const response = await apiRequest<LoginResponse>('/auth/login/provider', {
       method: 'POST',
       body: JSON.stringify({ accessKey }),
     });
@@ -148,7 +175,7 @@ export const authAPI = {
   },
 
   // 获取当前用户信息
-  getMe: () => apiRequest<any>('/auth/me'),
+  getMe: (): Promise<AuthUser> => apiRequest<AuthUser>('/auth/me'),
 };
 
 // 用户管理相关API
@@ -164,18 +191,14 @@ export const usersAPI = {
   },
 
   // 管理员创建用户
-  create: async (userData: {
-    email: string;
-    password: string;
-    name?: string;
-  }) => apiRequest<any>('/users/create', {
+  create: async (userData: CreateUserRequest): Promise<User> => apiRequest<User>('/users/create', {
     method: 'POST',
     body: JSON.stringify(userData),
   }),
 
   // 用户登录（邮箱密码方式）
-  login: async (email: string, password: string) => {
-    const response = await apiRequest<any>('/users/login', {
+  login: async (email: string, password: string): Promise<LoginResponse> => {
+    const response = await apiRequest<LoginResponse>('/users/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
@@ -189,54 +212,40 @@ export const usersAPI = {
   },
 
   // 获取所有用户（管理员专用）
-  getAll: (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-  }) => {
+  getAll: (params?: PaginationParams): Promise<PaginatedResponse<User>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     if (params?.search) searchParams.append('search', params.search);
 
-    return apiRequest<any>(`/users?${searchParams.toString()}`);
+    return apiRequest<PaginatedResponse<User>>(`/users?${searchParams.toString()}`);
   },
 
   // 获取单个用户信息（管理员专用）
-  getById: (userId: string) => apiRequest<any>(`/users/${userId}`),
+  getById: (userId: string): Promise<User> => apiRequest<User>(`/users/${userId}`),
 
   // 更新用户信息（管理员专用）
-  update: (userId: string, userData: {
-    email?: string;
-    name?: string;
-    isActive?: boolean;
-  }) => apiRequest<any>(`/users/${userId}`, {
+  update: (userId: string, userData: UpdateUserRequest): Promise<User> => apiRequest<User>(`/users/${userId}`, {
     method: 'PUT',
     body: JSON.stringify(userData),
   }),
 
   // 重置用户密码（管理员专用）
-  resetPassword: (userId: string, newPassword: string) => apiRequest<any>(`/users/${userId}/password`, {
+  resetPassword: (userId: string, newPassword: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/users/${userId}/password`, {
     method: 'PUT',
     body: JSON.stringify({ newPassword }),
   }),
 
   // 删除用户（管理员专用）
-  delete: (userId: string) => apiRequest<any>(`/users/${userId}`, {
+  delete: (userId: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/users/${userId}`, {
     method: 'DELETE',
   }),
 
   // 获取当前用户的企业微信配置
-  getWechatConfig: () => apiRequest<{
-    wechat_webhook_url: string;
-    wechat_notification_enabled: boolean;
-  }>('/users/me/wechat-config'),
+  getWechatConfig: (): Promise<WechatConfig> => apiRequest<WechatConfig>('/users/me/wechat-config'),
 
   // 更新当前用户的企业微信配置
-  updateWechatConfig: (config: {
-    wechat_webhook_url?: string;
-    wechat_notification_enabled?: boolean;
-  }) => apiRequest<any>('/users/me/wechat-config', {
+  updateWechatConfig: (config: WechatConfig): Promise<{ message: string }> => apiRequest<{ message: string }>('/users/me/wechat-config', {
     method: 'PUT',
     body: JSON.stringify(config),
   }),
@@ -245,8 +254,8 @@ export const usersAPI = {
 // 管理员相关API
 export const adminAPI = {
   // 管理员登录
-  login: async (password: string) => {
-    const response = await apiRequest<any>('/admin/login', {
+  login: async (password: string): Promise<LoginResponse> => {
+    const response = await apiRequest<LoginResponse>('/admin/login', {
       method: 'POST',
       body: JSON.stringify({ password }),
     });
@@ -260,89 +269,66 @@ export const adminAPI = {
   },
 
   // 更新管理员密码
-  updatePassword: (currentPassword: string, newPassword: string) => apiRequest<any>('/admin/password', {
+  updatePassword: (currentPassword: string, newPassword: string): Promise<{ message: string }> => apiRequest<{ message: string }>('/admin/password', {
     method: 'PUT',
     body: JSON.stringify({ currentPassword, newPassword }),
   }),
 
   // 获取系统统计信息
-  getStats: () => apiRequest<any>('/admin/stats'),
+  getStats: (): Promise<AdminStats> => apiRequest<AdminStats>('/admin/stats'),
 
   // 获取所有订单（管理员视图）
-  getOrders: (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    status?: string;
-  }) => {
+  getOrders: (params?: OrdersParams): Promise<PaginatedResponse<Order>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     if (params?.search) searchParams.append('search', params.search);
     if (params?.status) searchParams.append('status', params.status);
 
-    return apiRequest<any>(`/admin/orders?${searchParams.toString()}`);
+    return apiRequest<PaginatedResponse<Order>>(`/admin/orders?${searchParams.toString()}`);
   },
 
   // 获取用户活动记录
-  getUserActivities: (params?: {
-    page?: number;
-    limit?: number;
-    userId?: string;
-  }) => {
+  getUserActivities: (params?: UserActivityParams): Promise<PaginatedResponse<UserActivity>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.limit) searchParams.append('limit', params.limit.toString());
     if (params?.userId) searchParams.append('userId', params.userId);
 
-    return apiRequest<any>(`/admin/user-activities?${searchParams.toString()}`);
+    return apiRequest<PaginatedResponse<UserActivity>>(`/admin/user-activities?${searchParams.toString()}`);
   },
 };
 
 // 订单相关API
 export const ordersAPI = {
   // 获取所有订单（管理员用）
-  getAll: async () => {
-    const response = await apiRequest<any>('/orders?pageSize=1000');
-    return response.items || response;
+  getAll: async (): Promise<Order[]> => {
+    const response = await apiRequest<PaginatedResponse<Order>>('/orders?pageSize=1000');
+    return response.items || [];
   },
 
   // 获取活跃订单（用户端）
-  getActiveOrders: async (params?: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-  }) => {
+  getActiveOrders: async (params?: PaginationParams): Promise<PaginatedResponse<Order>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
     if (params?.search) searchParams.append('search', params.search);
 
-    const response = await apiRequest<any>(`/orders/active?${searchParams.toString()}`);
-    return response;
+    return await apiRequest<PaginatedResponse<Order>>(`/orders/active?${searchParams.toString()}`);
   },
 
   // 获取历史订单（用户端）
-  getClosedOrders: async (params?: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-  }) => {
+  getClosedOrders: async (params?: PaginationParams): Promise<PaginatedResponse<Order>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
     if (params?.search) searchParams.append('search', params.search);
 
-    const response = await apiRequest<any>(`/orders/closed?${searchParams.toString()}`);
-    return response;
+    return await apiRequest<PaginatedResponse<Order>>(`/orders/closed?${searchParams.toString()}`);
   },
 
   // 创建新订单
-  create: (orderData: {
-    warehouse: string;
-    goods: string;
-    destination: string;
-  }) => apiRequest<any>('/orders', {
+  create: (orderData: CreateOrderRequest): Promise<Order> => apiRequest<Order>('/orders', {
     method: 'POST',
     body: JSON.stringify({
       warehouse: orderData.warehouse,
@@ -352,26 +338,26 @@ export const ordersAPI = {
   }),
 
   // 获取单个订单
-  getById: (id: string) => apiRequest<any>(`/orders/${id}`),
+  getById: (id: string): Promise<Order> => apiRequest<Order>(`/orders/${id}`),
 
   // 更新订单
-  update: (id: string, data: any) => apiRequest<any>(`/orders/${id}`, {
+  update: (id: string, data: UpdateOrderRequest): Promise<Order> => apiRequest<Order>(`/orders/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
 
   // 关闭订单
-  close: (id: string) => apiRequest<any>(`/orders/${id}/close`, {
+  close: (id: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/orders/${id}/close`, {
     method: 'PUT',
   }),
 
   // 重新开启订单
-  reopen: (id: string) => apiRequest<any>(`/orders/${id}/reopen`, {
+  reopen: (id: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/orders/${id}/reopen`, {
     method: 'PUT',
   }),
 
   // 删除订单
-  delete: (id: string) => apiRequest<any>(`/orders/${id}`, {
+  delete: (id: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/orders/${id}`, {
     method: 'DELETE',
   }),
 };
@@ -379,41 +365,31 @@ export const ordersAPI = {
 // 报价相关API
 export const quotesAPI = {
   // 获取订单的所有报价
-  getByOrderId: (orderId: string) => apiRequest<any[]>(`/orders/${orderId}/quotes`),
+  getByOrderId: (orderId: string): Promise<Quote[]> => apiRequest<Quote[]>(`/orders/${orderId}/quotes`),
 
   // 获取单个订单的最低报价
-  getLowestByOrderId: (orderId: string) => apiRequest<any>(`/quotes/lowest/${orderId}`),
+  getLowestByOrderId: (orderId: string): Promise<Quote | null> => apiRequest<Quote | null>(`/quotes/lowest/${orderId}`),
 
   // 批量获取最低报价
-  getLowestBatch: (orderIds: string[]) => {
+  getLowestBatch: (orderIds: string[]): Promise<BatchQuotesResponse> => {
     const orderIdsParam = orderIds.join(',');
-    return apiRequest<any>(`/quotes/lowest-batch?orderIds=${encodeURIComponent(orderIdsParam)}`);
+    return apiRequest<BatchQuotesResponse>(`/quotes/lowest-batch?orderIds=${encodeURIComponent(orderIdsParam)}`);
   },
 
   // 创建报价
-  create: (quoteData: {
-    orderId: string;
-    providerId: string;
-    price: number;
-    notes?: string;
-  }) => apiRequest<any>('/quotes', {
+  create: (quoteData: CreateQuoteRequest): Promise<Quote> => apiRequest<Quote>('/quotes', {
     method: 'POST',
     body: JSON.stringify(quoteData),
   }),
 
   // 物流商提交报价 (通过accessKey)
-  submitByProvider: (quoteData: {
-    orderId: string;
-    price: number;
-    estimatedDelivery: string;
-    accessKey: string;
-  }) => apiRequest<any>('/quotes', {
+  submitByProvider: (quoteData: CreateQuoteRequest): Promise<Quote> => apiRequest<Quote>('/quotes', {
     method: 'POST',
     body: JSON.stringify(quoteData),
   }),
 
   // 选择报价
-  select: (orderId: string, provider: string, price: number) => apiRequest<any>(`/orders/${orderId}/select-provider`, {
+  select: (orderId: string, provider: string, price: number): Promise<{ message: string }> => apiRequest<{ message: string }>(`/orders/${orderId}/select-provider`, {
     method: 'PUT',
     body: JSON.stringify({ provider, price }),
   }),
@@ -422,58 +398,46 @@ export const quotesAPI = {
 // 供应商相关API
 export const providersAPI = {
   // 获取所有供应商
-  getAll: () => apiRequest<any[]>('/providers'),
+  getAll: (): Promise<Provider[]> => apiRequest<Provider[]>('/providers'),
 
   // 创建供应商
-  create: (providerData: {
-    name: string;
-    customAccessKey?: string;
-    wechatWebhookUrl?: string;
-  }) => apiRequest<any>('/providers', {
+  create: (providerData: CreateProviderRequest): Promise<Provider> => apiRequest<Provider>('/providers', {
     method: 'POST',
     body: JSON.stringify(providerData),
   }),
 
   // 删除供应商
-  delete: (providerId: number) => apiRequest<any>(`/providers/${providerId}`, {
+  delete: (providerId: number): Promise<{ message: string }> => apiRequest<{ message: string }>(`/providers/${providerId}`, {
     method: 'DELETE',
   }),
 
   // 更新供应商webhook
-  updateWebhook: (providerId: number, wechatWebhookUrl: string) => apiRequest<any>(`/providers/${providerId}/webhook`, {
+  updateWebhook: (providerId: number, wechatWebhookUrl: string): Promise<{ message: string }> => apiRequest<{ message: string }>(`/providers/${providerId}/webhook`, {
     method: 'PUT',
     body: JSON.stringify({ wechatWebhookUrl }),
   }),
 
   // 获取供应商信息（通过accessKey）
-  getByAccessKey: (accessKey: string) => apiRequest<any>(`/providers/details?accessKey=${accessKey}`),
+  getByAccessKey: (accessKey: string): Promise<Provider> => apiRequest<Provider>(`/providers/details?accessKey=${accessKey}`),
 
   // 获取供应商的可用订单
-  getAvailableOrders: (accessKey: string, params?: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-  }) => {
+  getAvailableOrders: (accessKey: string, params?: PaginationParams): Promise<PaginatedResponse<Order>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
     if (params?.search) searchParams.append('search', params.search);
 
-    return apiRequest<any>(`/providers/${accessKey}/available-orders?${searchParams.toString()}`);
+    return apiRequest<PaginatedResponse<Order>>(`/providers/${accessKey}/available-orders?${searchParams.toString()}`);
   },
 
   // 获取供应商的报价历史
-  getQuoteHistory: (accessKey: string, params?: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-  }) => {
+  getQuoteHistory: (accessKey: string, params?: PaginationParams): Promise<PaginatedResponse<Quote>> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', params.page.toString());
     if (params?.pageSize) searchParams.append('pageSize', params.pageSize.toString());
     if (params?.search) searchParams.append('search', params.search);
 
-    return apiRequest<any>(`/providers/${accessKey}/quote-history?${searchParams.toString()}`);
+    return apiRequest<PaginatedResponse<Quote>>(`/providers/${accessKey}/quote-history?${searchParams.toString()}`);
   },
 };
 
@@ -621,7 +585,7 @@ export const exportAPI = {
 // AI相关API - 直接调用SiliconFlow API
 export const aiAPI = {
   // AI文本识别
-  recognizeText: async (text: string) => {
+  recognizeText: async (text: string): Promise<{ warehouse: string; goods: string; destination: string }> => {
     try {
       const startTime = Date.now();
 
@@ -697,11 +661,12 @@ export const aiAPI = {
           goods = jsonData.goods;
         } else if (Array.isArray(jsonData.goods)) {
           // 数组形式的货物信息（兼容旧格式）
-          goods = jsonData.goods.map((item: any) => {
-            if (typeof item === 'object' && item.name && item.quantity) {
-              return `${item.name} ${item.quantity}`;
+          goods = jsonData.goods.map((item: unknown) => {
+            if (typeof item === 'object' && item !== null && 'name' in item && 'quantity' in item) {
+              const goodsItem = item as { name: string; quantity: string };
+              return `${goodsItem.name} ${goodsItem.quantity}`;
             } else {
-              return item;
+              return String(item);
             }
           }).join('\n');
         } else if (typeof jsonData.goods === 'object') {

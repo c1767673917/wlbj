@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // 物流报价系统 - 备份文件验证脚本
 
 const fs = require('fs');
@@ -11,10 +9,12 @@ const crypto = require('crypto');
 const backupFilePath = process.argv[2];
 
 if (!backupFilePath || !fs.existsSync(backupFilePath)) {
-  console.error(JSON.stringify({
-    valid: false,
-    error: '备份文件路径无效'
-  }));
+  console.error(
+    JSON.stringify({
+      valid: false,
+      error: '备份文件路径无效',
+    })
+  );
   process.exit(1);
 }
 
@@ -27,7 +27,7 @@ const result = {
   metadata: null,
   components: [],
   errors: [],
-  warnings: []
+  warnings: [],
 };
 
 // 日志函数
@@ -54,23 +54,24 @@ function cleanup() {
 function verifyFileFormat() {
   const fileExtension = path.extname(backupFilePath).toLowerCase();
   const fileName = path.basename(backupFilePath).toLowerCase();
-  
+
   if (!fileName.endsWith('.tar.gz') && !fileName.endsWith('.zip')) {
     addError('不支持的文件格式，仅支持 .tar.gz 和 .zip 格式');
     return false;
   }
-  
+
   // 检查文件大小
   const stats = fs.statSync(backupFilePath);
   if (stats.size === 0) {
     addError('备份文件为空');
     return false;
   }
-  
-  if (stats.size > 500 * 1024 * 1024) { // 500MB
+
+  if (stats.size > 500 * 1024 * 1024) {
+    // 500MB
     addWarning('备份文件较大，可能需要较长时间处理');
   }
-  
+
   return true;
 }
 
@@ -87,7 +88,7 @@ function extractAndVerify() {
     } else if (backupFilePath.toLowerCase().endsWith('.zip')) {
       execSync(`unzip -q "${backupFilePath}" -d "${VERIFY_TEMP_DIR}"`);
     }
-    
+
     // 查找解压后的备份目录
     const items = fs.readdirSync(VERIFY_TEMP_DIR);
     const backupDir = items.find(item => {
@@ -110,7 +111,7 @@ function extractAndVerify() {
 // 验证备份元数据
 function verifyMetadata(backupDir) {
   const metadataPath = path.join(backupDir, 'backup-metadata.json');
-  
+
   if (!fs.existsSync(metadataPath)) {
     addWarning('未找到备份元数据文件，这可能是旧版本的备份');
     return null;
@@ -118,7 +119,7 @@ function verifyMetadata(backupDir) {
 
   try {
     const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
-    
+
     // 验证必需字段
     const requiredFields = ['version', 'timestamp', 'created_at', 'backup_info'];
     for (const field of requiredFields) {
@@ -127,12 +128,12 @@ function verifyMetadata(backupDir) {
         return null;
       }
     }
-    
+
     // 验证版本兼容性
     if (metadata.version && !metadata.version.startsWith('2.')) {
       addWarning(`备份版本 ${metadata.version} 可能不完全兼容当前系统`);
     }
-    
+
     result.metadata = metadata;
     return metadata;
   } catch (err) {
@@ -144,14 +145,14 @@ function verifyMetadata(backupDir) {
 // 验证数据库组件
 function verifyDatabaseComponent(backupDir) {
   const dbDir = path.join(backupDir, 'database');
-  
+
   if (!fs.existsSync(dbDir)) {
     addError('缺少数据库备份组件');
     return false;
   }
 
   const dbFiles = fs.readdirSync(dbDir).filter(file => file.endsWith('.db.gz'));
-  
+
   if (dbFiles.length === 0) {
     addError('数据库备份目录中未找到数据库文件');
     return false;
@@ -164,8 +165,9 @@ function verifyDatabaseComponent(backupDir) {
   // 检查数据库文件大小
   const dbFile = path.join(dbDir, dbFiles[0]);
   const stats = fs.statSync(dbFile);
-  
-  if (stats.size < 100) { // 小于100字节可能是空文件
+
+  if (stats.size < 100) {
+    // 小于100字节可能是空文件
     addWarning('数据库备份文件可能为空或损坏');
   }
 
@@ -173,7 +175,7 @@ function verifyDatabaseComponent(backupDir) {
     name: 'database',
     status: 'valid',
     files: dbFiles,
-    size: stats.size
+    size: stats.size,
   });
 
   return true;
@@ -182,14 +184,14 @@ function verifyDatabaseComponent(backupDir) {
 // 验证配置组件
 function verifyConfigComponent(backupDir) {
   const configDir = path.join(backupDir, 'configs');
-  
+
   if (!fs.existsSync(configDir)) {
     addError('缺少配置备份组件');
     return false;
   }
 
   const configFiles = fs.readdirSync(configDir);
-  
+
   if (configFiles.length === 0) {
     addError('配置备份目录为空');
     return false;
@@ -197,9 +199,7 @@ function verifyConfigComponent(backupDir) {
 
   // 检查是否有压缩包或直接的配置文件
   const hasArchive = configFiles.some(file => file.endsWith('.tar.gz'));
-  const hasDirectFiles = configFiles.some(file => 
-    file.includes('.env') || file.includes('.json')
-  );
+  const hasDirectFiles = configFiles.some(file => file.includes('.env') || file.includes('.json'));
 
   if (!hasArchive && !hasDirectFiles) {
     addError('配置备份目录中未找到有效的配置文件');
@@ -216,7 +216,7 @@ function verifyConfigComponent(backupDir) {
     name: 'configs',
     status: 'valid',
     files: configFiles,
-    size: totalSize
+    size: totalSize,
   });
 
   return true;
@@ -225,14 +225,14 @@ function verifyConfigComponent(backupDir) {
 // 验证日志组件
 function verifyLogComponent(backupDir) {
   const logDir = path.join(backupDir, 'logs');
-  
+
   if (!fs.existsSync(logDir)) {
     addWarning('未找到日志备份组件（可选）');
     return true; // 日志是可选的
   }
 
   const logFiles = fs.readdirSync(logDir);
-  
+
   if (logFiles.length === 0) {
     addWarning('日志备份目录为空');
     return true;
@@ -248,7 +248,7 @@ function verifyLogComponent(backupDir) {
     name: 'logs',
     status: 'valid',
     files: logFiles,
-    size: totalSize
+    size: totalSize,
   });
 
   return true;
@@ -310,7 +310,8 @@ function main() {
     const checksumValid = verifyChecksum(backupDir, metadata);
 
     // 确定整体验证结果
-    result.valid = dbValid && configValid && logValid && checksumValid && result.errors.length === 0;
+    result.valid =
+      dbValid && configValid && logValid && checksumValid && result.errors.length === 0;
 
     // 添加总结信息
     if (result.valid) {
@@ -324,7 +325,6 @@ function main() {
 
     // 输出验证结果
     console.log(JSON.stringify(result, null, 2));
-
   } catch (err) {
     addError(`验证过程出错: ${err.message}`);
     cleanup();

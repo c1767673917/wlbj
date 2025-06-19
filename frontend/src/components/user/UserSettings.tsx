@@ -28,13 +28,16 @@ const UserSettings = () => {
       console.log('加载配置响应:', response);
 
       setConfig(response);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('加载企业微信配置失败:', error);
-      console.error('错误详情:', {
-        message: error?.message,
-        status: error?.status,
-        response: error?.response
-      });
+      if (error && typeof error === 'object') {
+        const apiError = error as { message?: string; status?: number; response?: unknown };
+        console.error('错误详情:', {
+          message: apiError.message,
+          status: apiError.status,
+          response: apiError.response
+        });
+      }
 
       let errorMessage = '加载配置失败，请刷新页面重试';
       if (error?.response?.status === 401) {
@@ -71,32 +74,38 @@ const UserSettings = () => {
       setTimeout(() => {
         setMessage(null);
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('保存企业微信配置失败:', error);
-      console.error('错误详情:', {
-        message: error?.message,
-        status: error?.status,
-        response: error?.response,
-        stack: error?.stack
-      });
+      if (error && typeof error === 'object') {
+        const apiError = error as { message?: string; status?: number; response?: unknown };
+        console.error('错误详情:', {
+          message: apiError.message,
+          status: apiError.status,
+          response: apiError.response,
+          stack: 'stack' in apiError ? apiError.stack : undefined
+        });
+      }
 
       let errorMessage = '保存失败，请检查网络连接';
 
-      if (error?.response) {
-        try {
-          const errorData = await error.response.json();
-          if (errorData.errors && Array.isArray(errorData.errors)) {
-            errorMessage = `验证错误: ${errorData.errors.map(e => e.msg).join(', ')}`;
-          } else if (errorData.error) {
-            errorMessage = errorData.error;
-          } else if (errorData.message) {
-            errorMessage = errorData.message;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { json: () => Promise<any>; status: number; statusText: string } };
+        if (apiError.response) {
+          try {
+            const errorData = await apiError.response.json();
+            if (errorData.errors && Array.isArray(errorData.errors)) {
+              errorMessage = `验证错误: ${errorData.errors.map((e: any) => e.msg).join(', ')}`;
+            } else if (errorData.error) {
+              errorMessage = errorData.error;
+            } else if (errorData.message) {
+              errorMessage = errorData.message;
+            }
+          } catch (parseError) {
+            console.error('解析错误响应失败:', parseError);
+            errorMessage = `HTTP ${apiError.response.status}: ${apiError.response.statusText}`;
           }
-        } catch (parseError) {
-          console.error('解析错误响应失败:', parseError);
-          errorMessage = `HTTP ${error.response.status}: ${error.response.statusText}`;
         }
-      } else if (error?.message) {
+      } else if (error instanceof Error) {
         errorMessage = error.message;
       }
 

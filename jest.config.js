@@ -1,0 +1,36 @@
+module.exports = {
+  testEnvironment: 'node',
+  roots: ['<rootDir>/tests/unit', '<rootDir>/tests/integration'],
+  testMatch: [
+    '**/tests/unit/**/*.test.js',
+    '**/tests/unit/**/*.spec.js',
+    '**/tests/integration/**/*.test.js',
+    '**/tests/integration/**/*.spec.js',
+  ],
+  collectCoverageFrom: [
+    'routes/**/*.js',
+    'utils/**/*.js',
+    'middleware/**/*.js',
+    'db/**/*.js',
+    '!**/node_modules/**',
+    '!**/tests/**',
+    '!**/coverage/**',
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
+  coverageThreshold: {
+    global: {
+      branches: 60,
+      functions: 60,
+      lines: 60,
+      statements: 60,
+    },
+  },
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/setup.js'],
+  testTimeout: 10000,
+  verbose: true,
+  forceExit: true,
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true,
+};

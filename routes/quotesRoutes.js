@@ -3,42 +3,49 @@ const router = express.Router();
 const db = require('../db/database');
 const { v4: uuidv4 } = require('uuid');
 const { CacheManager } = require('../utils/cache');
-const { generateUserQuoteNotificationMessage, sendWechatNotification } = require('../utils/wechatNotification');
+const {
+  generateUserQuoteNotificationMessage,
+  sendWechatNotification,
+} = require('../utils/wechatNotification');
 
 // 向用户发送报价通知的异步函数
 async function sendUserQuoteNotification(order, quote) {
   try {
     // 获取订单所属用户的企业微信配置
-    db.get('SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?', [order.userId], async (err, user) => {
-      if (err) {
-        console.error('获取用户信息失败:', err);
-        return;
+    db.get(
+      'SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
+      [order.userId],
+      async (err, user) => {
+        if (err) {
+          console.error('获取用户信息失败:', err);
+          return;
+        }
+
+        if (!user) {
+          console.log('未找到订单所属用户，跳过用户通知');
+          return;
+        }
+
+        if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
+          console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
+          return;
+        }
+
+        console.log(`开始向用户 ${user.email} 发送报价通知...`);
+
+        // 生成用户报价通知消息
+        const message = generateUserQuoteNotificationMessage(order, quote, user);
+
+        // 发送通知
+        const result = await sendWechatNotification(user.wechat_webhook_url, message);
+
+        if (result.success) {
+          console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
+        } else {
+          console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
+        }
       }
-
-      if (!user) {
-        console.log('未找到订单所属用户，跳过用户通知');
-        return;
-      }
-
-      if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
-        console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
-        return;
-      }
-
-      console.log(`开始向用户 ${user.email} 发送报价通知...`);
-
-      // 生成用户报价通知消息
-      const message = generateUserQuoteNotificationMessage(order, quote, user);
-
-      // 发送通知
-      const result = await sendWechatNotification(user.wechat_webhook_url, message);
-
-      if (result.success) {
-        console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
-      } else {
-        console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
-      }
-    });
+    );
   } catch (error) {
     console.error('发送用户报价通知时出错:', error);
   }
@@ -51,14 +58,14 @@ router.get('/', (req, res) => {
   const pageSize = parseInt(req.query.pageSize) || 10;
   const offset = (page - 1) * pageSize;
 
-  let params = [];
-  let countParams = [];
-  let whereClauses = [];
+  const params = [];
+  const countParams = [];
+  const whereClauses = [];
 
   if (accessKey) {
     db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
       if (err) {
-        console.error("Error fetching provider by accessKey for quotes:", err);
+        console.error('Error fetching provider by accessKey for quotes:', err);
         return res.status(500).json({ error: '查询物流商信息失败' });
       }
       if (!providerRow) {
@@ -94,35 +101,35 @@ router.get('/', (req, res) => {
     `;
 
     if (whereClauses.length > 0) {
-        const whereString = ' WHERE ' + whereClauses.join(' AND ');
-        countQuery += whereString;
-        dataQuery += whereString;
+      const whereString = ' WHERE ' + whereClauses.join(' AND ');
+      countQuery += whereString;
+      dataQuery += whereString;
     }
 
     dataQuery += ' ORDER BY q.createdAt DESC LIMIT ? OFFSET ?';
     params.push(pageSize, offset);
 
     db.get(countQuery, countParams, (err, countRow) => {
-        if (err) {
-            console.error("Count query error (quotes):", err);
-            return res.status(500).json({ error: '获取报价总数失败' });
-        }
-        const totalItems = countRow ? countRow.total : 0;
-        const totalPages = Math.ceil(totalItems / pageSize);
+      if (err) {
+        console.error('Count query error (quotes):', err);
+        return res.status(500).json({ error: '获取报价总数失败' });
+      }
+      const totalItems = countRow ? countRow.total : 0;
+      const totalPages = Math.ceil(totalItems / pageSize);
 
-        db.all(dataQuery, params, (err, items) => {
-            if (err) {
-                console.error("Data query error (quotes):", err);
-                return res.status(500).json({ error: '获取报价失败' });
-            }
-            res.json({
-                items: items || [],
-                totalItems,
-                totalPages,
-                currentPage: page,
-                pageSize
-            });
+      db.all(dataQuery, params, (err, items) => {
+        if (err) {
+          console.error('Data query error (quotes):', err);
+          return res.status(500).json({ error: '获取报价失败' });
+        }
+        res.json({
+          items: items || [],
+          totalItems,
+          totalPages,
+          currentPage: page,
+          pageSize,
         });
+      });
     });
   }
 });
@@ -132,12 +139,14 @@ router.post('/', (req, res) => {
   const { orderId, price, estimatedDelivery, accessKey } = req.body;
 
   if (!orderId || !price || !estimatedDelivery || !accessKey) {
-    return res.status(400).json({ error: 'orderId, price, estimatedDelivery 和 accessKey 都是必填的' });
+    return res
+      .status(400)
+      .json({ error: 'orderId, price, estimatedDelivery 和 accessKey 都是必填的' });
   }
 
   db.get('SELECT name FROM providers WHERE accessKey = ?', [accessKey], (err, providerRow) => {
     if (err) {
-      console.error("Error fetching provider by accessKey for submitting quote:", err);
+      console.error('Error fetching provider by accessKey for submitting quote:', err);
       return res.status(500).json({ error: '查询物流商信息失败' });
     }
     if (!providerRow) {
@@ -146,103 +155,114 @@ router.post('/', (req, res) => {
     const providerName = providerRow.name;
 
     db.get('SELECT status FROM orders WHERE id = ?', [orderId], (err, orderRow) => {
-        if (err) {
-            console.error("Error fetching order details:", err);
-            return res.status(500).json({ error: '查询订单信息失败' });
-        }
-        if (!orderRow) {
-            return res.status(404).json({ error: '订单不存在' });
-        }
-        if (orderRow.status !== 'active') {
-            return res.status(400).json({ error: `订单状态为 "${orderRow.status}"，不可报价` });
-        }
+      if (err) {
+        console.error('Error fetching order details:', err);
+        return res.status(500).json({ error: '查询订单信息失败' });
+      }
+      if (!orderRow) {
+        return res.status(404).json({ error: '订单不存在' });
+      }
+      if (orderRow.status !== 'active') {
+        return res.status(400).json({ error: `订单状态为 "${orderRow.status}"，不可报价` });
+      }
 
-        db.get('SELECT id FROM quotes WHERE orderId = ? AND provider = ?', [orderId, providerName], (err, existingQuote) => {
-            if (err) {
-                console.error("Error checking existing quote:", err);
-                return res.status(500).json({ error: '检查现有报价失败' });
-            }
+      db.get(
+        'SELECT id FROM quotes WHERE orderId = ? AND provider = ?',
+        [orderId, providerName],
+        (err, existingQuote) => {
+          if (err) {
+            console.error('Error checking existing quote:', err);
+            return res.status(500).json({ error: '检查现有报价失败' });
+          }
 
-            if (existingQuote) {
-                // 如果已存在报价，则更新现有报价（重新报价）
-                const updatedAt = new Date().toISOString();
+          if (existingQuote) {
+            // 如果已存在报价，则更新现有报价（重新报价）
+            const updatedAt = new Date().toISOString();
 
-                db.run(
-                  'UPDATE quotes SET price = ?, estimatedDelivery = ?, createdAt = ? WHERE id = ?',
-                  [parseFloat(price), estimatedDelivery, updatedAt, existingQuote.id],
-                  function(err) {
-                    if (err) {
-                      console.error("Error updating quote:", err);
-                      return res.status(500).json({ error: '更新报价失败' });
-                    }
+            db.run(
+              'UPDATE quotes SET price = ?, estimatedDelivery = ?, createdAt = ? WHERE id = ?',
+              [parseFloat(price), estimatedDelivery, updatedAt, existingQuote.id],
+              function (err) {
+                if (err) {
+                  console.error('Error updating quote:', err);
+                  return res.status(500).json({ error: '更新报价失败' });
+                }
 
-                    // 清除相关缓存
-                    CacheManager.invalidateQuoteRelatedCache(orderId);
+                // 清除相关缓存
+                CacheManager.invalidateQuoteRelatedCache(orderId);
 
-                    const updatedQuote = {
-                      id: existingQuote.id,
-                      orderId: orderId,
-                      provider: providerName,
-                      price: parseFloat(price),
-                      estimatedDelivery: estimatedDelivery,
-                      createdAt: updatedAt
-                    };
-
-                    // 重新报价成功后，获取订单信息并发送用户通知
-                    db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
-                      if (err) {
-                        console.error('获取订单信息失败:', err);
-                      } else if (order) {
-                        // 发送用户报价通知
-                        sendUserQuoteNotification(order, updatedQuote);
-                      } else {
-                        console.log('未找到对应订单，跳过用户通知');
-                      }
-                    });
-
-                    res.status(200).json(updatedQuote);
-                  }
-                );
-            } else {
-                // 如果不存在报价，则创建新报价
-                const newQuote = {
-                  id: uuidv4(),
+                const updatedQuote = {
+                  id: existingQuote.id,
                   orderId: orderId,
                   provider: providerName,
                   price: parseFloat(price),
                   estimatedDelivery: estimatedDelivery,
-                  createdAt: new Date().toISOString()
+                  createdAt: updatedAt,
                 };
 
-                db.run(
-                  'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
-                  [newQuote.id, newQuote.orderId, newQuote.provider, newQuote.price, newQuote.estimatedDelivery, newQuote.createdAt],
-                  function(err) {
-                    if (err) {
-                      console.error(err);
-                      return res.status(500).json({ error: '创建报价失败' });
-                    }
-
-                    // 清除相关缓存
-                    CacheManager.invalidateQuoteRelatedCache(newQuote.orderId);
-
-                    // 报价创建成功后，获取订单信息并发送用户通知
-                    db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
-                      if (err) {
-                        console.error('获取订单信息失败:', err);
-                      } else if (order) {
-                        // 发送用户报价通知
-                        sendUserQuoteNotification(order, newQuote);
-                      } else {
-                        console.log('未找到对应订单，跳过用户通知');
-                      }
-                    });
-
-                    res.status(201).json(newQuote);
+                // 重新报价成功后，获取订单信息并发送用户通知
+                db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+                  if (err) {
+                    console.error('获取订单信息失败:', err);
+                  } else if (order) {
+                    // 发送用户报价通知
+                    sendUserQuoteNotification(order, updatedQuote);
+                  } else {
+                    console.log('未找到对应订单，跳过用户通知');
                   }
-                );
-            }
-        });
+                });
+
+                res.status(200).json(updatedQuote);
+              }
+            );
+          } else {
+            // 如果不存在报价，则创建新报价
+            const newQuote = {
+              id: uuidv4(),
+              orderId: orderId,
+              provider: providerName,
+              price: parseFloat(price),
+              estimatedDelivery: estimatedDelivery,
+              createdAt: new Date().toISOString(),
+            };
+
+            db.run(
+              'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
+              [
+                newQuote.id,
+                newQuote.orderId,
+                newQuote.provider,
+                newQuote.price,
+                newQuote.estimatedDelivery,
+                newQuote.createdAt,
+              ],
+              function (err) {
+                if (err) {
+                  console.error(err);
+                  return res.status(500).json({ error: '创建报价失败' });
+                }
+
+                // 清除相关缓存
+                CacheManager.invalidateQuoteRelatedCache(newQuote.orderId);
+
+                // 报价创建成功后，获取订单信息并发送用户通知
+                db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+                  if (err) {
+                    console.error('获取订单信息失败:', err);
+                  } else if (order) {
+                    // 发送用户报价通知
+                    sendUserQuoteNotification(order, newQuote);
+                  } else {
+                    console.log('未找到对应订单，跳过用户通知');
+                  }
+                });
+
+                res.status(201).json(newQuote);
+              }
+            );
+          }
+        }
+      );
     });
   });
 });

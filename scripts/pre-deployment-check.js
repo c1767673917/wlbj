@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * 部署前检查脚本
  * 验证所有部署相关的配置和文件
@@ -15,7 +13,7 @@ const colors = {
   red: '\x1b[31m',
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
-  reset: '\x1b[0m'
+  reset: '\x1b[0m',
 };
 
 function log(color, message) {
@@ -26,14 +24,18 @@ function checkEnvironmentVariables() {
   const requiredEnvVars = [
     { name: 'NODE_ENV', required: true, production: 'production' },
     { name: 'JWT_SECRET', required: true, shouldNotBe: 'default_jwt_secret_change_in_production' },
-    { name: 'APP_PASSWORD', required: true, shouldNotBe: 'your_secure_admin_password_here_change_this' }
+    {
+      name: 'APP_PASSWORD',
+      required: true,
+      shouldNotBe: 'your_secure_admin_password_here_change_this',
+    },
   ];
 
   const optionalEnvVars = [
     { name: 'PORT', default: '3000' },
     { name: 'TRUST_PROXY', default: 'auto' },
     { name: 'REDIS_HOST', default: 'localhost' },
-    { name: 'REDIS_PORT', default: '6379' }
+    { name: 'REDIS_PORT', default: '6379' },
   ];
 
   const issues = [];
@@ -42,7 +44,7 @@ function checkEnvironmentVariables() {
   // 检查必需的环境变量
   requiredEnvVars.forEach(envVar => {
     const value = process.env[envVar.name];
-    
+
     if (!value) {
       issues.push(`缺少必需的环境变量: ${envVar.name}`);
     } else if (envVar.shouldNotBe && value === envVar.shouldNotBe) {
@@ -167,7 +169,7 @@ function main() {
   log('blue', '\n2. 检查前端构建文件');
   const indexResult = validateIndexHtml();
   const assetsResult = validateAssets();
-  
+
   if (indexResult.valid && assetsResult.valid) {
     log('green', '   ✅ 前端构建文件正确');
   } else {

@@ -1,11 +1,10 @@
-#!/usr/bin/env node
-
 // 物流报价系统 - 七牛云备份执行脚本
 
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const sqlite3 = require('sqlite3').verbose();
+const { decrypt } = require('../utils/encryption');
 
 // 配置
 const APP_DIR = path.join(__dirname, '..');
@@ -17,7 +16,7 @@ let QINIU_CONFIG = {
   accessKey: process.env.QINIU_ACCESS_KEY,
   secretKey: process.env.QINIU_SECRET_KEY,
   bucket: process.env.QINIU_BUCKET,
-  zone: process.env.QINIU_ZONE || 'z0'
+  zone: process.env.QINIU_ZONE || 'z0',
 };
 
 let WECHAT_WEBHOOK_URL = process.env.WECHAT_WEBHOOK_URL;
@@ -45,7 +44,7 @@ async function loadConfigFromDatabase() {
     const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY);
     db.get('SELECT * FROM backup_config WHERE id = 1', (err, row) => {
       // 确保数据库连接正确关闭
-      db.close((closeErr) => {
+      db.close(closeErr => {
         if (closeErr) {
           log(`配置数据库关闭警告: ${closeErr.message}`);
         }
@@ -63,10 +62,10 @@ async function loadConfigFromDatabase() {
 
       // 更新全局配置
       QINIU_CONFIG = {
-        accessKey: row.qiniu_access_key || process.env.QINIU_ACCESS_KEY,
-        secretKey: row.qiniu_secret_key || process.env.QINIU_SECRET_KEY,
+        accessKey: decrypt(row.qiniu_access_key) || process.env.QINIU_ACCESS_KEY,
+        secretKey: decrypt(row.qiniu_secret_key) || process.env.QINIU_SECRET_KEY,
         bucket: row.qiniu_bucket || process.env.QINIU_BUCKET,
-        zone: row.qiniu_zone || process.env.QINIU_ZONE || 'z0'
+        zone: row.qiniu_zone || process.env.QINIU_ZONE || 'z0',
       };
 
       WECHAT_WEBHOOK_URL = row.wechat_webhook_url || process.env.WECHAT_WEBHOOK_URL;
@@ -78,7 +77,9 @@ async function loadConfigFromDatabase() {
 
 // 发送企业微信通知
 async function sendWechatNotification(message, type = 'info') {
-  if (!WECHAT_WEBHOOK_URL) return;
+  if (!WECHAT_WEBHOOK_URL) {
+    return;
+  }
 
   const emoji = type === 'success' ? '✅' : type === 'error' ? '🚨' : 'ℹ️';
   const fullMessage = `${emoji} 【物流报价系统备份】\n\n${message}\n\n时间: ${new Date().toLocaleString('zh-CN')}`;
@@ -90,8 +91,8 @@ async function sendWechatNotification(message, type = 'info') {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         msgtype: 'text',
-        text: { content: fullMessage }
-      })
+        text: { content: fullMessage },
+      }),
     });
   } catch (err) {
     log(`企业微信通知发送失败: ${err.message}`);
@@ -130,9 +131,9 @@ async function backupDatabase(backupDir) {
       const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY);
       const backupPath = path.join(dbBackupDir, `logistics_${DATE}.db`);
 
-      db.backup(backupPath, (err) => {
+      db.backup(backupPath, err => {
         // 确保数据库连接正确关闭
-        db.close((closeErr) => {
+        db.close(closeErr => {
           if (closeErr) {
             log(`数据库关闭警告: ${closeErr.message}`);
           }
@@ -191,7 +192,7 @@ async function backupConfigs(backupDir) {
 
     try {
       execSync(`tar -czf "${tarPath}" -C "${configBackupDir}" ${configs.join(' ')}`, {
-        cwd: configBackupDir
+        cwd: configBackupDir,
       });
 
       // 删除原始文件
@@ -259,13 +260,17 @@ async function uploadToQiniu(backupDir) {
   // 配置qshell
   const { execSync } = require('child_process');
   try {
-    execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`);
+    execSync(
+      `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`
+    );
   } catch (err) {
     // 如果账户已存在，尝试删除后重新添加
     if (err.message.includes('already exist')) {
       try {
         execSync('qshell user rm backup-account');
-        execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`);
+        execSync(
+          `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`
+        );
       } catch (retryErr) {
         log('qshell账户配置警告，但继续执行备份');
       }
@@ -313,13 +318,17 @@ async function uploadUnifiedPackageToQiniu(packageInfo) {
   // 配置qshell
   const { execSync } = require('child_process');
   try {
-    execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`);
+    execSync(
+      `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`
+    );
   } catch (err) {
     // 如果账户已存在，尝试删除后重新添加
     if (err.message.includes('already exist')) {
       try {
         execSync('qshell user rm backup-account');
-        execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`);
+        execSync(
+          `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "backup-account"`
+        );
       } catch (retryErr) {
         log('qshell账户配置警告，但继续执行备份');
       }
@@ -342,7 +351,7 @@ async function uploadUnifiedPackageToQiniu(packageInfo) {
       count: 1,
       size: packageInfo.packageSize,
       qiniuKey,
-      checksum: packageInfo.checksum
+      checksum: packageInfo.checksum,
     };
   } catch (err) {
     throw new Error(`统一备份包上传失败: ${err.message}`);
@@ -374,7 +383,9 @@ function getAllFiles(dir) {
 
 // 格式化字节大小
 function formatBytes(bytes) {
-  if (bytes === 0) return '0 B';
+  if (bytes === 0) {
+    return '0 B';
+  }
 
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -388,7 +399,7 @@ function cleanupLocal() {
   log('清理本地旧备份...');
 
   const retentionDays = 3; // 本地保留3天
-  const cutoffTime = Date.now() - (retentionDays * 24 * 60 * 60 * 1000);
+  const cutoffTime = Date.now() - retentionDays * 24 * 60 * 60 * 1000;
 
   if (fs.existsSync(BACKUP_ROOT)) {
     const items = fs.readdirSync(BACKUP_ROOT);
@@ -415,16 +426,16 @@ function createBackupMetadata(backupDir, dbSize, configSize, logSize) {
       app_name: 'wlbj-logistics',
       app_version: require(path.join(APP_DIR, 'package.json')).version,
       node_version: process.version,
-      platform: process.platform
+      platform: process.platform,
     },
     backup_info: {
       database_size: dbSize,
       config_size: configSize,
       log_size: logSize,
       total_size: dbSize + configSize + logSize,
-      components: ['database', 'configs', 'logs']
+      components: ['database', 'configs', 'logs'],
     },
-    checksum: null // 将在创建统一包后计算
+    checksum: null, // 将在创建统一包后计算
   };
 
   const metadataPath = path.join(backupDir, 'backup-metadata.json');
@@ -445,7 +456,9 @@ async function createUnifiedBackupPackage(backupDir) {
     const { execSync } = require('child_process');
 
     // 创建tar.gz包，包含所有备份文件和元数据
-    execSync(`tar -czf "${packagePath}" -C "${path.dirname(backupDir)}" "${path.basename(backupDir)}"`);
+    execSync(
+      `tar -czf "${packagePath}" -C "${path.dirname(backupDir)}" "${path.basename(backupDir)}"`
+    );
 
     const packageSize = fs.statSync(packagePath).size;
     log(`统一备份包创建完成: ${packageName} (${formatBytes(packageSize)})`);
@@ -466,13 +479,15 @@ async function createUnifiedBackupPackage(backupDir) {
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
 
     // 重新创建包以包含更新的元数据
-    execSync(`tar -czf "${packagePath}" -C "${path.dirname(backupDir)}" "${path.basename(backupDir)}"`);
+    execSync(
+      `tar -czf "${packagePath}" -C "${path.dirname(backupDir)}" "${path.basename(backupDir)}"`
+    );
 
     return {
       packagePath,
       packageName,
       packageSize: fs.statSync(packagePath).size,
-      checksum
+      checksum,
     };
   } catch (err) {
     throw new Error(`创建统一备份包失败: ${err.message}`);
@@ -525,7 +540,6 @@ async function main() {
 
     log('🎉 备份任务执行完成');
     console.log(`备份大小: ${formatBytes(packageInfo.packageSize)}`); // 用于提取备份大小
-
   } catch (err) {
     error(`备份任务失败: ${err.message}`);
 

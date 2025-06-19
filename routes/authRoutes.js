@@ -10,20 +10,18 @@ const {
   hashPassword,
   verifyPassword,
   refreshAccessToken,
-  authenticateToken
+  authenticateToken,
 } = require('../utils/auth');
 
 // 用户登录验证规则
 const loginValidation = [
   body('email').notEmpty().trim().isLength({ min: 1, max: 255 }).withMessage('用户名/邮箱不能为空'),
   body('password').notEmpty().isLength({ min: 4 }).trim().withMessage('密码不能为空且至少4个字符'),
-  body('role').optional().isIn(Object.values(ROLES))
+  body('role').optional().isIn(Object.values(ROLES)),
 ];
 
 // 刷新token验证规则
-const refreshValidation = [
-  body('refreshToken').notEmpty().trim()
-];
+const refreshValidation = [body('refreshToken').notEmpty().trim()];
 
 // 处理验证错误
 function handleValidationErrors(req, res) {
@@ -34,10 +32,69 @@ function handleValidationErrors(req, res) {
   return null;
 }
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: 用户登录
+ *     tags: [认证]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: 用户名或邮箱
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 description: 密码
+ *                 example: "password123"
+ *               role:
+ *                 type: string
+ *                 enum: [admin, user, provider]
+ *                 description: 用户角色（可选）
+ *     responses:
+ *       200:
+ *         description: 登录成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: JWT访问令牌
+ *                 refreshToken:
+ *                   type: string
+ *                   description: 刷新令牌
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: 认证失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       400:
+ *         description: 请求参数错误
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // 用户登录（仅支持用户名+密码登录）
 router.post('/login', loginValidation, async (req, res) => {
   const validationError = handleValidationErrors(req, res);
-  if (validationError) return;
+  if (validationError) {
+    return;
+  }
 
   const { email, password, role = ROLES.USER } = req.body;
 
@@ -68,7 +125,7 @@ router.post('/login', loginValidation, async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
       };
 
       const accessToken = generateAccessToken(userInfo);
@@ -79,16 +136,15 @@ router.post('/login', loginValidation, async (req, res) => {
         email: user.email,
         name: user.name,
         loginIdentifier: email,
-        ip: req.ip
+        ip: req.ip,
       });
 
       return res.json({
         accessToken,
         refreshToken,
-        user: userInfo
+        user: userInfo,
       });
     });
-
   } catch (error) {
     logger.error('登录处理失败', { error: error.message, stack: error.stack });
     res.status(500).json({ error: '登录失败，请稍后重试' });
@@ -96,11 +152,11 @@ router.post('/login', loginValidation, async (req, res) => {
 });
 
 // 供应商登录（通过accessKey）
-router.post('/login/provider', [
-  body('accessKey').notEmpty().trim()
-], async (req, res) => {
+router.post('/login/provider', [body('accessKey').notEmpty().trim()], async (req, res) => {
   const validationError = handleValidationErrors(req, res);
-  if (validationError) return;
+  if (validationError) {
+    return;
+  }
 
   const { accessKey } = req.body;
 
@@ -120,7 +176,7 @@ router.post('/login/provider', [
       id: provider.id,
       name: provider.name,
       role: ROLES.PROVIDER,
-      providerId: provider.id
+      providerId: provider.id,
     };
 
     // 生成tokens
@@ -130,7 +186,7 @@ router.post('/login/provider', [
     logger.info('供应商登录成功', {
       providerId: provider.id,
       providerName: provider.name,
-      ip: req.ip
+      ip: req.ip,
     });
 
     res.json({
@@ -140,8 +196,8 @@ router.post('/login/provider', [
         id: user.id,
         name: user.name,
         role: user.role,
-        providerId: user.providerId
-      }
+        providerId: user.providerId,
+      },
     });
   });
 });
@@ -149,7 +205,9 @@ router.post('/login/provider', [
 // 刷新token
 router.post('/refresh', refreshValidation, (req, res) => {
   const validationError = handleValidationErrors(req, res);
-  if (validationError) return;
+  if (validationError) {
+    return;
+  }
 
   const { refreshToken } = req.body;
 
@@ -159,7 +217,7 @@ router.post('/refresh', refreshValidation, (req, res) => {
     logger.info('Token刷新成功', { ip: req.ip });
 
     res.json({
-      accessToken: newAccessToken
+      accessToken: newAccessToken,
     });
   } catch (error) {
     logger.warn('Token刷新失败', { error: error.message, ip: req.ip });
@@ -172,7 +230,7 @@ router.post('/logout', authenticateToken, (req, res) => {
   logger.info('用户登出', {
     userId: req.user.id,
     role: req.user.role,
-    ip: req.ip
+    ip: req.ip,
   });
 
   // 实际的token失效应该在客户端处理
@@ -180,6 +238,31 @@ router.post('/logout', authenticateToken, (req, res) => {
   res.json({ message: '登出成功' });
 });
 
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: 获取当前用户信息
+ *     tags: [认证]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 获取用户信息成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: 未授权
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 // 获取当前用户信息
 router.get('/me', authenticateToken, (req, res) => {
   res.json({
@@ -188,8 +271,8 @@ router.get('/me', authenticateToken, (req, res) => {
       email: req.user.email,
       role: req.user.role,
       name: req.user.name,
-      providerId: req.user.providerId
-    }
+      providerId: req.user.providerId,
+    },
   });
 });
 

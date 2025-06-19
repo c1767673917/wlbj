@@ -10,11 +10,21 @@ const config = {
   databaseUrl: process.env.DATABASE_URL || '',
 
   // 安全配置
-  jwtSecret: process.env.JWT_SECRET || 'default_jwt_secret_change_in_production',
+  jwtSecret:
+    process.env.JWT_SECRET ||
+    (() => {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('JWT_SECRET must be set in production environment');
+      }
+      return 'dev-only-secret-' + Date.now();
+    })(),
   adminPassword: process.env.APP_PASSWORD || '', // 管理员密码（部署时设置）
 
   // 代理配置
   trustProxy: process.env.TRUST_PROXY || 'auto', // auto, true, false, loopback, 或具体IP
+
+  // CORS配置
+  corsOrigin: process.env.CORS_ORIGIN || '',
 
   // 开发模式检查
   isDevelopment: () => config.nodeEnv === 'development',
@@ -28,8 +38,17 @@ const config = {
       errors.push('APP_PASSWORD (管理员密码) is required in production');
     }
 
-    if (config.jwtSecret === 'default_jwt_secret_change_in_production' && config.isProduction()) {
-      errors.push('JWT_SECRET must be changed in production');
+    // JWT密钥安全验证
+    if (config.jwtSecret.includes('default') || config.jwtSecret.includes('change')) {
+      errors.push('JWT_SECRET contains default values, must be changed');
+    }
+    if (config.jwtSecret.length < 32) {
+      errors.push('JWT_SECRET must be at least 32 characters long');
+    }
+
+    // CORS配置验证
+    if (config.isProduction() && (!config.corsOrigin || config.corsOrigin === '*')) {
+      errors.push('CORS_ORIGIN must be configured with specific domains in production');
     }
 
     if (errors.length > 0) {
@@ -37,7 +56,7 @@ const config = {
     }
 
     return true;
-  }
+  },
 };
 
 module.exports = config;

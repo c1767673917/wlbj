@@ -607,3 +607,211 @@ Error: listen EADDRINUSE: address already in use :::3000
     at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:151:5)
     at node:internal/main/run_main_module:33:47
+[2025-06-18 20:41:33.177 PM] error: 	数据加密失败:
+[2025-06-18 20:41:52.578 PM] error: 	数据加密失败:
+[2025-06-18 20:43:25.291 PM] error: 	数据加密失败:
+[2025-06-18 21:16:49.343 PM] error: 	未捕获的错误: 测试全局错误处理
+[2025-06-19 13:29:07.707 PM] error: 	uncaughtException: Cannot read properties of undefined (reading 'cstNode')
+TypeError: Cannot read properties of undefined (reading 'cstNode')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/specification.js:263:39
+    at Array.forEach (<anonymous>)
+    at build (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/specification.js:253:25)
+    at module.exports (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/lib.js:32:10)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/middleware/swagger.js:10:15)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+[2025-06-19 13:29:22.243 PM] error: 	uncaughtException: Cannot read properties of undefined (reading 'cstNode')
+TypeError: Cannot read properties of undefined (reading 'cstNode')
+    at /Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/specification.js:263:39
+    at Array.forEach (<anonymous>)
+    at build (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/specification.js:253:25)
+    at module.exports (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/node_modules/swagger-jsdoc/src/lib.js:32:10)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/middleware/swagger.js:10:15)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+[2025-06-19 13:42:40.926 PM] error: 	uncaughtException: Cannot find module '../../config/logger'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/monitors/CacheMonitor.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+Error: Cannot find module '../../config/logger'
+Require stack:
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/monitors/CacheMonitor.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js
+- /Users/lichuansong/Desktop/wlbj_ Release/wlbj/app.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1405:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1061:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1066:22)
+    at Function._load (node:internal/modules/cjs/loader:1215:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+    at require (node:internal/modules/helpers:135:16)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/monitors/CacheMonitor.js:5:16)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+[2025-06-19 13:48:44.701 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 13:49:11.543 PM] error: 	uncaughtException: LRU is not a constructor
+/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22
+    this.l2Cache = new LRU({
+                   ^
+
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 13:49:26.536 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 13:49:57.986 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:17:14.775 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:20:27.492 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:21:42.113 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:21:52.891 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:22:34.221 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:25:36.001 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:26:49.021 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:27:06.031 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)
+[2025-06-19 14:28:14.930 PM] error: 	uncaughtException: LRU is not a constructor
+TypeError: LRU is not a constructor
+    at new SmartCacheManager (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/SmartCacheManager.js:22:20)
+    at new CacheIntegration (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:13:25)
+    at Object.<anonymous> (/Users/lichuansong/Desktop/wlbj_ Release/wlbj/utils/cache/CacheIntegration.js:269:26)
+    at Module._compile (node:internal/modules/cjs/loader:1734:14)
+    at Object..js (node:internal/modules/cjs/loader:1899:10)
+    at Module.load (node:internal/modules/cjs/loader:1469:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1491:12)

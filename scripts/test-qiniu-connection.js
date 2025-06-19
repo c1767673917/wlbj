@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // 七牛云连接测试脚本
 
 const fs = require('fs');
@@ -50,7 +48,6 @@ function main() {
     } else {
       throw new Error(`存储空间 ${config.bucket} 不存在或无权限访问`);
     }
-
   } catch (err) {
     console.error('❌ 七牛云连接测试失败:', err.message);
     process.exit(1);

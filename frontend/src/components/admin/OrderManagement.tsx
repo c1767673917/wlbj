@@ -47,7 +47,9 @@ const OrderManagement = () => {
   const [total, setTotal] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [systemStats, setSystemStats] = useState<any>(null);
+  const [systemStats, setSystemStats] = useState<{
+    orders: { total: number; active: number; closed: number };
+  } | null>(null);
 
   useEffect(() => {
     loadOrders();

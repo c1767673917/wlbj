@@ -5,6 +5,7 @@
 ### 1. 环境配置检查
 
 #### 必需的环境变量
+
 ```bash
 # 复制环境变量模板
 cp env.example .env
@@ -14,6 +15,7 @@ nano .env
 ```
 
 **关键配置项**：
+
 - `NODE_ENV=production` - 设置生产环境
 - `JWT_SECRET` - 修改为强随机字符串（至少32位）
 - `APP_PASSWORD` - 设置管理员密码（强密码）
@@ -21,12 +23,12 @@ nano .env
 
 #### Trust Proxy 配置指南
 
-| 部署场景 | 推荐配置 | 说明 |
-|---------|---------|------|
-| 直接部署（无代理） | `TRUST_PROXY=false` | 不信任任何代理 |
-| Nginx/Apache 单层代理 | `TRUST_PROXY=1` | 信任第一层代理 |
-| 云服务负载均衡器 | `TRUST_PROXY=loopback` | 仅信任本地代理 |
-| 多层代理 | `TRUST_PROXY=127.0.0.1,::1` | 指定可信代理IP |
+| 部署场景              | 推荐配置                    | 说明           |
+| --------------------- | --------------------------- | -------------- |
+| 直接部署（无代理）    | `TRUST_PROXY=false`         | 不信任任何代理 |
+| Nginx/Apache 单层代理 | `TRUST_PROXY=1`             | 信任第一层代理 |
+| 云服务负载均衡器      | `TRUST_PROXY=loopback`      | 仅信任本地代理 |
+| 多层代理              | `TRUST_PROXY=127.0.0.1,::1` | 指定可信代理IP |
 
 ### 2. 前端构建检查
 
@@ -71,6 +73,7 @@ npm list express sqlite3 express-rate-limit helmet
 **原因**: 静态文件服务配置问题或前端构建失败
 
 **解决方案**:
+
 ```bash
 # 重新构建前端
 cd frontend && npm run build
@@ -87,6 +90,7 @@ cat dist/index.html
 **原因**: Trust proxy 配置不正确
 
 **解决方案**:
+
 ```bash
 # 检查当前配置
 echo $TRUST_PROXY
@@ -104,6 +108,7 @@ export TRUST_PROXY="127.0.0.1,::1,10.0.0.1"
 **原因**: Node.js 版本不兼容或 native 模块未正确编译
 
 **解决方案**:
+
 ```bash
 # 检查 Node.js 版本
 node --version
@@ -150,6 +155,7 @@ ufw enable
 ### 1. 启用 Gzip 压缩
 
 在 Nginx 配置中添加：
+
 ```nginx
 gzip on;
 gzip_types text/plain text/css application/json application/javascript;
@@ -167,6 +173,7 @@ location /assets/ {
 ### 3. 数据库优化
 
 SQLite 已启用以下优化：
+
 - WAL 模式（提升并发性能）
 - 2MB 缓存大小
 - 内存临时存储
@@ -176,12 +183,14 @@ SQLite 已启用以下优化：
 ### 1. 日志配置
 
 日志文件位置：
+
 - 应用日志: `logs/app.log`
 - 错误日志: `logs/error.log`
 
 ### 2. 健康检查
 
 创建健康检查端点：
+
 ```bash
 curl http://localhost:3000/api/health
 ```
@@ -189,6 +198,7 @@ curl http://localhost:3000/api/health
 ### 3. 性能监控
 
 监控关键指标：
+
 - 响应时间
 - 数据库查询性能
 - 内存使用
@@ -232,6 +242,7 @@ NODE_ENV=production node app.js
 ## 🆘 故障排除
 
 ### 查看日志
+
 ```bash
 # 查看应用日志
 tail -f logs/app.log
@@ -241,6 +252,7 @@ tail -f logs/error.log
 ```
 
 ### 常用调试命令
+
 ```bash
 # 检查端口占用
 netstat -tlnp | grep 3000

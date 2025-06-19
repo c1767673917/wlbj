@@ -114,7 +114,7 @@ const AdminPortal = () => {
   const StatCard = ({ title, value, icon: Icon, color }: {
     title: string;
     value: number;
-    icon: any;
+    icon: React.ComponentType<{ size?: number; className?: string }>;
     color: string;
   }) => (
     <Card className="p-6">

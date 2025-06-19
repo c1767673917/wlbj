@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+frontend/dist/
+frontend/node_modules/
+logs/
+data/
+backup/
+uploads/
+*.log
+*.db
+*.db-*
+package-lock.json

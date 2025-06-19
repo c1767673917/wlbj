@@ -5,14 +5,14 @@ const { v4: uuidv4 } = require('uuid');
 const {
   notifyAllProvidersNewOrder,
   generateUserQuoteNotificationMessage,
-  sendWechatNotification
+  sendWechatNotification,
 } = require('../utils/wechatNotification');
 const {
   ROLES,
   PERMISSIONS,
   authenticateToken,
   requirePermission,
-  requireRole
+  requireRole,
 } = require('../utils/auth');
 const { CacheManager } = require('../utils/cache');
 
@@ -52,8 +52,16 @@ function generateOrderId() {
           // 立即插入一个占位记录来防止并发冲突
           db.run(
             'INSERT INTO orders (id, warehouse, goods, deliveryAddress, createdAt, userId, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [orderId, 'PLACEHOLDER', 'PLACEHOLDER', 'PLACEHOLDER', new Date().toISOString(), 'PLACEHOLDER', 'placeholder'],
-            function(insertErr) {
+            [
+              orderId,
+              'PLACEHOLDER',
+              'PLACEHOLDER',
+              'PLACEHOLDER',
+              new Date().toISOString(),
+              'PLACEHOLDER',
+              'placeholder',
+            ],
+            function (insertErr) {
               if (insertErr) {
                 db.run('ROLLBACK');
                 // 如果插入失败（可能是并发冲突），重试
@@ -77,34 +85,38 @@ function generateOrderId() {
 async function sendWechatNotifications(order) {
   try {
     // 获取所有配置了企业微信webhook的物流公司
-    db.all('SELECT name, wechat_webhook_url FROM providers WHERE wechat_webhook_url IS NOT NULL AND wechat_webhook_url != ""', [], async (err, providers) => {
-      if (err) {
-        console.error('获取物流公司列表失败:', err);
-        return;
-      }
-
-      if (providers.length === 0) {
-        console.log('没有配置企业微信webhook的物流公司，跳过通知发送');
-        return;
-      }
-
-      console.log(`开始向 ${providers.length} 个物流公司发送订单通知...`);
-
-      // 发送通知
-      const results = await notifyAllProvidersNewOrder(order, providers);
-
-      // 记录发送结果
-      results.forEach(result => {
-        if (result.success) {
-          console.log(`✓ 成功向 ${result.providerName} 发送订单通知`);
-        } else {
-          console.error(`✗ 向 ${result.providerName} 发送订单通知失败: ${result.message}`);
+    db.all(
+      'SELECT name, wechat_webhook_url FROM providers WHERE wechat_webhook_url IS NOT NULL AND wechat_webhook_url != ""',
+      [],
+      async (err, providers) => {
+        if (err) {
+          console.error('获取物流公司列表失败:', err);
+          return;
         }
-      });
 
-      const successCount = results.filter(r => r.success).length;
-      console.log(`订单通知发送完成: ${successCount}/${results.length} 成功`);
-    });
+        if (providers.length === 0) {
+          console.log('没有配置企业微信webhook的物流公司，跳过通知发送');
+          return;
+        }
+
+        console.log(`开始向 ${providers.length} 个物流公司发送订单通知...`);
+
+        // 发送通知
+        const results = await notifyAllProvidersNewOrder(order, providers);
+
+        // 记录发送结果
+        results.forEach(result => {
+          if (result.success) {
+            console.log(`✓ 成功向 ${result.providerName} 发送订单通知`);
+          } else {
+            console.error(`✗ 向 ${result.providerName} 发送订单通知失败: ${result.message}`);
+          }
+        });
+
+        const successCount = results.filter(r => r.success).length;
+        console.log(`订单通知发送完成: ${successCount}/${results.length} 成功`);
+      }
+    );
   } catch (error) {
     console.error('发送企业微信通知时出错:', error);
   }
@@ -114,54 +126,55 @@ async function sendWechatNotifications(order) {
 async function sendUserQuoteNotification(order, quote) {
   try {
     // 获取订单所属用户的企业微信配置
-    db.get('SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?', [order.userId], async (err, user) => {
-      if (err) {
-        console.error('获取用户信息失败:', err);
-        return;
+    db.get(
+      'SELECT email, name, wechat_webhook_url, wechat_notification_enabled FROM users WHERE id = ?',
+      [order.userId],
+      async (err, user) => {
+        if (err) {
+          console.error('获取用户信息失败:', err);
+          return;
+        }
+
+        if (!user) {
+          console.log('未找到订单所属用户，跳过用户通知');
+          return;
+        }
+
+        if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
+          console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
+          return;
+        }
+
+        console.log(`开始向用户 ${user.email} 发送报价通知...`);
+
+        // 生成用户报价通知消息
+        const message = generateUserQuoteNotificationMessage(order, quote, user);
+
+        // 发送通知
+        const result = await sendWechatNotification(user.wechat_webhook_url, message);
+
+        if (result.success) {
+          console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
+        } else {
+          console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
+        }
       }
-
-      if (!user) {
-        console.log('未找到订单所属用户，跳过用户通知');
-        return;
-      }
-
-      if (!user.wechat_notification_enabled || !user.wechat_webhook_url) {
-        console.log(`用户 ${user.email} 未启用企业微信通知或未配置webhook，跳过通知发送`);
-        return;
-      }
-
-      console.log(`开始向用户 ${user.email} 发送报价通知...`);
-
-      // 生成用户报价通知消息
-      const message = generateUserQuoteNotificationMessage(order, quote, user);
-
-      // 发送通知
-      const result = await sendWechatNotification(user.wechat_webhook_url, message);
-
-      if (result.success) {
-        console.log(`✓ 成功向用户 ${user.email} 发送报价通知`);
-      } else {
-        console.error(`✗ 向用户 ${user.email} 发送报价通知失败: ${result.message}`);
-      }
-    });
+    );
   } catch (error) {
     console.error('发送用户报价通知时出错:', error);
   }
 }
 
 // GET /api/orders/active - 获取活跃订单（用户端专用，支持用户级别数据隔离）
-router.get('/active',
-  authenticateToken,
-  requirePermission(PERMISSIONS.VIEW_ORDER),
-  (req, res) => {
+router.get('/active', authenticateToken, requirePermission(PERMISSIONS.VIEW_ORDER), (req, res) => {
   const search = req.query.search;
   const page = parseInt(req.query.page) || 1;
   const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
   const offset = (page - 1) * pageSize;
 
-  let params = ['active'];
-  let countParams = ['active'];
-  let whereClauses = ['status = ?'];
+  const params = ['active'];
+  const countParams = ['active'];
+  const whereClauses = ['status = ?'];
 
   // 数据隔离：普通用户只能看到自己的订单，管理员可以看到所有订单
   if (req.user.role !== ROLES.ADMIN) {
@@ -179,15 +192,17 @@ router.get('/active',
   }
 
   const whereString = ' WHERE ' + whereClauses.join(' AND ');
-  let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
-  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders' + whereString;
+  const countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+  let dataQuery =
+    'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status FROM orders' +
+    whereString;
 
   dataQuery += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
   params.push(pageSize, offset);
 
   db.get(countQuery, countParams, (err, countRow) => {
     if (err) {
-      console.error("Count query error (active orders):", err);
+      console.error('Count query error (active orders):', err);
       return res.status(500).json({ error: '获取活跃订单总数失败' });
     }
     const totalItems = countRow.total;
@@ -195,7 +210,7 @@ router.get('/active',
 
     db.all(dataQuery, params, (err, items) => {
       if (err) {
-        console.error("Data query error (active orders):", err);
+        console.error('Data query error (active orders):', err);
         return res.status(500).json({ error: '获取活跃订单失败' });
       }
       res.json({
@@ -204,25 +219,22 @@ router.get('/active',
         totalPages,
         currentPage: page,
         pageSize,
-        hasSearch: !!search
+        hasSearch: !!search,
       });
     });
   });
 });
 
 // GET /api/orders/closed - 获取历史订单（用户端专用，支持用户级别数据隔离）
-router.get('/closed',
-  authenticateToken,
-  requirePermission(PERMISSIONS.VIEW_ORDER),
-  (req, res) => {
+router.get('/closed', authenticateToken, requirePermission(PERMISSIONS.VIEW_ORDER), (req, res) => {
   const search = req.query.search;
   const page = parseInt(req.query.page) || 1;
   const pageSize = Math.min(parseInt(req.query.pageSize) || 50, 1000);
   const offset = (page - 1) * pageSize;
 
-  let params = ['closed'];
-  let countParams = ['closed'];
-  let whereClauses = ['status = ?'];
+  const params = ['closed'];
+  const countParams = ['closed'];
+  const whereClauses = ['status = ?'];
 
   // 数据隔离：普通用户只能看到自己的订单，管理员可以看到所有订单
   if (req.user.role !== ROLES.ADMIN) {
@@ -240,16 +252,18 @@ router.get('/closed',
   }
 
   const whereString = ' WHERE ' + whereClauses.join(' AND ');
-  let countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
+  const countQuery = 'SELECT COUNT(*) as total FROM orders' + whereString;
   // 历史订单需要包含选择的物流商信息
-  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders' + whereString;
+  let dataQuery =
+    'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders' +
+    whereString;
 
   dataQuery += ' ORDER BY selectedAt DESC, createdAt DESC LIMIT ? OFFSET ?';
   params.push(pageSize, offset);
 
   db.get(countQuery, countParams, (err, countRow) => {
     if (err) {
-      console.error("Count query error (closed orders):", err);
+      console.error('Count query error (closed orders):', err);
       return res.status(500).json({ error: '获取历史订单总数失败' });
     }
     const totalItems = countRow.total;
@@ -257,7 +271,7 @@ router.get('/closed',
 
     db.all(dataQuery, params, (err, items) => {
       if (err) {
-        console.error("Data query error (closed orders):", err);
+        console.error('Data query error (closed orders):', err);
         return res.status(500).json({ error: '获取历史订单失败' });
       }
       res.json({
@@ -266,26 +280,23 @@ router.get('/closed',
         totalPages,
         currentPage: page,
         pageSize,
-        hasSearch: !!search
+        hasSearch: !!search,
       });
     });
   });
 });
 
 // GET /api/orders - 获取所有订单（支持用户级别数据隔离）
-router.get('/',
-  authenticateToken,
-  requirePermission(PERMISSIONS.VIEW_ORDER),
-  (req, res) => {
+router.get('/', authenticateToken, requirePermission(PERMISSIONS.VIEW_ORDER), (req, res) => {
   const status = req.query.status;
   const search = req.query.search; // 新增搜索参数
   const page = parseInt(req.query.page) || 1;
   const pageSize = Math.min(parseInt(req.query.pageSize) || 10, 50); // 限制最大页面大小
   const offset = (page - 1) * pageSize;
 
-  let params = [];
-  let countParams = [];
-  let whereClauses = [];
+  const params = [];
+  const countParams = [];
+  const whereClauses = [];
 
   // 数据隔离：普通用户只能看到自己的订单，管理员可以看到所有订单
   if (req.user.role !== ROLES.ADMIN) {
@@ -311,7 +322,8 @@ router.get('/',
 
   let countQuery = 'SELECT COUNT(*) as total FROM orders';
   // 包含选择物流商相关字段，用于订单历史显示
-  let dataQuery = 'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders';
+  let dataQuery =
+    'SELECT id, warehouse, goods, deliveryAddress, createdAt, updatedAt, status, selectedProvider, selectedPrice, selectedAt FROM orders';
 
   if (whereClauses.length > 0) {
     const whereString = ' WHERE ' + whereClauses.join(' AND ');
@@ -325,7 +337,7 @@ router.get('/',
 
   db.get(countQuery, countParams, (err, countRow) => {
     if (err) {
-      console.error("Count query error:", err);
+      console.error('Count query error:', err);
       return res.status(500).json({ error: '获取订单总数失败' });
     }
     const totalItems = countRow.total;
@@ -333,7 +345,7 @@ router.get('/',
 
     db.all(dataQuery, params, (err, items) => {
       if (err) {
-        console.error("Data query error:", err);
+        console.error('Data query error:', err);
         return res.status(500).json({ error: '获取订单失败' });
       }
       res.json({
@@ -342,74 +354,80 @@ router.get('/',
         totalPages,
         currentPage: page,
         pageSize,
-        hasSearch: !!search
+        hasSearch: !!search,
       });
     });
   });
 });
 
 // POST /api/orders - 提交新订单
-router.post('/',
+router.post(
+  '/',
   authenticateToken,
   requirePermission(PERMISSIONS.CREATE_ORDER),
   async (req, res) => {
-  try {
-    // 生成新的订单号格式
-    const orderId = await generateOrderId();
+    try {
+      // 生成新的订单号格式
+      const orderId = await generateOrderId();
 
-    const newOrder = {
-      id: orderId,
-      warehouse: req.body.warehouse,
-      goods: req.body.goods,
-      deliveryAddress: req.body.deliveryAddress,
-      createdAt: new Date().toISOString(),
-      userId: req.user.id // 添加用户ID
-    };
+      const newOrder = {
+        id: orderId,
+        warehouse: req.body.warehouse,
+        goods: req.body.goods,
+        deliveryAddress: req.body.deliveryAddress,
+        createdAt: new Date().toISOString(),
+        userId: req.user.id, // 添加用户ID
+      };
 
-    // 更新占位记录为实际订单数据
-    db.run(
-      'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, createdAt = ?, userId = ?, status = ? WHERE id = ?',
-      [newOrder.warehouse, newOrder.goods, newOrder.deliveryAddress, newOrder.createdAt, newOrder.userId, 'active', newOrder.id],
-      function(err) {
-        if (err) {
-          console.error(err);
-          // 如果更新失败，删除占位记录
-          db.run('DELETE FROM orders WHERE id = ?', [newOrder.id]);
-          return res.status(500).json({ error: '创建订单失败' });
-        }
-
-        // 清除相关缓存
-        CacheManager.invalidateOrderRelatedCache(newOrder.userId);
-
-        // 订单创建成功后，发送企业微信通知
-        sendWechatNotifications(newOrder);
-
-        res.status(201).json({
-          order: {
-            id: newOrder.id,
-            warehouse: newOrder.warehouse,
-            goods: newOrder.goods,
-            deliveryAddress: newOrder.deliveryAddress,
-            createdAt: newOrder.createdAt,
-            status: 'active'
+      // 更新占位记录为实际订单数据
+      db.run(
+        'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, createdAt = ?, userId = ?, status = ? WHERE id = ?',
+        [
+          newOrder.warehouse,
+          newOrder.goods,
+          newOrder.deliveryAddress,
+          newOrder.createdAt,
+          newOrder.userId,
+          'active',
+          newOrder.id,
+        ],
+        function (err) {
+          if (err) {
+            console.error(err);
+            // 如果更新失败，删除占位记录
+            db.run('DELETE FROM orders WHERE id = ?', [newOrder.id]);
+            return res.status(500).json({ error: '创建订单失败' });
           }
-        });
-      }
-    );
-  } catch (error) {
-    console.error('生成订单号失败:', error);
-    res.status(500).json({ error: '创建订单失败' });
-  }
-});
 
+          // 清除相关缓存
+          CacheManager.invalidateOrderRelatedCache(newOrder.userId);
+
+          // 订单创建成功后，发送企业微信通知
+          sendWechatNotifications(newOrder);
+
+          res.status(201).json({
+            order: {
+              id: newOrder.id,
+              warehouse: newOrder.warehouse,
+              goods: newOrder.goods,
+              deliveryAddress: newOrder.deliveryAddress,
+              createdAt: newOrder.createdAt,
+              status: 'active',
+            },
+          });
+        }
+      );
+    } catch (error) {
+      console.error('生成订单号失败:', error);
+      res.status(500).json({ error: '创建订单失败' });
+    }
+  }
+);
 
 // GET /api/orders/:id - 获取单个订单（支持用户级别数据隔离）
-router.get('/:id',
-  authenticateToken,
-  requirePermission(PERMISSIONS.VIEW_ORDER),
-  (req, res) => {
+router.get('/:id', authenticateToken, requirePermission(PERMISSIONS.VIEW_ORDER), (req, res) => {
   let query = 'SELECT * FROM orders WHERE id = ?';
-  let params = [req.params.id];
+  const params = [req.params.id];
 
   // 数据隔离：普通用户只能看到自己的订单
   if (req.user.role !== ROLES.ADMIN) {
@@ -447,10 +465,7 @@ router.get('/:id/quotes', (req, res) => {
 });
 
 // PUT /api/orders/:id - 更新订单（支持用户级别数据隔离）
-router.put('/:id',
-  authenticateToken,
-  requirePermission(PERMISSIONS.UPDATE_ORDER),
-  (req, res) => {
+router.put('/:id', authenticateToken, requirePermission(PERMISSIONS.UPDATE_ORDER), (req, res) => {
   try {
     const orderId = req.params.id;
     const { warehouse, goods, deliveryAddress } = req.body;
@@ -462,8 +477,9 @@ router.put('/:id',
     const updatedAt = new Date().toISOString();
 
     // 构建更新查询，包含用户权限检查
-    let updateQuery = 'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, updatedAt = ? WHERE id = ?';
-    let updateParams = [warehouse, goods, deliveryAddress, updatedAt, orderId];
+    let updateQuery =
+      'UPDATE orders SET warehouse = ?, goods = ?, deliveryAddress = ?, updatedAt = ? WHERE id = ?';
+    const updateParams = [warehouse, goods, deliveryAddress, updatedAt, orderId];
 
     // 数据隔离：普通用户只能更新自己的订单
     if (req.user.role !== ROLES.ADMIN) {
@@ -471,7 +487,7 @@ router.put('/:id',
       updateParams.push(req.user.id);
     }
 
-    db.run(updateQuery, updateParams, function(err) {
+    db.run(updateQuery, updateParams, function (err) {
       if (err) {
         console.error(err);
         return res.status(500).json({ error: '更新订单失败' });
@@ -496,117 +512,130 @@ router.put('/:id',
 });
 
 // PUT /api/orders/:id/close - 关闭订单（支持用户级别数据隔离）
-router.put('/:id/close',
+router.put(
+  '/:id/close',
   authenticateToken,
   requirePermission(PERMISSIONS.CLOSE_ORDER),
   (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const updatedAt = new Date().toISOString();
+    try {
+      const orderId = req.params.id;
+      const updatedAt = new Date().toISOString();
 
-    // 构建更新查询，包含用户权限检查
-    let updateQuery = 'UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?';
-    let updateParams = ['closed', updatedAt, orderId];
+      // 构建更新查询，包含用户权限检查
+      let updateQuery = 'UPDATE orders SET status = ?, updatedAt = ? WHERE id = ?';
+      const updateParams = ['closed', updatedAt, orderId];
 
-    // 数据隔离：普通用户只能关闭自己的订单
-    if (req.user.role !== ROLES.ADMIN) {
-      updateQuery += ' AND userId = ?';
-      updateParams.push(req.user.id);
-    }
-
-    db.run(updateQuery, updateParams, function(err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: '关闭订单失败' });
+      // 数据隔离：普通用户只能关闭自己的订单
+      if (req.user.role !== ROLES.ADMIN) {
+        updateQuery += ' AND userId = ?';
+        updateParams.push(req.user.id);
       }
 
-      if (this.changes === 0) {
-        return res.status(404).json({ error: '订单不存在或无权限操作' });
-      }
-
-      db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+      db.run(updateQuery, updateParams, function (err) {
         if (err) {
           console.error(err);
-          return res.status(500).json({ error: '获取更新后的订单失败' });
+          return res.status(500).json({ error: '关闭订单失败' });
         }
-        res.json(row);
+
+        if (this.changes === 0) {
+          return res.status(404).json({ error: '订单不存在或无权限操作' });
+        }
+
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: '获取更新后的订单失败' });
+          }
+          res.json(row);
+        });
       });
-    });
-  } catch (error) {
-    console.error('关闭订单失败:', error);
-    res.status(500).json({ error: '关闭订单失败' });
+    } catch (error) {
+      console.error('关闭订单失败:', error);
+      res.status(500).json({ error: '关闭订单失败' });
+    }
   }
-});
+);
 
 // PUT /api/orders/:id/select-provider - 选择物流商（支持用户级别数据隔离）
-router.put('/:id/select-provider',
+router.put(
+  '/:id/select-provider',
   authenticateToken,
   requirePermission(PERMISSIONS.SELECT_PROVIDER),
   (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const { provider, price } = req.body;
+    try {
+      const orderId = req.params.id;
+      const { provider, price } = req.body;
 
-    if (!provider || !price) {
-      return res.status(400).json({ error: '物流商名称和报价金额都是必填的' });
-    }
+      if (!provider || !price) {
+        return res.status(400).json({ error: '物流商名称和报价金额都是必填的' });
+      }
 
-    const updatedAt = new Date().toISOString();
-    const selectedAt = new Date().toISOString();
+      const updatedAt = new Date().toISOString();
+      const selectedAt = new Date().toISOString();
 
-    // 首先验证该报价是否存在
-    db.get(
-      'SELECT * FROM quotes WHERE orderId = ? AND provider = ? AND price = ?',
-      [orderId, provider, parseFloat(price)],
-      (err, quote) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: '验证报价失败' });
-        }
-
-        if (!quote) {
-          return res.status(400).json({ error: '选择的报价不存在或已失效' });
-        }
-
-        // 构建更新查询，包含用户权限检查
-        let updateQuery = 'UPDATE orders SET status = ?, selectedProvider = ?, selectedPrice = ?, selectedAt = ?, updatedAt = ? WHERE id = ? AND status = ?';
-        let updateParams = ['closed', provider, parseFloat(price), selectedAt, updatedAt, orderId, 'active'];
-
-        // 数据隔离：普通用户只能操作自己的订单
-        if (req.user.role !== ROLES.ADMIN) {
-          updateQuery += ' AND userId = ?';
-          updateParams.push(req.user.id);
-        }
-
-        db.run(updateQuery, updateParams, function(err) {
+      // 首先验证该报价是否存在
+      db.get(
+        'SELECT * FROM quotes WHERE orderId = ? AND provider = ? AND price = ?',
+        [orderId, provider, parseFloat(price)],
+        (err, quote) => {
           if (err) {
             console.error(err);
-            return res.status(500).json({ error: '选择物流商失败' });
+            return res.status(500).json({ error: '验证报价失败' });
           }
 
-          if (this.changes === 0) {
-            return res.status(404).json({ error: '订单不存在、已关闭或无权限操作' });
+          if (!quote) {
+            return res.status(400).json({ error: '选择的报价不存在或已失效' });
           }
 
-          // 返回更新后的订单信息
-          db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+          // 构建更新查询，包含用户权限检查
+          let updateQuery =
+            'UPDATE orders SET status = ?, selectedProvider = ?, selectedPrice = ?, selectedAt = ?, updatedAt = ? WHERE id = ? AND status = ?';
+          const updateParams = [
+            'closed',
+            provider,
+            parseFloat(price),
+            selectedAt,
+            updatedAt,
+            orderId,
+            'active',
+          ];
+
+          // 数据隔离：普通用户只能操作自己的订单
+          if (req.user.role !== ROLES.ADMIN) {
+            updateQuery += ' AND userId = ?';
+            updateParams.push(req.user.id);
+          }
+
+          db.run(updateQuery, updateParams, function (err) {
             if (err) {
               console.error(err);
-              return res.status(500).json({ error: '获取更新后的订单失败' });
+              return res.status(500).json({ error: '选择物流商失败' });
             }
-            res.json({
-              ...row,
-              message: '成功选择物流商，订单已移至历史记录'
+
+            if (this.changes === 0) {
+              return res.status(404).json({ error: '订单不存在、已关闭或无权限操作' });
+            }
+
+            // 返回更新后的订单信息
+            db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+              if (err) {
+                console.error(err);
+                return res.status(500).json({ error: '获取更新后的订单失败' });
+              }
+              res.json({
+                ...row,
+                message: '成功选择物流商，订单已移至历史记录',
+              });
             });
           });
-        });
-      }
-    );
-  } catch (error) {
-    console.error('选择物流商失败:', error);
-    res.status(500).json({ error: '选择物流商失败' });
+        }
+      );
+    } catch (error) {
+      console.error('选择物流商失败:', error);
+      res.status(500).json({ error: '选择物流商失败' });
+    }
   }
-});
+);
 
 // POST /api/orders/:id/quotes - 为订单添加报价 (This was originally in app.js, seems more like a quote action but tied to an order)
 // For now, keeping it here as it's under /api/orders/:id path.
@@ -626,13 +655,20 @@ router.post('/:id/quotes', (req, res) => {
       provider,
       price: parseFloat(price),
       estimatedDelivery,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     db.run(
       'INSERT INTO quotes (id, orderId, provider, price, estimatedDelivery, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
-      [quote.id, quote.orderId, quote.provider, quote.price, quote.estimatedDelivery, quote.createdAt],
-      function(err) {
+      [
+        quote.id,
+        quote.orderId,
+        quote.provider,
+        quote.price,
+        quote.estimatedDelivery,
+        quote.createdAt,
+      ],
+      function (err) {
         if (err) {
           console.error(err);
           return res.status(500).json({ error: '创建报价失败' });
@@ -658,143 +694,55 @@ router.post('/:id/quotes', (req, res) => {
 });
 
 // PUT /api/orders/:id/reopen - 重新开启历史订单（支持用户级别数据隔离）
-router.put('/:id/reopen',
+router.put(
+  '/:id/reopen',
   authenticateToken,
   requirePermission(PERMISSIONS.UPDATE_ORDER),
   (req, res) => {
-  try {
-    const orderId = req.params.id;
-    const updatedAt = new Date().toISOString();
+    try {
+      const orderId = req.params.id;
+      const updatedAt = new Date().toISOString();
 
-    // 首先检查订单是否存在且为关闭状态
-    let checkQuery = 'SELECT * FROM orders WHERE id = ? AND status = ?';
-    let checkParams = [orderId, 'closed'];
+      // 首先检查订单是否存在且为关闭状态
+      let checkQuery = 'SELECT * FROM orders WHERE id = ? AND status = ?';
+      const checkParams = [orderId, 'closed'];
 
-    // 数据隔离：普通用户只能操作自己的订单
-    if (req.user.role !== ROLES.ADMIN) {
-      checkQuery += ' AND userId = ?';
-      checkParams.push(req.user.id);
-    }
-
-    db.get(checkQuery, checkParams, (err, order) => {
-      if (err) {
-        console.error('检查订单状态失败:', err);
-        return res.status(500).json({ error: '检查订单状态失败' });
+      // 数据隔离：普通用户只能操作自己的订单
+      if (req.user.role !== ROLES.ADMIN) {
+        checkQuery += ' AND userId = ?';
+        checkParams.push(req.user.id);
       }
 
-      if (!order) {
-        return res.status(404).json({ error: '订单不存在、不是历史订单或无权限操作' });
-      }
-
-      // 开始数据库事务
-      db.serialize(() => {
-        db.run('BEGIN TRANSACTION');
-
-        // 更新订单状态为active，清空选择的物流商信息
-        let updateQuery = 'UPDATE orders SET status = ?, selectedProvider = NULL, selectedPrice = NULL, selectedAt = NULL, updatedAt = ? WHERE id = ?';
-        let updateParams = ['active', updatedAt, orderId];
-
-        // 数据隔离：普通用户只能操作自己的订单
-        if (req.user.role !== ROLES.ADMIN) {
-          updateQuery += ' AND userId = ?';
-          updateParams.push(req.user.id);
+      db.get(checkQuery, checkParams, (err, order) => {
+        if (err) {
+          console.error('检查订单状态失败:', err);
+          return res.status(500).json({ error: '检查订单状态失败' });
         }
 
-        db.run(updateQuery, updateParams, function(updateErr) {
-          if (updateErr) {
-            console.error('重新开启订单失败:', updateErr);
-            db.run('ROLLBACK');
-            return res.status(500).json({ error: '重新开启订单失败' });
-          }
+        if (!order) {
+          return res.status(404).json({ error: '订单不存在、不是历史订单或无权限操作' });
+        }
 
-          if (this.changes === 0) {
-            db.run('ROLLBACK');
-            return res.status(404).json({ error: '订单不存在或无权限操作' });
-          }
+        // 开始数据库事务
+        db.serialize(() => {
+          db.run('BEGIN TRANSACTION');
 
-          // 提交事务
-          db.run('COMMIT', (commitErr) => {
-            if (commitErr) {
-              console.error('提交事务失败:', commitErr);
-              return res.status(500).json({ error: '重新开启订单失败' });
-            }
+          // 更新订单状态为active，清空选择的物流商信息
+          let updateQuery =
+            'UPDATE orders SET status = ?, selectedProvider = NULL, selectedPrice = NULL, selectedAt = NULL, updatedAt = ? WHERE id = ?';
+          const updateParams = ['active', updatedAt, orderId];
 
-            // 返回更新后的订单信息
-            db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
-              if (err) {
-                console.error('获取更新后的订单失败:', err);
-                return res.status(500).json({ error: '获取更新后的订单失败' });
-              }
-              res.json({
-                ...row,
-                message: '订单已成功重新开启，移至我的订单列表'
-              });
-            });
-          });
-        });
-      });
-    });
-  } catch (error) {
-    console.error('重新开启订单失败:', error);
-    res.status(500).json({ error: '重新开启订单失败' });
-  }
-});
-
-// DELETE /api/orders/:id - 删除订单（支持用户级别数据隔离）
-router.delete('/:id',
-  authenticateToken,
-  requirePermission(PERMISSIONS.DELETE_ORDER),
-  (req, res) => {
-  try {
-    const orderId = req.params.id;
-
-    // 首先检查订单是否存在
-    let checkQuery = 'SELECT * FROM orders WHERE id = ?';
-    let checkParams = [orderId];
-
-    // 数据隔离：普通用户只能操作自己的订单
-    if (req.user.role !== ROLES.ADMIN) {
-      checkQuery += ' AND userId = ?';
-      checkParams.push(req.user.id);
-    }
-
-    db.get(checkQuery, checkParams, (err, order) => {
-      if (err) {
-        console.error('检查订单是否存在失败:', err);
-        return res.status(500).json({ error: '检查订单失败' });
-      }
-
-      if (!order) {
-        return res.status(404).json({ error: '订单不存在或无权限操作' });
-      }
-
-      // 开始数据库事务
-      db.serialize(() => {
-        db.run('BEGIN TRANSACTION');
-
-        // 首先删除相关的报价记录
-        db.run('DELETE FROM quotes WHERE orderId = ?', [orderId], function(quotesErr) {
-          if (quotesErr) {
-            console.error('删除订单报价失败:', quotesErr);
-            db.run('ROLLBACK');
-            return res.status(500).json({ error: '删除订单失败' });
-          }
-
-          // 然后删除订单记录
-          let deleteQuery = 'DELETE FROM orders WHERE id = ?';
-          let deleteParams = [orderId];
-
-          // 数据隔离：普通用户只能删除自己的订单
+          // 数据隔离：普通用户只能操作自己的订单
           if (req.user.role !== ROLES.ADMIN) {
-            deleteQuery += ' AND userId = ?';
-            deleteParams.push(req.user.id);
+            updateQuery += ' AND userId = ?';
+            updateParams.push(req.user.id);
           }
 
-          db.run(deleteQuery, deleteParams, function(orderErr) {
-            if (orderErr) {
-              console.error('删除订单失败:', orderErr);
+          db.run(updateQuery, updateParams, function (updateErr) {
+            if (updateErr) {
+              console.error('重新开启订单失败:', updateErr);
               db.run('ROLLBACK');
-              return res.status(500).json({ error: '删除订单失败' });
+              return res.status(500).json({ error: '重新开启订单失败' });
             }
 
             if (this.changes === 0) {
@@ -803,25 +751,118 @@ router.delete('/:id',
             }
 
             // 提交事务
-            db.run('COMMIT', (commitErr) => {
+            db.run('COMMIT', commitErr => {
               if (commitErr) {
                 console.error('提交事务失败:', commitErr);
-                return res.status(500).json({ error: '删除订单失败' });
+                return res.status(500).json({ error: '重新开启订单失败' });
               }
 
-              res.json({
-                message: '订单已成功删除',
-                deletedOrderId: orderId
+              // 返回更新后的订单信息
+              db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, row) => {
+                if (err) {
+                  console.error('获取更新后的订单失败:', err);
+                  return res.status(500).json({ error: '获取更新后的订单失败' });
+                }
+                res.json({
+                  ...row,
+                  message: '订单已成功重新开启，移至我的订单列表',
+                });
               });
             });
           });
         });
       });
-    });
-  } catch (error) {
-    console.error('删除订单失败:', error);
-    res.status(500).json({ error: '删除订单失败' });
+    } catch (error) {
+      console.error('重新开启订单失败:', error);
+      res.status(500).json({ error: '重新开启订单失败' });
+    }
   }
-});
+);
+
+// DELETE /api/orders/:id - 删除订单（支持用户级别数据隔离）
+router.delete(
+  '/:id',
+  authenticateToken,
+  requirePermission(PERMISSIONS.DELETE_ORDER),
+  (req, res) => {
+    try {
+      const orderId = req.params.id;
+
+      // 首先检查订单是否存在
+      let checkQuery = 'SELECT * FROM orders WHERE id = ?';
+      const checkParams = [orderId];
+
+      // 数据隔离：普通用户只能操作自己的订单
+      if (req.user.role !== ROLES.ADMIN) {
+        checkQuery += ' AND userId = ?';
+        checkParams.push(req.user.id);
+      }
+
+      db.get(checkQuery, checkParams, (err, order) => {
+        if (err) {
+          console.error('检查订单是否存在失败:', err);
+          return res.status(500).json({ error: '检查订单失败' });
+        }
+
+        if (!order) {
+          return res.status(404).json({ error: '订单不存在或无权限操作' });
+        }
+
+        // 开始数据库事务
+        db.serialize(() => {
+          db.run('BEGIN TRANSACTION');
+
+          // 首先删除相关的报价记录
+          db.run('DELETE FROM quotes WHERE orderId = ?', [orderId], function (quotesErr) {
+            if (quotesErr) {
+              console.error('删除订单报价失败:', quotesErr);
+              db.run('ROLLBACK');
+              return res.status(500).json({ error: '删除订单失败' });
+            }
+
+            // 然后删除订单记录
+            let deleteQuery = 'DELETE FROM orders WHERE id = ?';
+            const deleteParams = [orderId];
+
+            // 数据隔离：普通用户只能删除自己的订单
+            if (req.user.role !== ROLES.ADMIN) {
+              deleteQuery += ' AND userId = ?';
+              deleteParams.push(req.user.id);
+            }
+
+            db.run(deleteQuery, deleteParams, function (orderErr) {
+              if (orderErr) {
+                console.error('删除订单失败:', orderErr);
+                db.run('ROLLBACK');
+                return res.status(500).json({ error: '删除订单失败' });
+              }
+
+              if (this.changes === 0) {
+                db.run('ROLLBACK');
+                return res.status(404).json({ error: '订单不存在或无权限操作' });
+              }
+
+              // 提交事务
+              db.run('COMMIT', commitErr => {
+                if (commitErr) {
+                  console.error('提交事务失败:', commitErr);
+                  return res.status(500).json({ error: '删除订单失败' });
+                }
+
+                res.json({
+                  message: '订单已成功删除',
+                  deletedOrderId: orderId,
+                });
+              });
+            });
+          });
+        });
+      });
+    } catch (error) {
+      console.error('删除订单失败:', error);
+      res.status(500).json({ error: '删除订单失败' });
+    }
+  }
+);
 
 module.exports = router;

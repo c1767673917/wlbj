@@ -6,7 +6,8 @@ class SimpleCache {
   }
 
   // 设置缓存
-  set(key, value, ttl = 300) { // 默认5分钟
+  set(key, value, ttl = 300) {
+    // 默认5分钟
     // 清除旧的定时器
     if (this.timers.has(key)) {
       clearTimeout(this.timers.get(key));
@@ -16,7 +17,7 @@ class SimpleCache {
     this.cache.set(key, {
       value,
       timestamp: Date.now(),
-      ttl: ttl * 1000 // 转换为毫秒
+      ttl: ttl * 1000, // 转换为毫秒
     });
 
     // 设置过期定时器
@@ -72,7 +73,7 @@ class SimpleCache {
   stats() {
     return {
       size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      keys: Array.from(this.cache.keys()),
     };
   }
 }
@@ -209,5 +210,5 @@ class CacheManager {
 
 module.exports = {
   CacheManager,
-  SimpleCache
+  SimpleCache,
 };

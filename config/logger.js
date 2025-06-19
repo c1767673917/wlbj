@@ -17,14 +17,14 @@ const logger = winston.createLogger({
       format: 'YYYY-MM-DD HH:mm:ss.SSS A',
     }),
     align(),
-    printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`)
   ),
   transports: [
     // 控制台输出
     new winston.transports.Console({
       format: combine(
         colorize({ all: true }),
-        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+        printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`)
       ),
     }),
     // 应用日志文件
@@ -48,4 +48,4 @@ const logger = winston.createLogger({
   ],
 });
 
-module.exports = logger; 
+module.exports = logger;

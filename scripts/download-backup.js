@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // 物流报价系统 - 下载最新备份脚本
 
 const fs = require('fs');
@@ -15,7 +13,7 @@ const QINIU_CONFIG = {
   accessKey: process.env.QINIU_ACCESS_KEY,
   secretKey: process.env.QINIU_SECRET_KEY,
   bucket: process.env.QINIU_BUCKET,
-  zone: process.env.QINIU_ZONE || 'z0'
+  zone: process.env.QINIU_ZONE || 'z0',
 };
 
 // 日志函数
@@ -47,7 +45,7 @@ function createDownloadDir() {
 // 获取最新备份文件列表
 function getLatestBackupFromQiniu() {
   log('获取七牛云最新备份文件...');
-  
+
   try {
     // 检查qshell工具
     execSync('which qshell', { stdio: 'ignore' });
@@ -57,12 +55,16 @@ function getLatestBackupFromQiniu() {
 
   // 配置qshell
   try {
-    execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "download-account"`);
+    execSync(
+      `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "download-account"`
+    );
   } catch (err) {
     if (err.message.includes('already exist')) {
       try {
         execSync('qshell user rm download-account');
-        execSync(`qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "download-account"`);
+        execSync(
+          `qshell account "${QINIU_CONFIG.accessKey}" "${QINIU_CONFIG.secretKey}" "download-account"`
+        );
       } catch (retryErr) {
         log('qshell账户配置警告，但继续执行下载');
       }
@@ -73,9 +75,12 @@ function getLatestBackupFromQiniu() {
 
   // 列出统一备份包
   try {
-    const listOutput = execSync(`qshell listbucket "${QINIU_CONFIG.bucket}" "unified-backups/wlbj-logistics/" ""`, { encoding: 'utf8' });
+    const listOutput = execSync(
+      `qshell listbucket "${QINIU_CONFIG.bucket}" "unified-backups/wlbj-logistics/" ""`,
+      { encoding: 'utf8' }
+    );
     const lines = listOutput.split('\n').filter(line => line.trim());
-    
+
     if (lines.length === 0) {
       throw new Error('未找到任何备份文件');
     }
@@ -89,7 +94,7 @@ function getLatestBackupFromQiniu() {
             key: parts[0],
             size: parseInt(parts[1]),
             hash: parts[2],
-            mtime: parseInt(parts[3])
+            mtime: parseInt(parts[3]),
           };
         }
         return null;
@@ -110,13 +115,13 @@ function getLatestBackupFromQiniu() {
 // 下载备份文件
 function downloadBackupFile(backupFile, downloadDir) {
   log(`开始下载备份文件: ${backupFile.key}`);
-  
+
   const fileName = path.basename(backupFile.key);
   const localPath = path.join(downloadDir, fileName);
-  
+
   try {
     execSync(`qshell qdownload "${QINIU_CONFIG.bucket}" "${backupFile.key}" "${localPath}"`);
-    
+
     if (fs.existsSync(localPath)) {
       const localSize = fs.statSync(localPath).size;
       if (localSize === backupFile.size) {
@@ -135,12 +140,14 @@ function downloadBackupFile(backupFile, downloadDir) {
 
 // 格式化字节大小
 function formatBytes(bytes) {
-  if (bytes === 0) return '0 B';
-  
+  if (bytes === 0) {
+    return '0 B';
+  }
+
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
@@ -148,24 +155,23 @@ function formatBytes(bytes) {
 async function main() {
   try {
     log('开始下载最新备份...');
-    
+
     // 检查配置
     checkQiniuConfig();
-    
+
     // 创建下载目录
     const downloadDir = createDownloadDir();
     log(`下载目录: ${downloadDir}`);
-    
+
     // 获取最新备份文件信息
     const latestBackup = getLatestBackupFromQiniu();
     log(`找到最新备份: ${latestBackup.key}`);
-    
+
     // 下载备份文件
     const localPath = downloadBackupFile(latestBackup, downloadDir);
-    
+
     log('🎉 备份下载完成');
     console.log(`下载文件路径: ${localPath}`); // 用于API提取文件路径
-    
   } catch (err) {
     error(`备份下载失败: ${err.message}`);
     process.exit(1);

@@ -238,9 +238,10 @@ const UserManagement = () => {
       setAddUserErrors({});
       loadUsers(); // 重新加载用户列表
       alert('用户创建成功');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('创建用户失败:', error);
-      alert(error.message || '创建用户失败');
+      const errorMessage = error instanceof Error ? error.message : '创建用户失败';
+      alert(errorMessage);
     }
   };
 
@@ -286,9 +287,10 @@ const UserManagement = () => {
       setNewPassword('');
       setResetPasswordError('');
       alert(`用户 ${resetPasswordUser.name || resetPasswordUser.email} 的密码重置成功`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('重置密码失败:', error);
-      setResetPasswordError(error.message || '重置密码失败');
+      const errorMessage = error instanceof Error ? error.message : '重置密码失败';
+      setResetPasswordError(errorMessage);
     }
   };
 

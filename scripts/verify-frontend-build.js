@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * 前端构建验证脚本
  * 检查前端构建文件的完整性和正确性
@@ -9,10 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DIST_DIR = path.join(__dirname, '../frontend/dist');
-const REQUIRED_FILES = [
-  'index.html',
-  'assets'
-];
+const REQUIRED_FILES = ['index.html', 'assets'];
 
 function checkFileExists(filePath) {
   try {
@@ -26,20 +21,20 @@ function checkFileExists(filePath) {
 function validateIndexHtml() {
   const indexPath = path.join(DIST_DIR, 'index.html');
   const result = checkFileExists(indexPath);
-  
+
   if (!result.exists) {
     return { valid: false, error: 'index.html 不存在' };
   }
 
   try {
     const content = fs.readFileSync(indexPath, 'utf8');
-    
+
     // 检查必要的元素
     const checks = [
       { name: 'DOCTYPE', pattern: /<!doctype html>/i },
       { name: 'root div', pattern: /<div id="root"><\/div>/ },
       { name: 'JS assets', pattern: /src="\/assets\/.*\.js"/ },
-      { name: 'CSS assets', pattern: /href="\/assets\/.*\.css"/ }
+      { name: 'CSS assets', pattern: /href="\/assets\/.*\.css"/ },
     ];
 
     const issues = [];
@@ -52,7 +47,7 @@ function validateIndexHtml() {
     return {
       valid: issues.length === 0,
       issues: issues,
-      size: result.size
+      size: result.size,
     };
   } catch (error) {
     return { valid: false, error: `读取 index.html 失败: ${error.message}` };
@@ -62,7 +57,7 @@ function validateIndexHtml() {
 function validateAssets() {
   const assetsPath = path.join(DIST_DIR, 'assets');
   const result = checkFileExists(assetsPath);
-  
+
   if (!result.exists) {
     return { valid: false, error: 'assets 目录不存在' };
   }
@@ -80,7 +75,7 @@ function validateAssets() {
       valid: jsFiles.length > 0 && cssFiles.length > 0,
       jsFiles: jsFiles.length,
       cssFiles: cssFiles.length,
-      totalFiles: files.length
+      totalFiles: files.length,
     };
   } catch (error) {
     return { valid: false, error: `读取 assets 目录失败: ${error.message}` };
@@ -120,7 +115,9 @@ function main() {
   // 验证 assets
   const assetsResult = validateAssets();
   if (assetsResult.valid) {
-    console.log(`✅ assets 验证通过 (${assetsResult.jsFiles} JS, ${assetsResult.cssFiles} CSS, 共 ${assetsResult.totalFiles} 文件)`);
+    console.log(
+      `✅ assets 验证通过 (${assetsResult.jsFiles} JS, ${assetsResult.cssFiles} CSS, 共 ${assetsResult.totalFiles} 文件)`
+    );
   } else {
     console.error('❌ assets 验证失败:');
     console.error(`   ${assetsResult.error}`);
@@ -128,7 +125,7 @@ function main() {
 
   // 总结
   const allValid = indexResult.valid && assetsResult.valid;
-  
+
   console.log('\n' + '='.repeat(50));
   if (allValid) {
     console.log('🎉 前端构建验证通过！');
@@ -149,5 +146,5 @@ if (require.main === module) {
 module.exports = {
   validateIndexHtml,
   validateAssets,
-  checkFileExists
+  checkFileExists,
 };
