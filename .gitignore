@@ -171,3 +171,19 @@ config/local.json
 # Temporary test files
 test-*.txt
 verify-*.js
+
+# Untracked files
+*.log
+* 2.json
+* 2.md
+* 2.js
+* 2.sh
+* 3.js
+* 3.sh
+* 3.md
+security-fixes/scripts 2/
+tests/unit/setup 2.js
+.husky/pre-commit 2
+frontend/src/types/api 2.ts
+
+.prettierignore 2
