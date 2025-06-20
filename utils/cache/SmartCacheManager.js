@@ -4,7 +4,7 @@
  */
 
 const NodeCache = require('node-cache');
-const LRU = require('lru-cache');
+const { LRUCache } = require('lru-cache');
 const logger = require('../../config/logger');
 
 class SmartCacheManager {
@@ -19,7 +19,7 @@ class SmartCacheManager {
     });
 
     // L2缓存：LRU缓存（中等速度，更大容量）
-    this.l2Cache = new LRU({
+    this.l2Cache = new LRUCache({
       max: options.l2MaxItems || 5000,
       ttl: options.l2TTL || 1800000, // 30分钟
       allowStale: false,

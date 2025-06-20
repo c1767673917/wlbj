@@ -16,16 +16,15 @@ const {
 // 导入安全中间件
 const { apiLimiter, sanitizeMiddleware, securityHeaders } = require('./middleware/security');
 
-// 导入缓存模块
-const { cache, cacheInvalidation } = require('./utils/redisCache');
+// 导入数据加载器
 const dataLoader = require('./utils/dataLoader');
 
 // 导入Swagger文档中间件
 // const { setupSwagger } = require('./middleware/swagger');
 
 // 导入智能缓存系统
-// const { cacheIntegration } = require('./utils/cache/CacheIntegration');
-// const { cacheStatsMiddleware } = require('./middleware/cache');
+const { cacheIntegration } = require('./utils/cache/CacheIntegration');
+const { createCacheMiddleware } = require('./middleware/cache');
 
 // 初始化全局错误处理
 initializeErrorHandling();
@@ -165,6 +164,34 @@ const providersRoutes = require('./routes/providersRoutes');
 const exportRoutes = require('./routes/exportRoutes'); // 导出路由
 const backupRoutes = require('./routes/backupRoutes'); // 备份路由
 
+// 添加缓存中间件 - 必须在路由定义之前
+app.use(
+  '/api/orders',
+  createCacheMiddleware({
+    ttl: 300, // 5分钟缓存
+    keyGenerator: req => `orders:${req.method}:${req.url}:${JSON.stringify(req.query)}`,
+    condition: req => req.method === 'GET', // 只缓存GET请求
+  })
+);
+
+app.use(
+  '/api/quotes',
+  createCacheMiddleware({
+    ttl: 180, // 3分钟缓存
+    keyGenerator: req => `quotes:${req.method}:${req.url}:${JSON.stringify(req.query)}`,
+    condition: req => req.method === 'GET',
+  })
+);
+
+app.use(
+  '/api/providers',
+  createCacheMiddleware({
+    ttl: 1800, // 30分钟缓存
+    keyGenerator: req => `providers:${req.method}:${req.url}:${JSON.stringify(req.query)}`,
+    condition: req => req.method === 'GET',
+  })
+);
+
 app.use('/api/auth', authRoutes); // JWT认证相关API
 app.use('/api/users', usersRoutes); // 用户管理API
 app.use('/api/admin', adminRoutes); // 管理员API
@@ -175,11 +202,49 @@ app.use('/api/providers', providersRoutes);
 app.use('/api/export', exportRoutes); // 添加导出路由
 app.use('/api/backup', backupRoutes); // 添加备份路由
 
+// 添加缓存状态监控API
+app.get('/api/cache/stats', (req, res) => {
+  try {
+    const stats = cacheIntegration.getCacheStats();
+    const report = cacheIntegration.generatePerformanceReport();
+    res.json({
+      success: true,
+      data: {
+        stats,
+        report,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '获取缓存统计失败',
+      error: error.message,
+    });
+  }
+});
+
+// 清空缓存API（仅开发环境）
+if (process.env.NODE_ENV === 'development') {
+  app.post('/api/cache/flush', async (req, res) => {
+    try {
+      await cacheIntegration.flushAllCache();
+      res.json({
+        success: true,
+        message: '缓存已清空',
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: '清空缓存失败',
+        error: error.message,
+      });
+    }
+  });
+}
+
 // 设置API文档
 // setupSwagger(app); // 临时禁用Swagger
-
-// 添加缓存统计中间件
-// app.use(cacheStatsMiddleware());
 
 // 前端路由
 app.get('/', (req, res) => {
@@ -261,17 +326,7 @@ app.use(notFoundHandler);
 // 全局错误处理中间件
 app.use(globalErrorHandler);
 
-// 启动缓存预热
-if (config.isProduction()) {
-  setTimeout(async () => {
-    try {
-      await cache.warmUp(dataLoader);
-      logger.info('生产环境缓存预热完成');
-    } catch (error) {
-      logger.error('缓存预热失败', { error: error.message });
-    }
-  }, 5000); // 延迟5秒启动，确保数据库已准备好
-}
+// 缓存预热已迁移到智能缓存系统中
 
 // 关闭应用时关闭数据库连接
 process.on('SIGINT', () => {
@@ -302,11 +357,11 @@ app.listen(PORT, async () => {
 
   // 初始化智能缓存系统
   try {
-    // 暂时注释掉缓存初始化以确保应用能正常启动
-    // await cacheIntegration.initialize();
-    logger.info('✅ 智能缓存系统已准备就绪（暂时禁用）');
+    await cacheIntegration.initialize();
+    logger.info('✅ 智能缓存系统已启用并初始化完成');
   } catch (error) {
     logger.error('❌ 智能缓存系统启动失败', { error: error.message });
+    logger.warn('系统将继续使用基础内存缓存');
   }
 
   logger.info('服务器启动完成，已启用以下安全特性：');
@@ -315,7 +370,7 @@ app.listen(PORT, async () => {
   logger.info('- SQL注入防护');
   logger.info('- 速率限制');
   logger.info('- 安全响应头');
-  logger.info('- 多级缓存系统（内存+Redis）');
+  logger.info('- 智能多级缓存系统（已启用）');
   logger.info('- 智能缓存管理和监控');
   logger.info('- 数据库查询性能监控');
 });
