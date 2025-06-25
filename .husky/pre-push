@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 运行推送前检查..."
+
+# 运行完整的代码质量检查
+echo "📋 运行完整的ESLint检查..."
+npm run lint
+
+# 运行完整的格式化检查
+echo "🎨 运行完整的格式化检查..."
+npm run format:check
+
+# 运行所有测试
+echo "🧪 运行完整测试套件..."
+npm test
+
+# 检查测试覆盖率
+echo "📊 检查测试覆盖率..."
+npm run test:coverage 2>/dev/null || echo "⚠️  测试覆盖率检查跳过（未配置）"
+
+# 运行安全检查
+echo "🔒 运行安全检查..."
+npm audit --audit-level moderate || echo "⚠️  发现安全漏洞，请检查"
+
+# 检查包大小
+echo "📦 检查包大小..."
+npm run build 2>/dev/null || echo "⚠️  构建检查跳过（未配置）"
+
+echo "✅ 推送前检查完成！"

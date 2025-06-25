@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 运行提交前检查..."
+
+# 运行lint-staged进行代码质量检查
+npx lint-staged
+
+# 检查是否有ESLint错误
+echo "📋 检查ESLint规则..."
+npm run lint:backend
+npm run lint:frontend
+
+# 检查代码格式化
+echo "🎨 检查代码格式化..."
+npm run format:backend:check
+npm run format:frontend:check
+
+# 运行测试
+echo "🧪 运行测试..."
+npm test
+
+echo "✅ 提交前检查完成！"

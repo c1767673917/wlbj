@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 读取提交消息
+commit_msg=$(cat $1)
+
+echo "📝 验证提交消息格式..."
+
+# 检查提交消息格式
+# 格式: type(scope): description
+# 例如: feat(auth): 添加用户登录功能
+if ! echo "$commit_msg" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\(.+\))?: .{1,50}"; then
+    echo "❌ 提交消息格式不正确！"
+    echo ""
+    echo "正确格式: type(scope): description"
+    echo ""
+    echo "类型 (type):"
+    echo "  feat:     新功能"
+    echo "  fix:      修复bug"
+    echo "  docs:     文档更新"
+    echo "  style:    代码格式化"
+    echo "  refactor: 重构代码"
+    echo "  test:     测试相关"
+    echo "  chore:    构建过程或辅助工具的变动"
+    echo "  perf:     性能优化"
+    echo "  ci:       CI/CD相关"
+    echo "  build:    构建系统或外部依赖的变动"
+    echo ""
+    echo "示例:"
+    echo "  feat(auth): 添加用户登录功能"
+    echo "  fix(api): 修复订单查询接口错误"
+    echo "  docs(readme): 更新安装说明"
+    echo ""
+    exit 1
+fi
+
+# 检查提交消息长度
+if [ ${#commit_msg} -gt 72 ]; then
+    echo "⚠️  提交消息过长，建议控制在72个字符以内"
+fi
+
+echo "✅ 提交消息格式验证通过！"

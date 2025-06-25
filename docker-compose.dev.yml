@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # 开发环境应用服务
+  app:
+    build:
+      context: .
+      target: development
+    container_name: wlbj-app-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Node.js调试端口
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=wlbj_dev
+      - DB_USER=wlbj_user
+      - DB_PASSWORD=dev_password
+      - JWT_SECRET=dev-jwt-secret-key
+      - LOG_LEVEL=debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - app-logs:/app/logs
+    networks:
+      - wlbj-dev-network
+    command: npm run dev
+
+  # 开发环境PostgreSQL
+  postgres:
+    image: postgres:14-alpine
+    container_name: wlbj-postgres-dev
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=wlbj_dev
+      - POSTGRES_USER=wlbj_user
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - wlbj-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wlbj_user -d wlbj_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 开发环境Redis
+  redis:
+    image: redis:7-alpine
+    container_name: wlbj-redis-dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-dev-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - wlbj-dev-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # 数据库管理工具 - pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: wlbj-pgadmin-dev
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@wlbj.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - wlbj-dev-network
+
+  # Redis管理工具 - RedisInsight
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: wlbj-redis-insight-dev
+    restart: unless-stopped
+    volumes:
+      - redis-insight-data:/db
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    networks:
+      - wlbj-dev-network
+
+  # 测试数据库（用于集成测试）
+  postgres-test:
+    image: postgres:14-alpine
+    container_name: wlbj-postgres-test
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=wlbj_test
+      - POSTGRES_USER=wlbj_test_user
+      - POSTGRES_PASSWORD=test_password
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+    networks:
+      - wlbj-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wlbj_test_user -d wlbj_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-dev-data:
+    driver: local
+  redis-dev-data:
+    driver: local
+  app-logs:
+    driver: local
+  pgadmin-data:
+    driver: local
+  redis-insight-data:
+    driver: local
+
+networks:
+  wlbj-dev-network:
+    driver: bridge
