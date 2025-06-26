@@ -11,7 +11,7 @@ const { logger } = require('../config/logger');
  * IP白名单配置
  * 在生产环境中应该从环境变量或配置文件中读取
  */
-const IP_WHITELIST = process.env.IP_WHITELIST 
+const IP_WHITELIST = process.env.IP_WHITELIST
   ? process.env.IP_WHITELIST.split(',').map(ip => ip.trim())
   : ['127.0.0.1', '::1', 'localhost'];
 
@@ -20,14 +20,16 @@ const IP_WHITELIST = process.env.IP_WHITELIST
  * @param {Object} req - Express请求对象
  * @returns {string} 客户端IP地址
  */
-const getClientIP = (req) => {
-  return req.ip || 
-         req.connection.remoteAddress || 
-         req.socket.remoteAddress ||
-         (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
-         req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-         req.headers['x-real-ip'] ||
-         'unknown';
+const getClientIP = req => {
+  return (
+    req.ip ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.headers['x-real-ip'] ||
+    'unknown'
+  );
 };
 
 /**
@@ -43,7 +45,7 @@ const checkIPWhitelist = (req, res, next) => {
   }
 
   const clientIP = getClientIP(req);
-  
+
   // 检查IP是否在白名单中
   const isWhitelisted = IP_WHITELIST.some(whitelistedIP => {
     if (whitelistedIP === 'localhost' && (clientIP === '127.0.0.1' || clientIP === '::1')) {
@@ -57,12 +59,12 @@ const checkIPWhitelist = (req, res, next) => {
       clientIP,
       userAgent: req.headers['user-agent'],
       url: req.originalUrl,
-      method: req.method
+      method: req.method,
     });
 
     return res.status(403).json({
       success: false,
-      message: '访问被拒绝'
+      message: '访问被拒绝',
     });
   }
 
@@ -78,23 +80,34 @@ const createRateLimiter = (options = {}) => {
     max: process.env.NODE_ENV === 'test' ? 10000 : 100, // 测试环境放宽限制
     message: {
       success: false,
-      message: '请求过于频繁，请稍后再试'
+      message: '请求过于频繁，请稍后再试',
     },
     standardHeaders: true,
     legacyHeaders: false,
+    // 在开发环境中跳过trust proxy验证
+    skip: process.env.NODE_ENV === 'development' ? () => false : undefined,
+    keyGenerator: req => {
+      // 在开发环境中使用简单的IP获取方式
+      if (process.env.NODE_ENV === 'development') {
+        return req.ip || req.connection.remoteAddress || '127.0.0.1';
+      }
+      return getClientIP(req);
+    },
     handler: (req, res) => {
       logger.warn('请求频率限制触发', {
         clientIP: getClientIP(req),
         userAgent: req.headers['user-agent'],
         url: req.originalUrl,
-        method: req.method
+        method: req.method,
       });
-      
-      res.status(429).json(options.message || {
-        success: false,
-        message: '请求过于频繁，请稍后再试'
-      });
-    }
+
+      res.status(429).json(
+        options.message || {
+          success: false,
+          message: '请求过于频繁，请稍后再试',
+        }
+      );
+    },
   };
 
   return rateLimit({ ...defaultOptions, ...options });
@@ -105,7 +118,7 @@ const createRateLimiter = (options = {}) => {
  */
 const apiRateLimit = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15分钟
-  max: process.env.NODE_ENV === 'test' ? 10000 : 100
+  max: process.env.NODE_ENV === 'test' ? 10000 : 100,
 });
 
 /**
@@ -116,8 +129,8 @@ const authRateLimit = createRateLimiter({
   max: process.env.NODE_ENV === 'test' ? 1000 : 10, // 认证接口限制更严格
   message: {
     success: false,
-    message: '认证请求过于频繁，请稍后再试'
-  }
+    message: '认证请求过于频繁，请稍后再试',
+  },
 });
 
 /**
@@ -128,8 +141,8 @@ const uploadRateLimit = createRateLimiter({
   max: process.env.NODE_ENV === 'test' ? 1000 : 20, // 每小时最多20次上传
   message: {
     success: false,
-    message: '文件上传过于频繁，请稍后再试'
-  }
+    message: '文件上传过于频繁，请稍后再试',
+  },
 });
 
 /**
@@ -141,16 +154,16 @@ const securityHeaders = helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
-      frameSrc: ["'none'"]
-    }
+      frameSrc: ["'none'"],
+    },
   },
   crossOriginEmbedderPolicy: false, // 根据需要调整
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
 });
 
 /**
@@ -169,21 +182,21 @@ const requestLogger = (req, res, next) => {
     url: req.originalUrl,
     clientIP,
     userAgent: req.headers['user-agent'],
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   // 监听响应结束
   res.on('finish', () => {
     const duration = Date.now() - startTime;
     const logLevel = res.statusCode >= 400 ? 'warn' : 'info';
-    
+
     logger[logLevel]('请求完成', {
       method: req.method,
       url: req.originalUrl,
       statusCode: res.statusCode,
       duration: `${duration}ms`,
       clientIP,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 
@@ -217,5 +230,5 @@ module.exports = {
   securityHeaders,
   requestLogger,
   sanitizeData,
-  getClientIP
+  getClientIP,
 };

@@ -49,6 +49,8 @@ COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/database ./database
 COPY --from=builder --chown=nodejs:nodejs /app/migrations ./migrations
+COPY --from=builder --chown=nodejs:nodejs /app/knexfile.js ./knexfile.js
+COPY --from=builder --chown=nodejs:nodejs /app/scripts ./scripts
 
 # 创建日志目录
 RUN mkdir -p /app/logs && chown nodejs:nodejs /app/logs

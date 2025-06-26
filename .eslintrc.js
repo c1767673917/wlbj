@@ -86,32 +86,15 @@ module.exports = {
     },
     {
       // 前端代码特定规则
-      files: ['frontend/**/*.{js,jsx,ts,tsx}', '**/*.{jsx,tsx}'],
+      files: ['frontend/**/*.{js,jsx}'],
       env: {
         browser: true,
         node: false
       },
       extends: [
-        'eslint:recommended',
-        '@typescript-eslint/recommended'
+        'eslint:recommended'
       ],
-      parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint', 'react', 'react-hooks'],
       rules: {
-        // React 特定规则
-        'react/jsx-uses-react': 'error',
-        'react/jsx-uses-vars': 'error',
-        'react/prop-types': 'off', // 使用 TypeScript
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
-
-        // TypeScript 特定规则
-        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-        '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-        '@typescript-eslint/no-explicit-any': 'warn',
-        '@typescript-eslint/prefer-const': 'error',
-
         // 浏览器环境规则
         'no-console': 'warn', // 前端允许console但警告
         'node/no-missing-require': 'off', // 前端不使用require

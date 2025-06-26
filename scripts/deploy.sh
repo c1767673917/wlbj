@@ -103,7 +103,7 @@ run_migrations() {
         -e DB_USER="$DB_USER" \
         -e DB_PASSWORD="$DB_PASSWORD" \
         "wlbj:$VERSION" \
-        npm run db:migrate
+        npm run migrate:latest
     
     log_success "数据库迁移完成"
 }
